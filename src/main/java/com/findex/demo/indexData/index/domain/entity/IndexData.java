@@ -1,6 +1,7 @@
 package com.findex.demo.indexData.index.domain.entity;
 
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -9,18 +10,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.Instant;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class IndexData {
 
   @Id
   @GeneratedValue
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  private Instant date;
+  private String date;
 
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
@@ -30,12 +35,12 @@ public class IndexData {
   private BigDecimal highPrice;
   private BigDecimal lowPrice;
 
-  private BigDecimal changeAmount;
-  private BigDecimal changeRate;
+  private BigDecimal versus;
+  private BigDecimal fluationRate;
 
-  private Long volume;
-  private Long tradingValue;
-  private Long marketCap;
+  private Long tradingQuantity;
+  private Long tradingPrice;
+  private Long marketTotalAmount;
 
 }
 
