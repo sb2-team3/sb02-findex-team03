@@ -15,6 +15,6 @@ public class SyncJobSearchRequest {
   private JobType jobType;
   private Long indexInfoId;
   private String baseDateFrom;
-  private Result result;
-  private Long lastId;
+//  private Result result;
+//  private Long lastId;
 }
