@@ -1,4 +1,6 @@
 package com.findex.demo.indexInfo.domain.entity;
 
-public class aa {
+public enum SourceType {
+  OPEN_API,
+  USER
 }
