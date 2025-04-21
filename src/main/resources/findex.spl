@@ -1,0 +1,51 @@
+-- ENUM 타입 정의 (PostgreSQL에서는 먼저 ENUM 타입을 정의해야 함)
+CREATE TYPE source_type_enum AS ENUM ('사용자', 'Open API');
+CREATE TYPE sync_type_enum AS ENUM ('지수 정보', '지수 데이터');
+CREATE TYPE sync_result_enum AS ENUM ('성공', '실패');
+
+-- 지수 정보 테이블
+CREATE TABLE index_info (
+                          id BIGSERIAL PRIMARY KEY,
+                          category_name VARCHAR(100),
+                          name VARCHAR(200),
+                          stock_count INTEGER,
+                          base_date DATE,
+                          base_index NUMERIC(15, 2),
+                          source_type source_type_enum,
+                          favorite BOOLEAN DEFAULT FALSE
+);
+
+-- 지수 데이터 테이블
+CREATE TABLE index_data (
+                          id BIGSERIAL PRIMARY KEY,
+                          index_info_id BIGINT REFERENCES index_info(id),
+                          date DATE,
+                          source_type source_type_enum,
+                          open_price NUMERIC(15, 2),
+                          close_price NUMERIC(15, 2),
+                          high_price NUMERIC(15, 2),
+                          low_price NUMERIC(15, 2),
+                          change_amount NUMERIC(15, 2),
+                          change_rate NUMERIC(6, 4),
+                          volume BIGINT,
+                          trading_value BIGINT,
+                          market_cap BIGINT
+);
+
+-- 연동 작업 테이블
+CREATE TABLE sync_log (
+                        id BIGSERIAL PRIMARY KEY,
+                        type sync_type_enum,
+                        index_info_id BIGINT REFERENCES index_info(id),
+                        target_date DATE,
+                        operator VARCHAR(100),
+                        synced_at TIMESTAMP,
+                        result sync_result_enum
+);
+
+-- 자동 연동 테이블
+CREATE TABLE auto_sync (
+                         id BIGSERIAL PRIMARY KEY,
+                         index_info_id BIGINT UNIQUE REFERENCES index_info(id),
+                         activated BOOLEAN DEFAULT TRUE
+);
