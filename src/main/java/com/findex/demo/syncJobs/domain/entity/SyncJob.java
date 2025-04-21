@@ -1,5 +1,7 @@
 package com.findex.demo.syncJobs.domain.entity;
 
+import com.findex.demo.syncJobs.type.JobType;
+import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
@@ -37,11 +39,4 @@ public class SyncJob {
   @Column(nullable = false)
   private Result result;
 
-  public enum JobType {
-    INDEX_INFO, INDEX_DATA
-  }
-
-  public enum Result {
-    SUCCESS, FAILURE
-  }
 }
