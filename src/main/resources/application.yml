@@ -1,1 +1,8 @@
-spring.application.name=demo
+
+spring:
+  application:
+    name: demo
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: postgres
+    password: mysecretpassword

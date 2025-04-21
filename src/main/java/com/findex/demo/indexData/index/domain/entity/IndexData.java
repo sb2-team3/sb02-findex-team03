@@ -1,9 +1,12 @@
 package com.findex.demo.indexData.index.domain.entity;
 
+import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -13,9 +16,9 @@ public class IndexData {
   @GeneratedValue
   private Long id;
 
-  //@ManyToOne
-  //@JoinColumn(name = "index_info_id")
-  //private IndexInfo indexInfo;
+  @ManyToOne
+  @JoinColumn(name = "index_info_id")
+  private IndexInfo indexInfo;
 
   private Instant date;
 
