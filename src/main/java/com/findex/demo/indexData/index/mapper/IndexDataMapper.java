@@ -1,10 +1,9 @@
-package com.findex.demo.mapper;
+package com.findex.demo.indexData.index.mapper;
 
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import lombok.NoArgsConstructor;
-import org.mapstruct.Mapper;
 
 @NoArgsConstructor
 public class IndexDataMapper implements EntityMapper<IndexDataCreateRequest,IndexData> {

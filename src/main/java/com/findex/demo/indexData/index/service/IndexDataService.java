@@ -1,13 +1,12 @@
 package com.findex.demo.indexData.index.service;
 
+import com.findex.demo.global.error.CustomException;
+import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
-import com.findex.demo.indexInfo.domain.entity.SourceType;
-import com.findex.demo.mapper.IndexDataMapper;
-import java.math.BigDecimal;
-import java.time.Instant;
+import com.findex.demo.indexData.index.mapper.IndexDataMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class IndexDataService {
     // 2. 중복 확인
     boolean exists = indexDataRepository.existsByIndexInfoAndDate(indexInfo, request.getBaseDate());
     if (exists) {
-      throw new IllegalStateException("이미 해당 날짜에 지수 데이터가 등록되어 있습니다.");
+      throw new CustomException(ErrorCode.VALIDATION_ERROR,"이미 해당 날짜에 지수 데이터가 등록되어 있습니다.");
     }
 
     // 3. 등록

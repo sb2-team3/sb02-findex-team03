@@ -1,4 +1,4 @@
-package com.findex.demo.mapper;
+package com.findex.demo.indexData.index.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
