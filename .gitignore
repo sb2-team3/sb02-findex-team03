@@ -60,5 +60,4 @@ out/
 ### VS Code ###
 .vscode/
 
-# Local config - do not commit
 application.yml
