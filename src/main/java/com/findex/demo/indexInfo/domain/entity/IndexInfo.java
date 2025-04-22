@@ -20,7 +20,7 @@ public class IndexInfo {
   private String indexClassification;
   private String indexName;
   private int employedItemCount;
-  private Instant basePointInTime;
+  private LocalDateTime basePointInTime;
   private double baseIndex;
   private boolean favorite;
 }
