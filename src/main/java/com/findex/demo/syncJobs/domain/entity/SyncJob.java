@@ -28,7 +28,7 @@ public class SyncJob {
   private JobType jobType;
 
   @Column(nullable = false)
-  private Instant targetDate;
+  private LocalDateTime targetDate;
 
   @Column(nullable = false)
   private String worker;
