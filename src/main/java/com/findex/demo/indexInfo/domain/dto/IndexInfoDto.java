@@ -2,15 +2,16 @@ package com.findex.demo.indexInfo.domain.dto;
 
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.Builder;
 
+@Builder
 public record IndexInfoDto(
     Integer id,
     String indexClassification,
     String indexName,
-    int employedItemsCount,
+    Integer employedItemsCount,
     LocalDate basePointInTime,
-    int baseIndex,
+    Integer baseIndex,
     SourceType sourceType,
     boolean favorite
 ) {}

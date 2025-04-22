@@ -9,6 +9,7 @@ import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
+import com.findex.demo.indexInfo.mapper.IndexInfoMapperV1;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     indexInfo = indexInfoRepository.save(indexInfo);
 
-    return indexInfoMapper.toDto(indexInfo);
+    return IndexInfoMapperV1.toIndexInfoDto(indexInfo);
   }
 
 
@@ -66,6 +67,9 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     indexInfoRepository.delete(indexInfo);
   }
 
+  /*
+  TODO : 읽이 전용 @Transactional(readOnly = true) 구현 시도 해보세요
+   */
   @Override
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
