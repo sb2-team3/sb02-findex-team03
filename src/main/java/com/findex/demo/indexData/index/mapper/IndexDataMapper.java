@@ -8,8 +8,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 
 public class IndexDataMapper {
 
-
-  public IndexDataDto toIndexDto(IndexData entity) {
+  public static IndexDataDto toIndexDto(IndexData entity) {
     return new IndexDataDto(
         entity.getId(),
         entity.getIndexInfo().getId(),
