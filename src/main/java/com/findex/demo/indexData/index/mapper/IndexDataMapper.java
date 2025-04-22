@@ -13,7 +13,7 @@ public class IndexDataMapper implements EntityMapper<IndexDataCreateRequest,Inde
   @Override
   public IndexData toEntity(IndexDataCreateRequest dto) {
     IndexData data = new IndexData();
-    data.setIndexInfo(dto.getIndexInfoId());
+    data.setIndexInfo(indexInfoRepositroy.findById(dto.getIndexInfoId()) );
     data.setDate(dto.getBaseDate());
     data.setOpenPrice(dto.getMarketPrice());
     data.setClosePrice(dto.getMarketPrice());
