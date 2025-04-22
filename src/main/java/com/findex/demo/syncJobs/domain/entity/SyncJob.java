@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,13 +36,13 @@ public class SyncJob {
     private Long indexInfoId;
 
     @Column(nullable = false)
-    private Instant targetDate;
+    private LocalDateTime targetDate;
 
     @Column(nullable = false)
     private String worker;
 
     @Column(nullable = false)
-    private Instant jobTime;
+    private LocalDateTime jobTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
