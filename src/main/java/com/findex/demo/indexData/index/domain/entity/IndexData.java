@@ -1,110 +1,37 @@
 package com.findex.demo.indexData.index.domain.entity;
 
-import com.findex.demo.global.times.BaseTimeEntity;
-import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
-import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
-import com.findex.demo.indexInfo.domain.entity.IndexInfo;
-import com.findex.demo.indexInfo.domain.entity.SourceType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import java.math.BigDecimal;
+import java.time.Instant;
 
-import java.time.LocalDate;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Getter
-@NoArgsConstructor
-public class IndexData extends BaseTimeEntity {
+public class IndexData {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @GeneratedValue
+  private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "index_info_id")
-  private IndexInfo indexInfo;
+  //@ManyToOne
+  //@JoinColumn(name = "index_info_id")
+  //private IndexInfo indexInfo;
 
-  private LocalDate baseDate;
+  private Instant date;
 
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
 
-  private Double openPrice;
-  private Double closePrice;
-  private Double highPrice;
-  private Double lowPrice;
+  private BigDecimal openPrice;
+  private BigDecimal closePrice;
+  private BigDecimal highPrice;
+  private BigDecimal lowPrice;
 
-  private Double versus;
-  private Double fluationRate;
+  private BigDecimal changeAmount;
+  private BigDecimal changeRate;
 
-  private Long tradingQuantity;
-  private Long tradingPrice;
-  private Long marketTotalAmount;
-
-  @Builder
-  public IndexData(IndexInfo indexInfo, LocalDate baseDate, SourceType sourceType, Double openPrice,
-                   Double closePrice, Double highPrice, Double lowPrice, Double versus, Double fluationRate,
-                   Long tradingQuantity, Long tradingPrice, Long marketTotalAmount) {
-    this.indexInfo = indexInfo;
-    this.baseDate = baseDate;
-    this.sourceType = sourceType;
-    this.openPrice = openPrice;
-    this.closePrice = closePrice;
-    this.highPrice = highPrice;
-    this.lowPrice = lowPrice;
-    this.versus = versus;
-    this.fluationRate = fluationRate;
-    this.tradingQuantity = tradingQuantity;
-    this.tradingPrice = tradingPrice;
-    this.marketTotalAmount = marketTotalAmount;
-  }
-
-
-  public void update(IndexDataUpdateRequest request) {
-    if (request.getMarketPrice() != null) {
-      this.openPrice = request.getMarketPrice();
-    }
-
-    if (request.getClosingPrice() != null) {
-      this.closePrice = request.getClosingPrice();
-    }
-
-    if (request.getHighPrice() != null) {
-      this.highPrice = request.getHighPrice();
-    }
-
-    if (request.getLowPrice() != null) {
-      this.lowPrice = request.getLowPrice();
-    }
-
-    if (request.getVersus() != null) {
-      this.versus = request.getVersus();
-    }
-
-    if (request.getFluctuationRate() != null) {
-      this.fluationRate = request.getFluctuationRate();
-    }
-
-    if (request.getTradingQuantity() != null) {
-      this.tradingQuantity = request.getTradingQuantity();
-    }
-
-    if (request.getTradingPrice() != null) {
-      this.tradingPrice = request.getTradingPrice();
-    }
-
-    if (request.getMarketTotalAmount() != null) {
-      this.marketTotalAmount = request.getMarketTotalAmount();
-    }
-  }
+  private Long volume;
+  private Long tradingValue;
+  private Long marketCap;
 
 }
-
