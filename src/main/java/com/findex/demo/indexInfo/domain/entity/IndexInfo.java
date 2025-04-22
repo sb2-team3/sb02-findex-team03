@@ -15,7 +15,7 @@ public class IndexInfo {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String indexClassification;
   private String indexName;
