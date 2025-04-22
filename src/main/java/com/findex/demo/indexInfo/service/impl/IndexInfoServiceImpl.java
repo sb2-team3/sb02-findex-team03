@@ -46,7 +46,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
   @Override
   @Transactional
-  public IndexInfoDto updateIndexInfo(Long id, IndexInfoUpdateRequest updateRequest) {
+  public IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
 
@@ -59,7 +59,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
   @Override
   @Transactional
-  public void deleteIndexInfo(Long id) {
+  public void deleteIndexInfo(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
 
@@ -67,7 +67,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   }
 
   @Override
-  public IndexInfoDto getIndexInfo(Long id) {
+  public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
         .map(indexInfoMapper::toDto)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));

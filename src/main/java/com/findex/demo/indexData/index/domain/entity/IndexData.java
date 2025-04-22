@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import org.mapstruct.Builder;
 
 
 @Entity
