@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,13 +29,13 @@ public class IndexData {
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
 
-  private BigDecimal openPrice;
-  private BigDecimal closePrice;
-  private BigDecimal highPrice;
-  private BigDecimal lowPrice;
+  private Double openPrice;
+  private Double closePrice;
+  private Double highPrice;
+  private Double lowPrice;
 
-  private BigDecimal versus;
-  private BigDecimal fluationRate;
+  private Double versus;
+  private Double fluationRate;
 
   private Long tradingQuantity;
   private Long tradingPrice;

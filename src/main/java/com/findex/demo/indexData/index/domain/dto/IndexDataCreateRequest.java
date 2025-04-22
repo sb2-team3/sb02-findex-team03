@@ -3,7 +3,7 @@ package com.findex.demo.indexData.index.domain.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.math.Double;
 
 @Data
 @Schema(description = "지수 데이터 생성 요청 DTO")
@@ -16,22 +16,22 @@ public class IndexDataCreateRequest {
   private String baseDate; // or LocalDate로 변환 가능
 
   @Schema(description = "시가", example = "2500.75")
-  private BigDecimal marketPrice;
+  private Double marketPrice;
 
   @Schema(description = "종가", example = "2550.00")
-  private BigDecimal closingPrice;
+  private Double closingPrice;
 
   @Schema(description = "고가", example = "2575.00")
-  private BigDecimal highPrice;
+  private Double highPrice;
 
   @Schema(description = "저가", example = "2480.50")
-  private BigDecimal lowPrice;
+  private Double lowPrice;
 
   @Schema(description = "전일 대비 등락", example = "-5.25")
-  private BigDecimal versus;
+  private Double versus;
 
   @Schema(description = "등락률", example = "-0.25")
-  private BigDecimal fluctuationRate;
+  private Double fluctuationRate;
 
   @Schema(description = "총 거래량", example = "120000000")
   private Long tradingQuantity;

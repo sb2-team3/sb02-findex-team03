@@ -6,7 +6,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class IndexDataMapper implements EntityMapper<IndexDataCreateRequest,IndexData> {
+public class IndexDataUpdateRequestMapper implements EntityMapper<IndexDataCreateRequest,IndexData> {
 
   IndexInfoRepositroy indexInfoRepositroy;
 
