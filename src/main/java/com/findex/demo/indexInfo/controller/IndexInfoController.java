@@ -23,21 +23,21 @@ public class IndexInfoController {
 
   @PatchMapping("/{id}")
   public ResponseEntity<IndexInfoDto> update(
-      @PathVariable Long id,
+      @PathVariable Integer id,
       @RequestBody IndexInfoUpdateRequest request) {
     return ResponseEntity.ok(indexInfoService.updateIndexInfo(id, request));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(
-      @PathVariable Long id) {
+      @PathVariable Integer id) {
     indexInfoService.deleteIndexInfo(id);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<IndexInfoDto> get(
-      @PathVariable Long id) {
+      @PathVariable Integer id) {
     return ResponseEntity.ok(indexInfoService.getIndexInfo(id));
   }
 

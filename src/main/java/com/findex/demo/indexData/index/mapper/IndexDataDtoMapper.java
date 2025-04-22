@@ -11,7 +11,7 @@ import org.mapstruct.ReportingPolicy;
 public class IndexDataDtoMapper {
 
 
-  IndexDataDto toDto(IndexData entity) {
+  public IndexDataDto toDto(IndexData entity) {
     return new IndexDataDto(
         entity.getId(),
         entity.getIndexInfo().getId(),

@@ -10,11 +10,11 @@ public interface IndexInfoService {
 
   IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
 
-  IndexInfoDto updateIndexInfo(Long id, IndexInfoUpdateRequest updateRequest);
+  IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest);
 
-  void deleteIndexInfo(Long id);
+  void deleteIndexInfo(Integer id);
 
-  IndexInfoDto getIndexInfo(Long id);
+  IndexInfoDto getIndexInfo(Integer id);
 
   List<IndexInfoSummaryDto> getIndexInfoSummaries();
 

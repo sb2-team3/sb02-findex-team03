@@ -1,5 +1,7 @@
 package com.findex.demo.indexData.index.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
@@ -34,7 +36,7 @@ public class IndexDataService {
 
   private final IndexInfoRepository indexInfoRepository;
   private final IndexDataRepository indexDataRepository;
-  private final IndexDataDtoMapper indexDataDtoMapper;
+
   private final IndexDataUpdateRequestMapper indexDataUpdateRequestMapper;
 
   public CursorPageResponseIndexDataDto findAll(IndexDataSearchCondition condition) {
@@ -61,10 +63,12 @@ public class IndexDataService {
       hashNext = results.size() == condition.getSize();
     }
 
+    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
     // DTO 변환
     List<IndexDataDto> content = results.stream()
-        .map(indexDataDtoMapper::toDto)
-        .collect(Collectors.toList());
+        .map(data->{return mapper.toDto(data);})
+        .toList();
+    ;
 
     return CursorPageResponseIndexDataDto.<IndexDataDto>builder()
         .contents(content)
@@ -77,28 +81,25 @@ public class IndexDataService {
   }
 
 
-//  public IndexDataDto create(IndexDataCreateRequest request) {
-//
+  public IndexDataDto create(IndexDataCreateRequest request) {
+
 //    // 1. 해당 지수 정보 존재 여부 확인
-//    IndexInfo indexInfo = indexInfoRepository.findById(request.getIndexInfoId())
-//        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다."));
-//
-//    // 2. 중복 확인
-//    boolean exists = indexDataRepository.existsByIndexInfoAndDate(indexInfo, request.getBaseDate());
-//    if (exists) {
-//      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다.");
-//    }
-//
-//    // 3. 등록
-//    IndexData data = indexDataUpdateRequestMapper.toEntity(request, indexInfo);
-//    indexDataRepository.save(data);
-//
-//
-//
-//   ;
-//
-//    return  indexDataDtoMapper.toDto(data);
-//  }
+   IndexInfo indexInfo = indexInfoRepository.findById(request.getIndexInfoId())
+       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다."));
+
+    // 2. 중복 확인
+    boolean exists = indexDataRepository.existsByIndexInfoAndDate(indexInfo, request.getBaseDate());
+    if (exists) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다.");
+    }
+
+    // 3. 등록
+    IndexData data = indexDataUpdateRequestMapper.toEntity(request, indexInfo);
+    indexDataRepository.save(data);
+
+    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
+    return  mapper.toDto(data);
+  }
 
   public IndexDataDto update(Integer id, IndexDataUpdateRequest request) {
     IndexData indexData = indexDataRepository.findById(id)
@@ -108,7 +109,9 @@ public class IndexDataService {
 
     IndexData updated = indexDataRepository.save(indexData);
 
-    return indexDataDtoMapper.toDto(updated);
+    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
+
+    return mapper.toDto(updated);
   }
 
   /**

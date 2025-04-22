@@ -1,11 +1,13 @@
 package com.findex.demo.syncJobs.domain.entity;
 
+import com.findex.demo.global.times.BaseTimeEntity;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
+import lombok.*;
+
 
 @Entity
 @Table(name = "sync_jobs")
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SyncJob {
+public class SyncJob extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
