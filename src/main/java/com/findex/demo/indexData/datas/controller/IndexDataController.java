@@ -21,14 +21,14 @@ public class IndexDataController {
     private final IndexDataService indexDataService;
 
     @GetMapping("api/index-data/{indexInfoId}/chart")
-    public ResponseEntity<List<IndexChartDto>> getIndexChart(
+    public ResponseEntity<IndexChartDto> getIndexChart(
         @PathVariable int indexInfoId,
         @RequestParam(required = false, defaultValue = "DAILY") PeriodType periodType
     ) {
-        List<IndexChartDto> indexChartDtos = indexDataService.getIndexChart(periodType,
+        IndexChartDto indexChartDto = indexDataService.getIndexChart(periodType,
             indexInfoId);
 
-        return ResponseEntity.ok(indexChartDtos);
+        return ResponseEntity.ok(indexChartDto);
     }
 
     @PostMapping("api/index-data/performance/rank")
@@ -37,19 +37,18 @@ public class IndexDataController {
         @RequestParam(required = false) Integer indexInfoId,
         @RequestParam(required = false, defaultValue = "10") Integer limit
     ) {
-        List<RankedIndexPerformanceDto> indexPerformanceRankDtos = indexDataService.getIndexPerformanceRank(
-            periodType, indexInfoId, limit);
+        List<RankedIndexPerformanceDto> dto = indexDataService.getIndexPerformanceRank(periodType,
+            indexInfoId, limit);
 
-        return ResponseEntity.ok(indexPerformanceRankDtos);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("api/index-data/performance/favorite")
     public ResponseEntity<List<IndexPerformanceDto>> getFavoriteIndexPerformanceRank(
         @RequestParam(required = false, defaultValue = "DAILY") PeriodType periodType
     ) {
-        List<IndexPerformanceDto> indexPerformanceDtos =
-            indexDataService.getFavoriteIndexPerformanceRank(periodType);
+        List<IndexPerformanceDto> dto = indexDataService.getInterestIndexPerformance(periodType);
 
-        return ResponseEntity.ok(indexPerformanceDtos);
+        return ResponseEntity.ok(dto);
     }
 }
