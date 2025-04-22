@@ -1,7 +1,5 @@
 package com.findex.demo.indexData.index.service;
 
-import static java.util.stream.Collectors.toList;
-
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
@@ -10,18 +8,15 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
-import com.findex.demo.indexData.index.mapper.IndexDataDtoMapper;
-import com.findex.demo.indexData.index.mapper.IndexDataUpdateRequestMapper;
+import com.findex.demo.indexData.index.mapper.IndexDataMapper;
 import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.awt.print.Pageable;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -36,8 +31,6 @@ public class IndexDataService {
 
   private final IndexInfoRepository indexInfoRepository;
   private final IndexDataRepository indexDataRepository;
-
-  private final IndexDataUpdateRequestMapper indexDataUpdateRequestMapper;
 
   public CursorPageResponseIndexDataDto findAll(IndexDataSearchCondition condition) {
 
@@ -63,7 +56,7 @@ public class IndexDataService {
       hashNext = results.size() == condition.getSize();
     }
 
-    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
+    IndexDataMapper mapper = new IndexDataMapper();
     // DTO 변환
     List<IndexDataDto> content = results.stream()
         .map(data->{return mapper.toDto(data);})
@@ -97,7 +90,7 @@ public class IndexDataService {
     IndexData data = indexDataUpdateRequestMapper.toEntity(request, indexInfo);
     indexDataRepository.save(data);
 
-    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
+    IndexDataMapper mapper = new IndexDataMapper();
     return  mapper.toDto(data);
   }
 
@@ -109,7 +102,7 @@ public class IndexDataService {
 
     IndexData updated = indexDataRepository.save(indexData);
 
-    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
+    IndexDataMapper mapper = new IndexDataMapper();
 
     return mapper.toDto(updated);
   }
