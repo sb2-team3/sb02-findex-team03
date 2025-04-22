@@ -1,9 +1,11 @@
 package com.findex.demo.indexData.index.domain.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 
 @Data
+@Builder
 public class IndexDataUpdateRequest {
 
   private Double marketPrice;

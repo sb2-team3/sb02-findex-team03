@@ -1,10 +1,12 @@
 package com.findex.demo.indexData.index.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 
 @Data
+@Builder
 @Schema(description = "지수 데이터 생성 요청 DTO")
 public class IndexDataCreateRequest {
 

@@ -1,9 +1,15 @@
+
+
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
-
 group = 'com.findex'
 version = '0.0.1-SNAPSHOT'
 
@@ -41,8 +47,28 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// QueryDsl 설정
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+
+	implementation "com.querydsl:querydsl-codegen:5.0.0" // QueryDSL 코드 생성
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 }
 
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()

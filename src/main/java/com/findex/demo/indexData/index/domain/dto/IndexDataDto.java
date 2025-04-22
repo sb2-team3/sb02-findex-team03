@@ -3,9 +3,13 @@ package com.findex.demo.indexData.index.domain.dto;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@Data
+@Builder
 public class IndexDataDto {
   // 고유 식별자 및 참조
   private Integer id;
