@@ -25,11 +25,7 @@ public class IndexInfo {
   private String indexClassification;
   private String indexName;
   private int employedItemCount;
-<<<<<<< HEAD
   private LocalDateTime basePointInTime;
-=======
-  private LocalDate basePointInTime;
->>>>>>> 357bad6 (IndexInfo 임시 완성본)
   private double baseIndex;
 
   @Enumerated(EnumType.STRING)
