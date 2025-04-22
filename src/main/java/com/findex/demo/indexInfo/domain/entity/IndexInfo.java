@@ -6,6 +6,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class IndexInfo {
   private String indexClassification;
   private String indexName;
   private int employedItemCount;
-  private LocalDateTime basePointInTime;
+  private LocalDate basePointInTime;
   private double baseIndex;
 
   @Enumerated(EnumType.STRING)
