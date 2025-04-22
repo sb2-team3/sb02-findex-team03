@@ -6,7 +6,7 @@ public record IndexInfoCreateRequest(
     String indexClassification,
     String indexName,
     int employedItemsCount,
-    LocalDate basePointInTime,
+    LocalDatetime basePointInTime,
     int baseIndex,
     boolean favorite
 ) {
