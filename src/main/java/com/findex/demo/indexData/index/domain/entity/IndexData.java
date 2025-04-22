@@ -29,7 +29,7 @@ public class IndexData {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  private String date;
+  private LocalDateTime date; // 기준 일자
 
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
