@@ -34,7 +34,7 @@ public class SyncJob {
   private String worker;
 
   @Column(nullable = false)
-  private Instant jobTime;
+  private LocalDateTime jobTime;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
