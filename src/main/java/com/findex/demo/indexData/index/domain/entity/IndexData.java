@@ -1,18 +1,20 @@
 package com.findex.demo.indexData.index.domain.entity;
 
+import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.Instant;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+import lombok.Getter;
+
+
+@Entity
 @Getter
 public class IndexData {
 
@@ -41,5 +43,16 @@ public class IndexData {
   private Long tradingPrice;
   private Long marketTotalAmount;
 
+  public void updateIndexData(IndexDataUpdateRequest request) {
+    this.openPrice= request.getMarketPrice();
+    this.closePrice = request.getClosingPrice();
+    this.highPrice= request.getHighPrice();
+    this.lowPrice= request.getLowPrice();
+    this.versus=request.getVersus();
+    this.fluationRate=request.getFluctuationRate();
+    this.tradingQuantity=request.getTradingQuantity();
+    this.tradingPrice-=request.getTradingPrice();
+    this.marketTotalAmount = request.getMarketTotalAmount();
+  }
 }
 

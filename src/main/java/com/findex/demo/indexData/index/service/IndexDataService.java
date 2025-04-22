@@ -20,6 +20,8 @@ public class IndexDataService {
 
   private final IndexInfoRepository indexInfoRepository;
   private final IndexDataRepository indexDataRepository;
+  private final IndexDataDtoMapper indexDataDtoMapper;
+  private final IndexDataUpdateRequestMapper indexDataUpdateRequestMapper;
 
   public IndexDataDto create(IndexDataCreateRequest request) {
 
@@ -34,34 +36,25 @@ public class IndexDataService {
     }
 
     // 3. 등록
-    IndexDataUpdateRequestMapper mapper = new IndexDataUpdateRequestMapper();
-    IndexData data = mapper.toEntity(request);
+    IndexData data = indexDataUpdateRequestMapper.toEntity(request, indexInfo);
     indexDataRepository.save(data);
 
-    IndexDataDtoMapper dtoMapper = new IndexDataDtoMapper();
+
 
    ;
 
-    return  dtoMapper.toDto(data);
+    return  indexDataDtoMapper.toDto(data);
   }
 
   public IndexDataDto update(Integer id, IndexDataUpdateRequest request) {
     IndexData indexData = indexDataRepository.findById(id)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다"));
 
-    indexData.setOpenPrice(request.getMarketPrice());
-    indexData.setClosePrice(request.getClosingPrice());
-    indexData.setHighPrice(request.getHighPrice());
-    indexData.setLowPrice(request.getLowPrice());
-    indexData.setVersus(request.getVersus());
-    indexData.setFluationRate(request.getFluctuationRate());
-    indexData.setTradingQuantity(request.getTradingQuantity());
-    indexData.setTradingPrice(request.getTradingPrice());
-    indexData.setMarketTotalAmount(request.getMarketTotalAmount());
+    indexData.updateIndexData(request);
 
     IndexData updated = indexDataRepository.save(indexData);
-    IndexDataDtoMapper mapper = new IndexDataDtoMapper();
-    return mapper.toDto(updated);
+
+    return indexDataDtoMapper.toDto(updated);
   }
 
   /**

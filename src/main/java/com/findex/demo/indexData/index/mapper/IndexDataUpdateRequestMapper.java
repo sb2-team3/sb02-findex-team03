@@ -2,34 +2,18 @@ package com.findex.demo.indexData.index.mapper;
 
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
+import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import lombok.NoArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@NoArgsConstructor
-public class IndexDataUpdateRequestMapper implements EntityMapper<IndexDataCreateRequest,IndexData> {
 
-  IndexInfoRepositroy indexInfoRepositroy;
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface IndexDataUpdateRequestMapper {
 
-  @Override
-  public IndexData toEntity(IndexDataCreateRequest dto) {
-    IndexData data = new IndexData();
-    data.setIndexInfo(indexInfoRepositroy.findById(dto.getIndexInfoId()) );
-    data.setDate(dto.getBaseDate());
-    data.setOpenPrice(dto.getMarketPrice());
-    data.setClosePrice(dto.getMarketPrice());
-    data.setHighPrice(dto.getHighPrice());
-    data.setLowPrice(dto.getLowPrice());
-    data.setVersus(dto.getVersus());
-    data.setFluationRate(dto.getFluctuationRate());
-    data.setTradingQuantity(dto.getTradingQuantity());
-    data.setTradingPrice(dto.getTradingPrice());
-    data.setMarketTotalAmount(dto.getMarketTotalAmount());
-    data.setSourceType(SourceType.USER);
-    return data;
-  }
-
-  @Override
-  public IndexDataCreateRequest toDto(IndexData entity) {
-    return null;
-  }
+  @Mapping(target = "indexInfo", source = "indexInfo")
+  @Mapping(target = "sourceType", expression = "java(SourceType.USER)")
+  public IndexData toEntity(IndexDataCreateRequest dto, IndexInfo indexInfo);
 }

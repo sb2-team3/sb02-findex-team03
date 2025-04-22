@@ -3,7 +3,6 @@ package com.findex.demo.indexData.index.domain.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.math.Double;
 
 @Data
 @Schema(description = "지수 데이터 생성 요청 DTO")
