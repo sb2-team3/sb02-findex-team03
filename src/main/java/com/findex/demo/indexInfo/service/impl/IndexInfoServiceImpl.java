@@ -9,6 +9,7 @@ import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
+import com.findex.demo.indexInfo.mapper.IndexInfoMapperV1;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
 import jakarta.transaction.Transactional;
@@ -40,13 +41,13 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     indexInfo = indexInfoRepository.save(indexInfo);
 
-    return indexInfoMapper.toDto(indexInfo);
+    return IndexInfoMapperV1.toIndexInfoDto(indexInfo);
   }
 
 
   @Override
   @Transactional
-  public IndexInfoDto updateIndexInfo(Long id, IndexInfoUpdateRequest updateRequest) {
+  public IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
 
@@ -59,15 +60,18 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
   @Override
   @Transactional
-  public void deleteIndexInfo(Long id) {
+  public void deleteIndexInfo(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
 
     indexInfoRepository.delete(indexInfo);
   }
 
+  /*
+  TODO : 읽이 전용 @Transactional(readOnly = true) 구현 시도 해보세요
+   */
   @Override
-  public IndexInfoDto getIndexInfo(Long id) {
+  public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
         .map(indexInfoMapper::toDto)
         .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));

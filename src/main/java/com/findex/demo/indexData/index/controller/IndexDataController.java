@@ -26,42 +26,46 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexDataController {
 
   private final IndexDataService indexDataService;
+
+  /*
+  TODO : 목요일 에  같이 구현
+   */
   /**
    * 지수 데이터 목록조회
    */
-  @GetMapping
-  public ResponseEntity<CursorPageResponseIndexDataDto> create(@RequestBody @Valid
-  IndexDataSearchCondition request) {
-    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
-    return ResponseEntity.status(HttpStatus.OK).body(dto);
-  }
+//  @GetMapping
+//  public ResponseEntity<CursorPageResponseIndexDataDto> create(@RequestBody @Valid
+//  IndexDataSearchCondition request) {
+//    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
+//    return ResponseEntity.status(HttpStatus.OK).body(dto);
+//  }
   /**
 
   /**
    * 지수 데이터 생성
    */
   @PostMapping
-  public ResponseEntity<IndexDataDto> create(@RequestBody @Valid IndexDataCreateRequest request) {
+  public ResponseEntity<IndexDataDto> create(@RequestBody IndexDataCreateRequest request) {
     IndexDataDto created = indexDataService.create(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
   /**
    * 지수 데이터 수정
    */
-  @PutMapping("/{id}")
+  @PutMapping("/{indexDataId}")
   public ResponseEntity<IndexDataDto> update(
-      @PathVariable Integer id,
-      @RequestBody @Valid IndexDataUpdateRequest request) {
-    IndexDataDto updated = indexDataService.update(id, request);
+      @PathVariable Integer indexDataId,
+      @RequestBody  IndexDataUpdateRequest request) {
+    IndexDataDto updated = indexDataService.update(indexDataId, request);
     return ResponseEntity.ok(updated);
   }
 
   /**
    * 지수 데이터 삭제
    */
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@PathVariable Integer id) {
-    indexDataService.delete(id);
+  @DeleteMapping("/{indexDataId}")
+  public ResponseEntity<Void> delete(@PathVariable Integer indexDataId) {
+    indexDataService.delete(indexDataId);
     return ResponseEntity.noContent().build(); // HTTP 204
   }
 }

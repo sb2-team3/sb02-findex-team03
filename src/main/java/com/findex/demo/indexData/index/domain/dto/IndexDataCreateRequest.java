@@ -1,20 +1,18 @@
 package com.findex.demo.indexData.index.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import java.time.LocalDate;
+import lombok.Getter;
 
-
-@Data
-@Builder
+@Getter
 @Schema(description = "지수 데이터 생성 요청 DTO")
 public class IndexDataCreateRequest {
 
   @Schema(description = "지수 정보 ID", example = "1")
-  private Long indexInfoId;
+  private Integer indexInfoId;
 
   @Schema(description = "기준 일자", example = "2024-04-21")
-  private String baseDate; // or LocalDate로 변환 가능
+  private LocalDate baseDate; // or LocalDate로 변환 가능
 
   @Schema(description = "시가", example = "2500.75")
   private Double marketPrice;

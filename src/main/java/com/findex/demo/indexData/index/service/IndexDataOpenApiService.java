@@ -5,6 +5,7 @@ import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
+
+/*
 @Service
 @RequiredArgsConstructor
 public class IndexDataOpenApiService {
@@ -67,3 +70,4 @@ public class IndexDataOpenApiService {
         .build();
   }
 }
+*/
