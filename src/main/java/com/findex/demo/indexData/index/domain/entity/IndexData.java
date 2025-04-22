@@ -12,11 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import java.time.LocalDate;
 import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Getter
+@Setter
 public class IndexData extends BaseTimeEntity {
 
   @Id
@@ -27,7 +30,7 @@ public class IndexData extends BaseTimeEntity {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  private String date;
+  private LocalDate baseDate;
 
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;

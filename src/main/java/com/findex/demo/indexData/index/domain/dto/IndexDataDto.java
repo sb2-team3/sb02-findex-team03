@@ -2,6 +2,7 @@ package com.findex.demo.indexData.index.domain.dto;
 
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class IndexDataDto {
   private Integer indexInfoId;
 
   // 날짜 및 소스 타입
-  private String baseDate;
+  private LocalDate baseDate;
   private SourceType sourceType;
 
   // 숫자 값 (소수)

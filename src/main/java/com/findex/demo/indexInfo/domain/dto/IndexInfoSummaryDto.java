@@ -1,7 +1,7 @@
 package com.findex.demo.indexInfo.domain.dto;
 
 public record IndexInfoSummaryDto(
-    Long id,
+    Integer id,
     String indexClassification,
     String indexName
 ) {
