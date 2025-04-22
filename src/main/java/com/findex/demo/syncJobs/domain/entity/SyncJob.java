@@ -1,5 +1,6 @@
 package com.findex.demo.syncJobs.domain.entity;
 
+import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
@@ -9,7 +10,6 @@ import java.time.Instant;
 @Entity
 @Table(name = "sync_jobs")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,12 +19,13 @@ public class SyncJob {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "index_info_id")
+  private IndexInfo indexInfo;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private JobType jobType;
-
-  @Column(nullable = false)
-  private Long indexInfoId;
 
   @Column(nullable = false)
   private Instant targetDate;
@@ -38,5 +39,7 @@ public class SyncJob {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Result result;
+
+
 
 }
