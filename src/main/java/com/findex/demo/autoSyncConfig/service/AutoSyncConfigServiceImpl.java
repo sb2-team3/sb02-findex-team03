@@ -3,12 +3,11 @@ package com.findex.demo.autoSyncConfig.service;
 import com.findex.demo.autoSyncConfig.domain.dto.AutoSyncConfigDto;
 import com.findex.demo.autoSyncConfig.domain.dto.AutoSyncConfigUpdateRequest;
 import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
-import com.findex.demo.autoSyncConfig.domain.mapper.AutoSyncConfigMapper;
+import com.findex.demo.autoSyncConfig.mapper.AutoSyncConfigMapper;
 import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,7 +5,7 @@ import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sync_jobs")

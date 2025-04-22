@@ -6,8 +6,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,12 +31,4 @@ public class IndexInfo {
   private SourceType sourceType;
 
   private boolean favorite = false;
-
-//  public void setEmployedItemCount(int employedItemCount) {
-//    this.employedItemCount = employedItemCount;
-//  }
-//
-//  public void setSourceType(SourceType sourceType) {
-//    this.sourceType = sourceType;
-//  }
 }

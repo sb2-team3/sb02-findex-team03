@@ -1,14 +1,14 @@
 package com.findex.demo.indexInfo.domain.dto;
 
 import com.findex.demo.indexInfo.domain.entity.SourceType;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record IndexInfoDto(
-    Long id,
+    Integer id,
     String indexClassification,
     String indexName,
     int employedItemsCount,
-    LocalDatetime basePointInTime,
+    LocalDateTime basePointInTime,
     int baseIndex,
     SourceType sourceType,
     boolean favorite

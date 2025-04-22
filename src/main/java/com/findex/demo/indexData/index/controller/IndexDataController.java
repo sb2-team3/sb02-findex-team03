@@ -40,11 +40,11 @@ public class IndexDataController {
   /**
    * 지수 데이터 생성
    */
-  @PostMapping
-  public ResponseEntity<IndexDataDto> create(@RequestBody @Valid IndexDataCreateRequest request) {
-    IndexDataDto created = indexDataService.create(request);
-    return ResponseEntity.status(HttpStatus.CREATED).body(created);
-  }
+//  @PostMapping
+//  public ResponseEntity<IndexDataDto> create(@RequestBody @Valid IndexDataCreateRequest request) {
+//    IndexDataDto created = indexDataService.create(request);
+//    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+//  }
   /**
    * 지수 데이터 수정
    */
