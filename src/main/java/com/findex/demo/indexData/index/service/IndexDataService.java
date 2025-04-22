@@ -83,7 +83,7 @@ public class IndexDataService {
        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다."));
 
     // 2. 중복 확인
-    boolean exists = indexDataRepository.existsByIndexInfoAndDate(indexInfo, request.getBaseDate());
+    boolean exists = indexDataRepository.existsByIndexInfoAndBaseDate(indexInfo, request.getBaseDate());
     if (exists) {
       throw new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다.");
     }
