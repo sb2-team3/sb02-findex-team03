@@ -8,24 +8,24 @@ import java.util.List;
 
 public interface IndexInfoService {
 
-  IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
+    IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
 
-  IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest);
+    IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest);
 
-  void deleteIndexInfo(Integer id);
+    void deleteIndexInfo(Integer id);
 
-  IndexInfoDto getIndexInfo(Integer id);
+    IndexInfoDto getIndexInfo(Integer id);
 
-  List<IndexInfoSummaryDto> getIndexInfoSummaries();
+    List<IndexInfoSummaryDto> getIndexInfoSummaries();
 
-  List<IndexInfoDto> getIndexInfoList(
-      String indexClassification,
-      String indexName,
-      Boolean favorite,
-      Long idAfter,
-      String cursor,
-      String sortField,
-      String sortDirection,
-      int size
-  );
+    List<IndexInfoDto> getIndexInfoList(
+            String indexClassification,
+            String indexName,
+            Boolean favorite,
+            Long idAfter,
+            String cursor,
+            String sortField,
+            String sortDirection,
+            int size
+    );
 }
