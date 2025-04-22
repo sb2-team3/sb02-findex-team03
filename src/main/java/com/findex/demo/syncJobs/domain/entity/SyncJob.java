@@ -7,7 +7,7 @@ import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
-import java.time.Instant;
+
 
 @Entity
 @Table(name = "sync_jobs")
@@ -41,5 +41,7 @@ public class SyncJob extends BaseTimeEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Result result;
+
+
 
 }

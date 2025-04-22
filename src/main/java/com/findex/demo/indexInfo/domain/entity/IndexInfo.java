@@ -1,26 +1,35 @@
 package com.findex.demo.indexInfo.domain.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
+@Setter
 @NoArgsConstructor
 public class IndexInfo {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String indexClassification;
   private String indexName;
   private int employedItemCount;
-  private Instant basePointInTime;
+  private LocalDate basePointInTime;
   private double baseIndex;
-  private boolean favorite;
+
+  @Enumerated(EnumType.STRING)
+  private SourceType sourceType;
+
+  private boolean favorite = false;
 }
