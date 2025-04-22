@@ -8,6 +8,16 @@ import java.util.List;
 
 public interface IndexInfoService {
 
+  IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
+
+  IndexInfoDto updateIndexInfo(Long id, IndexInfoUpdateRequest updateRequest);
+
+  void deleteIndexInfo(Long id);
+
+  IndexInfoDto getIndexInfo(Long id);
+
+  List<IndexInfoSummaryDto> getIndexInfoSummaries();
+
   List<IndexInfoDto> getIndexInfoList(
       String indexClassification,
       String indexName,
@@ -18,14 +28,4 @@ public interface IndexInfoService {
       String sortDirection,
       int size
   );
-
-  IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
-
-  IndexInfoDto getIndexInfo(Long id);
-
-  void deleteIndexInfo(Long id);
-
-  IndexInfoDto updateIndexInfo(Long id, IndexInfoUpdateRequest updateRequest);
-
-  List<IndexInfoSummaryDto> getIndexInfoSummaries();
 }

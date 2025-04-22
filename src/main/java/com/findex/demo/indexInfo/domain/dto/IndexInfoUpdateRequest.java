@@ -1,11 +1,11 @@
 package com.findex.demo.indexInfo.domain.dto;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 public record IndexInfoUpdateRequest(
-    int employedItemCount,
-    Instant basePointInTime,
-    double baseIndex,
+    int employedItemsCount,
+    LocalDate basePointInTime,
+    int baseIndex,
     boolean favorite
 ) {
 

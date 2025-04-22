@@ -1,10 +1,13 @@
 package com.findex.demo.indexInfo.service.impl;
 
+import com.findex.demo.global.error.CustomException;
+import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoSummaryDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
@@ -28,15 +31,18 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     String indexName = createRequest.indexName();
 
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
-      throw new IllegalArgumentException("해당 지수 분류명과 지수명 조합은 이미 존재합니다.");
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "지수 분류명과 지수명은 중복될 수 없습니다.");
     }
 
     IndexInfo indexInfo = indexInfoMapper.toEntity(createRequest);
 
-    indexInfoRepository.save(indexInfo);
+    indexInfo.setSourceType(SourceType.USER);
+
+    indexInfo = indexInfoRepository.save(indexInfo);
 
     return indexInfoMapper.toDto(indexInfo);
   }
+
 
   @Override
   @Transactional
