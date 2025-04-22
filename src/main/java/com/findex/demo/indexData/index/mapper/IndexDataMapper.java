@@ -9,7 +9,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 public class IndexDataMapper {
 
 
-  public IndexDataDto toDto(IndexData entity) {
+  public IndexDataDto toIndexDto(IndexData entity) {
     return new IndexDataDto(
         entity.getId(),
         entity.getIndexInfo().getId(),
@@ -27,5 +27,20 @@ public class IndexDataMapper {
     );
   }
 
-
+  public static IndexData toIndexData(IndexDataCreateRequest dto, IndexInfo indexInfo) {
+    return IndexData.builder()
+            .indexInfo(indexInfo)
+            .baseDate(dto.getBaseDate())
+            .openPrice(dto.getMarketPrice())
+            .closePrice(dto.getClosingPrice())
+            .highPrice(dto.getHighPrice())
+            .lowPrice(dto.getLowPrice())
+            .versus(dto.getVersus())
+            .fluationRate(dto.getFluctuationRate())
+            .tradingQuantity(dto.getTradingQuantity())
+            .tradingPrice(dto.getTradingPrice())
+            .marketTotalAmount(dto.getMarketTotalAmount())
+            .sourceType(SourceType.USER) // 기본값 지정
+            .build();
+  }
 }
