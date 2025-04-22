@@ -22,6 +22,12 @@ public class AutoSyncConfig {
     @OneToOne
     @JoinColumn(name = "index_info_id")
     private IndexInfo indexInfo;
-
+  
     private Boolean enabled;
+
+    public void update(Boolean enabled) {
+        if (enabled != null) {
+            this.enabled = enabled;
+        }
+    }
 }
