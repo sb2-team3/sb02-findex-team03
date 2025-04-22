@@ -12,12 +12,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
 
     private final AutoSyncConfigRepository autoSyncConfigRepository;
     private final AutoSyncConfigMapper autoSyncConfigMapper;
-   // private final IndexInfoRepository indexInfoRepository;
+
+    public AutoSyncConfigServiceImpl(AutoSyncConfigRepository autoSyncConfigRepository,
+                                     AutoSyncConfigMapper autoSyncConfigMapper) {
+        this.autoSyncConfigRepository = autoSyncConfigRepository;
+        this.autoSyncConfigMapper = autoSyncConfigMapper;
+    }
+    // private final IndexInfoRepository indexInfoRepository;
 
 
     @Override

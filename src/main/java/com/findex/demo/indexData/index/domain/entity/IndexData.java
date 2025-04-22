@@ -2,6 +2,7 @@ package com.findex.demo.indexData.index.domain.entity;
 
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
+@Entity
 public class IndexData {
 
   @Id
