@@ -5,7 +5,9 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,14 +22,14 @@ import lombok.Setter;
 public class IndexData {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  private String date;
+  private LocalDateTime date; // 기준 일자
 
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
