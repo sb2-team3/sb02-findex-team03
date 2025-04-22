@@ -14,7 +14,13 @@ public class AutoSyncConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private Boolean enabled;
+
+    public void update(Boolean enabled) {
+        if (enabled != null) {
+            this.enabled = enabled;
+        }
+    }
 }
