@@ -68,69 +68,43 @@ public class IndexData extends BaseTimeEntity {
   }
 
 
+  public void update(IndexDataUpdateRequest request) {
+    if (request.getMarketPrice() != null) {
+      this.openPrice = request.getMarketPrice();
+    }
 
-  public void updateIndexData(IndexDataUpdateRequest request) {
-    this.openPrice= request.getMarketPrice();
-    this.closePrice = request.getClosingPrice();
-    this.highPrice= request.getHighPrice();
-    this.lowPrice= request.getLowPrice();
-    this.versus=request.getVersus();
-    this.fluationRate=request.getFluctuationRate();
-    this.tradingQuantity=request.getTradingQuantity();
-    this.tradingPrice-=request.getTradingPrice();
-    this.marketTotalAmount = request.getMarketTotalAmount();
+    if (request.getClosingPrice() != null) {
+      this.closePrice = request.getClosingPrice();
+    }
+
+    if (request.getHighPrice() != null) {
+      this.highPrice = request.getHighPrice();
+    }
+
+    if (request.getLowPrice() != null) {
+      this.lowPrice = request.getLowPrice();
+    }
+
+    if (request.getVersus() != null) {
+      this.versus = request.getVersus();
+    }
+
+    if (request.getFluctuationRate() != null) {
+      this.fluationRate = request.getFluctuationRate();
+    }
+
+    if (request.getTradingQuantity() != null) {
+      this.tradingQuantity = request.getTradingQuantity();
+    }
+
+    if (request.getTradingPrice() != null) {
+      this.tradingPrice = request.getTradingPrice();
+    }
+
+    if (request.getMarketTotalAmount() != null) {
+      this.marketTotalAmount = request.getMarketTotalAmount();
+    }
   }
-
-  public void update(IndexDataCreateRequest dto, IndexInfo indexInfo) {
-    if (indexInfo != null) {
-      this.indexInfo = indexInfo;
-    }
-
-    if (dto.getBaseDate() != null) {
-      this.baseDate = dto.getBaseDate();
-    }
-
-    if (dto.getMarketPrice() != null) {
-      this.openPrice = dto.getMarketPrice();
-    }
-
-    if (dto.getClosingPrice() != null) {
-      this.closePrice = dto.getClosingPrice();
-    }
-
-    if (dto.getHighPrice() != null) {
-      this.highPrice = dto.getHighPrice();
-    }
-
-    if (dto.getLowPrice() != null) {
-      this.lowPrice = dto.getLowPrice();
-    }
-
-    if (dto.getVersus() != null) {
-      this.versus = dto.getVersus();
-    }
-
-    if (dto.getFluctuationRate() != null) {
-      this.fluationRate = dto.getFluctuationRate();
-    }
-
-    if (dto.getTradingQuantity() != null) {
-      this.tradingQuantity = dto.getTradingQuantity();
-    }
-
-    if (dto.getTradingPrice() != null) {
-      this.tradingPrice = dto.getTradingPrice();
-    }
-
-    if (dto.getMarketTotalAmount() != null) {
-      this.marketTotalAmount = dto.getMarketTotalAmount();
-    }
-
-    // 기본값 지정은 null 체크 안 하고 바로 적용
-    this.sourceType = SourceType.USER;
-  }
-
-
 
 }
 

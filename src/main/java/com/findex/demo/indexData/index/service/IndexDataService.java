@@ -97,15 +97,10 @@ public class IndexDataService {
 
   public IndexDataDto update(Integer id, IndexDataUpdateRequest request) {
     IndexData indexData = indexDataRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서 코드는 필수 입니다"));
-
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
     indexData.update(request);
-
     IndexData updated = indexDataRepository.save(indexData);
-
-    IndexDataMapper mapper = new IndexDataMapper();
-
-    return mapper.toDto(updated);
+    return IndexDataMapper.toIndexDto(updated);
   }
 
   /**
@@ -117,6 +112,7 @@ public class IndexDataService {
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE,"부서코드는 필수 입니다."));
     indexDataRepository.delete(indexData);
   }
+
   private String encodeCursor(Integer id) {
     return Base64.getEncoder().encodeToString(("{\"id\":" + id + "}").getBytes(StandardCharsets.UTF_8));
   }
