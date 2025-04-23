@@ -1,14 +1,16 @@
 package com.findex.demo.indexData.index.domain.dto;
 
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class IndexDataSearchCondition {
-  private Long indexInfoId;
+  private Integer indexInfoId;
   private LocalDate startDate;
   private LocalDate endDate;
-  private Long idAfter;
+  private Integer idAfter;
   private String cursor;
   private String sortField = "baseDate";
   private String sortDirection = "desc";

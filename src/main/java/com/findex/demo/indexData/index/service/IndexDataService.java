@@ -1,5 +1,6 @@
 package com.findex.demo.indexData.index.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
@@ -13,12 +14,13 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import java.awt.print.Pageable;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -31,47 +33,51 @@ public class IndexDataService {
   private final IndexInfoRepository indexInfoRepository;
   private final IndexDataRepository indexDataRepository;
 
-  @Transactional
-  public CursorPageResponseIndexDataDto findAll(IndexDataSearchCondition condition) {
+  @Transactional(readOnly = true)
+  public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
 
-    // 커서 기반 처리 기준 설정
-    Pageable pageable = (Pageable) PageRequest.of(
-        0,
-        condition.getSize(),
-        Sort.by(Direction.fromString(condition.getSortDirection()), condition.getSortField())
-    );
+    // 커서 디코딩 (Base64 → ID)
+    Integer cursorId = decodeCursor(condition.getCursor());
 
-    // Querydsl 또는 JPA Criteria를 활용한 필터링, 커서 기반 쿼리 수행
-    List<IndexData> results = indexDataRepository.findByCondition(condition, pageable);
+    // Page size + 1 → hasNext 판별용
+    int pageSize = condition.getSize() != 0 ? condition.getSize() : 10;
+    Pageable pageable = PageRequest.of(0, pageSize + 1,
+        Sort.by(Sort.Direction.fromString(condition.getSortDirection()), condition.getSortField()));
 
-    // 다음 커서 계산 (마지막 요소 ID 기준)
+    // 실제 데이터 조회
+    List<IndexData> results = indexDataRepository.findWithCursorPaging(condition.getIndexInfoId(),
+        condition.getStartDate(),condition.getEndDate(), cursorId, pageable);
+
+    // hasNext 판별
+    boolean hasNext = results.size() > pageSize;
+
+    // 커서 응답 처리용: 실제 응답은 size 만큼만 자르기
+    List<IndexData> pagedResult = hasNext ? results.subList(0, pageSize) : results;
+
+    IndexDataMapper indexDataMapper = new IndexDataMapper();
+    List<IndexDataDto> content = pagedResult.stream()
+        .map(indexData -> indexDataMapper.toIndexDto(indexData))
+        .toList();
+
     String nextCursor = null;
     Integer nextIdAfter = null;
-    boolean hashNext = false;
 
-    if (!results.isEmpty()) {
-      IndexData last = results.get(results.size() - 1);
-      nextCursor = encodeCursor(last.getId());
-      nextIdAfter = last.getId();
-      hashNext = results.size() == condition.getSize();
+    if (hasNext && !pagedResult.isEmpty()) {
+      Integer lastId = pagedResult.get(pagedResult.size() - 1).getId();
+      nextCursor = encodeCursor(lastId);
+      nextIdAfter = lastId;
     }
 
-    IndexDataMapper mapper = new IndexDataMapper();
-    // DTO 변환
-    List<IndexDataDto> content = results.stream()
-        .map(data->{return mapper.toIndexDto(data);})
-        .toList();
-    ;
-
     return CursorPageResponseIndexDataDto.<IndexDataDto>builder()
-        .contents(content)
+        .content(content)
         .nextCursor(nextCursor)
         .nextIdAfter(nextIdAfter)
-        .size(condition.getSize())
-        .totalElements(indexDataRepository.countByCondition(condition)) // 또는 null
-        .hashNext(hashNext)
+        .size(pageSize)
+        .totalElements(content.size()) // 전체 count는 성능상 생략 권장
+        .hashNext(hasNext)
         .build();
   }
+
 
 
   @Transactional
@@ -112,7 +118,19 @@ public class IndexDataService {
     indexDataRepository.delete(indexData);
   }
 
-  private String encodeCursor(Integer id) {
+
+  public String encodeCursor(Integer id) {
     return Base64.getEncoder().encodeToString(("{\"id\":" + id + "}").getBytes(StandardCharsets.UTF_8));
   }
+
+  public Integer decodeCursor(String cursor) {
+    try {
+      String json = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
+      int cursor_ = new ObjectMapper().readTree(json).path("id").asInt();
+      return Integer.valueOf(cursor_);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
 }

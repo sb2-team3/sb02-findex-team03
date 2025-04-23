@@ -43,7 +43,7 @@ public class IndexData extends BaseTimeEntity {
   private Double lowPrice;
 
   private Double versus;
-  private Double fluationRate;
+  private Double fluctuationRate;
 
   private Long tradingQuantity;
   private Long tradingPrice;
@@ -51,7 +51,7 @@ public class IndexData extends BaseTimeEntity {
 
   @Builder
   public IndexData(IndexInfo indexInfo, LocalDate baseDate, SourceType sourceType, Double openPrice,
-                   Double closePrice, Double highPrice, Double lowPrice, Double versus, Double fluationRate,
+                   Double closePrice, Double highPrice, Double lowPrice, Double versus, Double fluctuationRate,
                    Long tradingQuantity, Long tradingPrice, Long marketTotalAmount) {
     this.indexInfo = indexInfo;
     this.baseDate = baseDate;
@@ -61,7 +61,7 @@ public class IndexData extends BaseTimeEntity {
     this.highPrice = highPrice;
     this.lowPrice = lowPrice;
     this.versus = versus;
-    this.fluationRate = fluationRate;
+    this.fluctuationRate = fluctuationRate;
     this.tradingQuantity = tradingQuantity;
     this.tradingPrice = tradingPrice;
     this.marketTotalAmount = marketTotalAmount;
@@ -90,7 +90,7 @@ public class IndexData extends BaseTimeEntity {
     }
 
     if (request.getFluctuationRate() != null) {
-      this.fluationRate = request.getFluctuationRate();
+      this.fluctuationRate = request.getFluctuationRate();
     }
 
     if (request.getTradingQuantity() != null) {
