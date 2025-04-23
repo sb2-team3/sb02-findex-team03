@@ -17,5 +17,5 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
 
   List<IndexInfo> findByIndexClassification(String indexClassification);
 
-  List<IndexInfo> findByIndexName(String indexName);
+  IndexInfo findByIndexName(String indexName);
 }

@@ -15,11 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class SyncJobDto {
-  private Long id;
+  private Integer id;
 
   private JobType jobType;
 
-  private Long indexInfoId;
+  private Integer indexInfoId;
 
   @JsonFormat(pattern = "yyyy-MM-dd")
   private Instant targetDate;
