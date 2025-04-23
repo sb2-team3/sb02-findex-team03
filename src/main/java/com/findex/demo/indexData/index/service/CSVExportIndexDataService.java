@@ -11,7 +11,6 @@ import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.stereotype.Service;
 
 @Service
-
 public class CSVExportIndexDataService {
   IndexDataRepository indexDataRepository;
   public byte[] downloadCsv() throws Exception {
