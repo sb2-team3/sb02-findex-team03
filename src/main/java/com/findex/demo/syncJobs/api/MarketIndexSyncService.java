@@ -8,6 +8,7 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 
 @Slf4j
 @Service
@@ -44,10 +44,10 @@ public class MarketIndexSyncService {
         for (int page = 1; page <= TOTAL_PAGES; page++) {
             try {
                 String apiUrl = baseUrl +
-                        "?serviceKey=" + serviceKey +
-                        "&resultType=json" +
-                        "&pageNo=" + page +
-                        "&numOfRows=" + numOfRows;
+                    "?serviceKey=" + serviceKey +
+                    "&resultType=json" +
+                    "&pageNo=" + page +
+                    "&numOfRows=" + numOfRows;
 
                 log.info("📤 [Page {}] 요청 URI: {}", page, apiUrl);
 
@@ -55,7 +55,7 @@ public class MarketIndexSyncService {
                 String responseString = restTemplate.getForObject(uri, String.class);
 
                 JsonNode itemNode = objectMapper.readTree(responseString)
-                        .path("response").path("body").path("items").path("item");
+                    .path("response").path("body").path("items").path("item");
 
                 if (itemNode.isMissingNode() || itemNode.isNull()) {
                     log.warn("⚠️ [Page {}] 'item' 노드 없음, 건너뜀", page);
@@ -74,7 +74,7 @@ public class MarketIndexSyncService {
 
             } catch (Exception e) {
                 log.error("❌ 예외 발생: {}", e.getMessage(), e);
-                throw new CustomException(ErrorCode.PATH_NOT_FOUND, "API 호출 또는 파싱 중 오류 발생: page ");
+                throw new CustomException(ErrorCode.PATH_NOT_FOUND, "API 호출 또는 파싱 중 오류 발생: page " + page);
             }
         }
 
@@ -92,20 +92,30 @@ public class MarketIndexSyncService {
         }
 
         ExternalIndexInfoDto dto = ExternalIndexInfoDto.builder()
-                .indexClassification(indexClassification)
-                .indexName(indexName)
-                .employedItemCount(item.path("epyItmsCnt").asInt())
-                .basePointInTimeRaw(item.path("basPntm").asText())
-                .basId(item.path("basIdx").asInt())
-                .build();
+            .indexClassification(indexClassification)
+            .indexName(indexName)
+            .employedItemCount(item.path("epyItmsCnt").asInt())
+            .basePointInTimeRaw(item.path("basPntm").asText())
+            .basId(item.path("basIdx").asInt())
+            .build();
 
-        IndexInfo indexInfo = OpenApIIndexInfoMapper.toIndexInfo(dto);
-        log.info("indexInfo = {}", indexInfo.getIndexName());
         try {
-            indexInfoRepository.save(indexInfo);
-            log.info("✅ 저장 완료: {}", indexInfo.getIndexName());
-        } catch (DataIntegrityViolationException e) {
-            log.warn("⚠️ 중복된 지수 정보 무시: {}", key);
+            Optional<IndexInfo> existing = indexInfoRepository
+                .findByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
+
+            if (existing.isPresent()) {
+                IndexInfo indexInfo = existing.get();
+                indexInfo.updateFromDto(dto);
+                indexInfoRepository.save(indexInfo);
+                log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
+            } else {
+                IndexInfo indexInfo = OpenApIIndexInfoMapper.toIndexInfo(dto);
+                indexInfoRepository.save(indexInfo);
+                log.info("✅ 신규 저장 완료: {}", indexInfo.getIndexName());
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 저장 중 예외 발생: {}", e.getMessage(), e);
         }
     }
 }
