@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DataService {
 
-    IndexInfoRepository indexInfoRepository;
-    IndexDataRepository dataRepository;
+    private final IndexInfoRepository indexInfoRepository;
+    private final IndexDataRepository dataRepository;
 
     @Transactional(readOnly = true)
     public IndexChartDto getIndexChart(PeriodType periodType, Integer indexInfoId) {
@@ -63,6 +63,7 @@ public class DataService {
     }
 
     // 특정 지수 성과 순위 조회.
+    @Transactional(readOnly = true)
     public List<RankedIndexPerformanceDto> getIndexPerformanceRank(PeriodType periodType,
         Integer indexInfoId, int limit) {
 
