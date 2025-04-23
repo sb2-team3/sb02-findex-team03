@@ -21,5 +21,7 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
 
   List<IndexInfo> findByIndexClassification(String indexClassification);
 
-  IndexInfo findByIndexName(String indexName);
+  @Query("SELECT i FROM IndexInfo i WHERE i.indexName = :indexName")
+  IndexInfo findByIndexName(@Param("indexName") String indexName);
+
 }

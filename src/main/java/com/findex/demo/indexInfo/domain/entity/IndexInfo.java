@@ -23,6 +23,7 @@ public class IndexInfo {
   private Integer id;
 
   private String indexClassification;
+
   private String indexName;
   private int employedItemCount;
   private LocalDate basePointInTime;
