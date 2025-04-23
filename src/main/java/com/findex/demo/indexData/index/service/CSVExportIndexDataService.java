@@ -23,7 +23,7 @@ public class CSVExportIndexDataService {
 
       // CSV Header
       String[] header = {"id", "infoId", "baseDate", "sourceType", "openPrice", "closePrice",
-      "highPrice", "lowPrice", "versus","fluationRate","trandingQuantity","trandingPrice",
+      "highPrice", "lowPrice", "versus","fluctuationRate","trandingQuantity","trandingPrice",
       "marketTotalAmount"};
       csvWriter.writeNext(header);
 
@@ -39,7 +39,7 @@ public class CSVExportIndexDataService {
             data.getHighPrice().toString(),
             data.getLowPrice().toString(),
             data.getVersus().toString(),
-            data.getFluationRate().toString(),
+            data.getFluctuationRate().toString(),
             data.getTradingQuantity().toString(),
             data.getTradingPrice().toString(),
             data.getMarketTotalAmount().toString(),

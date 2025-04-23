@@ -8,7 +8,9 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -36,8 +39,20 @@ public class IndexDataController {
    * 지수 데이터 목록조회
    */
   @GetMapping
-  public ResponseEntity<CursorPageResponseIndexDataDto> create(@RequestBody @Valid
-  IndexDataSearchCondition request) {
+  public ResponseEntity<CursorPageResponseIndexDataDto> findAll(
+      @RequestParam(required = false) Integer indexInfoId,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam(required = false) Integer idAfter,
+      @RequestParam(required = false) String cursor,
+      @RequestParam(defaultValue = "baseDate") String sortField,
+      @RequestParam(defaultValue = "desc") String sortDirection,
+      @RequestParam(defaultValue = "10") Integer size
+  ) {
+    IndexDataSearchCondition request = new IndexDataSearchCondition(
+        indexInfoId, startDate, endDate, idAfter, cursor,
+        sortField, sortDirection, size
+    );
     CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
     return ResponseEntity.status(HttpStatus.OK).body(dto);
   }

@@ -17,7 +17,7 @@ public class OpenApiIndexDataMapper {
         .highPrice(externalIndexDataDto.highPrice())
         .lowPrice(externalIndexDataDto.lowPrice())
         .versus(externalIndexDataDto.versus())
-        .fluationRate(externalIndexDataDto.fluationRate())
+        .fluctuationRate(externalIndexDataDto.fluctuationRate())
         .tradingPrice(externalIndexDataDto.tradingPrice())
         .tradingQuantity(externalIndexDataDto.tradingQuantity())
         .marketTotalAmount(externalIndexDataDto.marketTotalAmount())

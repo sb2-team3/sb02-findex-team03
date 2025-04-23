@@ -22,7 +22,7 @@ public record ExternalIndexDataDto(
     Double lowPrice,
 
     Double versus,
-    Double fluationRate,
+    Double fluctuationRate,
 
     Long tradingQuantity,
     Long tradingPrice,
