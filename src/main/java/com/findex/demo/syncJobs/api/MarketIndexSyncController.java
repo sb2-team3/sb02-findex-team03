@@ -34,7 +34,7 @@ public class MarketIndexSyncController {
     private final MarketIndexDataSyncService marketIndexDataSyncService;
     private final IndexInfoRepository indexInfoRepository;
 
-    @PostMapping("/sync-jobs/index-info")
+
     @PostMapping("/index-infos")
     public ResponseEntity<Void> syncMarketIndexInfo() {
         marketIndexSyncService.fetchAndStoreMarketIndices();
@@ -42,7 +42,7 @@ public class MarketIndexSyncController {
     }
 
     //indexdata 연동구현 ref: 이준혁
-    @PostMapping("/sync-jobs/index-data")
+    @PostMapping("/index-data")
     public ResponseEntity<List<SyncJob>> syncIndexData(@RequestBody IndexDataSyncRequestDto request) {
         try {
             List<IndexInfo> indexInfos = indexInfoRepository.findAllById(request.getIndexInfoIds());
