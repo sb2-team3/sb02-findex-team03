@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CursorPageResponseIndexDataDto<IndexDataDto> {
-  List<IndexDataDto> contents;
+  List<IndexDataDto> content;
   String nextCursor;
   Integer nextIdAfter;
   Integer size;

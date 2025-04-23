@@ -108,7 +108,7 @@ public class MarketIndexDataSyncService {
         .lowPrice(item.path("lopr").asDouble())
         .openPrice(item.path("mkp").asDouble())
         .highPrice(item.path("hipr").asDouble())
-        .fluationRate(item.path("fltRt").asDouble())
+        .fluctuationRate(item.path("fltRt").asDouble())
         .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
         .tradingQuantity(item.path("trqu").asLong())
         .build();
