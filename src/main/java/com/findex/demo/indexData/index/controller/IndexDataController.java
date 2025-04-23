@@ -1,13 +1,19 @@
 package com.findex.demo.indexData.index.controller;
 
+import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
+import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
+import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,19 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexDataController {
 
   private final IndexDataService indexDataService;
-
+  private final CSVExportIndexDataService csvExportIndexDataService;
   /*
   TODO : 목요일 에  같이 구현
    */
   /**
    * 지수 데이터 목록조회
    */
-//  @GetMapping
-//  public ResponseEntity<CursorPageResponseIndexDataDto> create(@RequestBody @Valid
-//  IndexDataSearchCondition request) {
-//    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
-//    return ResponseEntity.status(HttpStatus.OK).body(dto);
-//  }
+  @GetMapping
+  public ResponseEntity<CursorPageResponseIndexDataDto> create(@RequestBody @Valid
+  IndexDataSearchCondition request) {
+    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
+    return ResponseEntity.status(HttpStatus.OK).body(dto);
+  }
   /**
 
   /**
@@ -63,6 +69,23 @@ public class IndexDataController {
   public ResponseEntity<Void> delete(@PathVariable Integer indexDataId) {
     indexDataService.delete(indexDataId);
     return ResponseEntity.noContent().build(); // HTTP 204
+  }
+
+  /**
+   * csv export
+   */
+  @GetMapping("/export/csv")
+  public ResponseEntity<byte[]> downloadCsvFile() throws Exception{
+
+    byte[] response = csvExportIndexDataService.downloadCsv();
+
+    if(response == null) {
+      return ResponseEntity.internalServerError().build();
+    }
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
+    return new ResponseEntity<>(response, headers, HttpStatus.OK);
   }
 }
 
