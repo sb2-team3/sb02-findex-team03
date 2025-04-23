@@ -6,8 +6,8 @@ import com.findex.demo.indexData.datas.domain.dto.IndexPerformanceDto;
 import com.findex.demo.indexData.datas.domain.dto.Performance;
 import com.findex.demo.indexData.datas.domain.dto.PeriodType;
 import com.findex.demo.indexData.datas.domain.dto.RankedIndexPerformanceDto;
-import com.findex.demo.indexData.datas.repository.DataRepository;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
+import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataService {
 
     IndexInfoRepository indexInfoRepository;
-    DataRepository dataRepository;
+    IndexDataRepository dataRepository;
 
     @Transactional(readOnly = true)
     public IndexChartDto getIndexChart(PeriodType periodType, Integer indexInfoId) {
@@ -114,7 +114,6 @@ public class DataService {
                 if (startPrice.compareTo(0.0) != 0) {
                     fluctuationRate = (endPrice - startPrice) / startPrice * 100;
                 }
-
 
                 // 등락폭 계산
                 double versus = endPrice - startPrice;
