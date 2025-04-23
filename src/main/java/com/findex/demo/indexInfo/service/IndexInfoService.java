@@ -20,13 +20,13 @@ public interface IndexInfoService {
     List<IndexInfoSummaryDto> getIndexInfoSummaries();
 
     CursorPageResponseIndexInfoDto getIndexInfoList(
-        String indexClassification,
-        String indexName,
-        Boolean favorite,
-        Long idAfter,
-        String cursor,
-        String sortField,
-        String sortDirection,
-        int size
+            String indexClassification,
+            String indexName,
+            Boolean favorite,
+            Long idAfter,
+            String cursor,
+            String sortField,
+            String sortDirection,
+            int size
     );
 }

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,7 @@ public class DataController {
         return ResponseEntity.ok(indexChartDto);
     }
 
-    @PostMapping("api/index-data/performance/rank")
+    @GetMapping("api/index-data/performance/rank")
     public ResponseEntity<List<RankedIndexPerformanceDto>> getIndexPerformanceRank(
         @RequestParam(required = false, defaultValue = "DAILY") PeriodType periodType,
         @RequestParam(required = false) Integer indexInfoId,
@@ -43,7 +42,7 @@ public class DataController {
         return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("api/index-data/performance/favorite")
+    @GetMapping("api/index-data/performance/favorite")
     public ResponseEntity<List<IndexPerformanceDto>> getFavoriteIndexPerformanceRank(
         @RequestParam(required = false, defaultValue = "DAILY") PeriodType periodType
     ) {

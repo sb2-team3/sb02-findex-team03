@@ -1,12 +1,10 @@
 package com.findex.demo.indexData.index.domain.entity;
 
-
 import com.findex.demo.global.times.BaseTimeEntity;
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
 
 import java.time.LocalDate;
 import lombok.Builder;
@@ -37,10 +34,8 @@ public class IndexData extends BaseTimeEntity {
 
   private LocalDate baseDate;
 
-    @Enumerated(EnumType.STRING)
-    private SourceType sourceType;
-
-
+  @Enumerated(EnumType.STRING)
+  private SourceType sourceType;
 
   private Double openPrice;
   private Double closePrice;
@@ -110,6 +105,5 @@ public class IndexData extends BaseTimeEntity {
       this.marketTotalAmount = request.getMarketTotalAmount();
     }
   }
-
 
 }
