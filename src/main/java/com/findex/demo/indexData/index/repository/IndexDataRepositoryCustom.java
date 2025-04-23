@@ -10,4 +10,6 @@ public interface IndexDataRepositoryCustom {
   List<IndexData> findByCondition(IndexDataSearchCondition condition, Pageable pageable);
 
   Integer countByCondition(IndexDataSearchCondition condition);
+
+
 }

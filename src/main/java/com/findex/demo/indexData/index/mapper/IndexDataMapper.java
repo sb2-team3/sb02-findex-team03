@@ -19,7 +19,7 @@ public class IndexDataMapper {
         entity.getHighPrice(),
         entity.getHighPrice(),
         entity.getVersus(),
-        entity.getFluationRate(),
+        entity.getFluctuationRate(),
         entity.getTradingQuantity(),
         entity.getTradingPrice(),
         entity.getMarketTotalAmount()
@@ -35,7 +35,7 @@ public class IndexDataMapper {
             .highPrice(dto.getHighPrice())
             .lowPrice(dto.getLowPrice())
             .versus(dto.getVersus())
-            .fluationRate(dto.getFluctuationRate())
+            .fluctuationRate(dto.getFluctuationRate())
             .tradingQuantity(dto.getTradingQuantity())
             .tradingPrice(dto.getTradingPrice())
             .marketTotalAmount(dto.getMarketTotalAmount())

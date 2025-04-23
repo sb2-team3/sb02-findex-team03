@@ -90,5 +90,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 
     return Math.toIntExact(em.createQuery(cq).getSingleResult());
   }
+
+
 }
 
