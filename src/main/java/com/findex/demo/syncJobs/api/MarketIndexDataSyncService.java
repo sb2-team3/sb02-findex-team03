@@ -11,6 +11,7 @@ import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -102,12 +103,19 @@ public class MarketIndexDataSyncService {
       return;
     }
 
+
+
     IndexData indexData = new IndexData();
-    IndexInfo indexInfo = indexInfoRepository.findByIndexName(indexName);
-    if (indexInfo == null) {
-      log.warn("❌ IndexInfo 조회 실패: {}", indexName);
+    Optional<IndexInfo> optionalInfo =
+        indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
+
+    if (optionalInfo.isEmpty()) {
+      log.warn("❌ IndexInfo 조회 실패 (복합키 기준): {}, {}", indexClassification, indexName);
       return;
     }
+
+    IndexInfo indexInfo = optionalInfo.get();
+
     try{
       ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
           .indexInfo(indexInfo)
