@@ -99,4 +99,73 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   ) {
     return List.of();
   }
+
+
+  public IndexInfo toEntity(IndexInfoCreateRequest createRequest) {
+    if ( createRequest == null ) {
+      return null;
+    }
+
+    IndexInfo.IndexInfoBuilder indexInfo = IndexInfo.builder();
+
+    indexInfo.employedItemCount( createRequest.employedItemsCount() );
+    indexInfo.indexClassification( createRequest.indexClassification() );
+    indexInfo.indexName( createRequest.indexName() );
+    indexInfo.basePointInTime( createRequest.basePointInTime() );
+    indexInfo.baseIndex( createRequest.baseIndex() );
+    indexInfo.favorite( createRequest.favorite() );
+
+    indexInfo.sourceType( SourceType.USER );
+
+    return indexInfo.build();
+  }
+
+
+  public IndexInfoDto toDto(IndexInfo indexInfo) {
+    if ( indexInfo == null ) {
+      return null;
+    }
+
+    IndexInfoDto.IndexInfoDtoBuilder indexInfoDto = IndexInfoDto.builder();
+
+    indexInfoDto.id( indexInfo.getId() );
+    indexInfoDto.indexClassification( indexInfo.getIndexClassification() );
+    indexInfoDto.indexName( indexInfo.getIndexName() );
+    indexInfoDto.basePointInTime( indexInfo.getBasePointInTime() );
+    indexInfoDto.baseIndex( indexInfo.getBaseIndex() );
+    indexInfoDto.sourceType( indexInfo.getSourceType() );
+    indexInfoDto.favorite( indexInfo.isFavorite() );
+
+    return indexInfoDto.build();
+  }
+
+
+  public IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
+    if ( indexInfo == null ) {
+      return null;
+    }
+
+    Integer id = null;
+    String indexClassification = null;
+    String indexName = null;
+
+    id = indexInfo.getId();
+    indexClassification = indexInfo.getIndexClassification();
+    indexName = indexInfo.getIndexName();
+
+    IndexInfoSummaryDto indexInfoSummaryDto = new IndexInfoSummaryDto( id, indexClassification, indexName );
+
+    return indexInfoSummaryDto;
+  }
+
+
+  public void updateFromDto(IndexInfoUpdateRequest request, IndexInfo indexInfo) {
+    if ( request == null ) {
+      return;
+    }
+
+    indexInfo.setBasePointInTime( request.basePointInTime() );
+    indexInfo.setBaseIndex( request.baseIndex() );
+    indexInfo.setFavorite( request.favorite() );
+  }
 }
