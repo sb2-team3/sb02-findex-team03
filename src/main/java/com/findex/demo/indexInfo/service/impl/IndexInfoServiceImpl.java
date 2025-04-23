@@ -2,6 +2,7 @@ package com.findex.demo.indexInfo.service.impl;
 
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
+import com.findex.demo.indexInfo.domain.dto.CursorPageResponseIndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoSummaryDto;
@@ -79,16 +80,10 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   }
 
   @Override
-  public List<IndexInfoDto> getIndexInfoList(
-      String indexClassification,
-      String indexName,
-      Boolean favorite,
-      Long idAfter,
-      String cursor,
-      String sortField,
-      String sortDirection,
-      int size
-  ) {
-    return List.of();
+  public CursorPageResponseIndexInfoDto getIndexInfoList(String indexClassification,
+      String indexName, Boolean favorite, Long idAfter, String cursor, String sortField,
+      String sortDirection, int size) {
+
+    return null;
   }
 }
