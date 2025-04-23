@@ -1,5 +1,6 @@
 package com.findex.demo.indexInfo.domain.entity;
 
+import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,5 +59,11 @@ public class IndexInfo {
 
   public void setEmployedItemCount(int employedItemCount) {
     this.employedItemCount = employedItemCount;
+  }
+
+  public void updateFromDto(ExternalIndexInfoDto dto) {
+    this.baseIndex = dto.basId();
+    this.employedItemCount = dto.employedItemCount();
+    this.basePointInTime = LocalDate.parse(dto.basePointInTimeRaw(), DateTimeFormatter.ofPattern("yyyyMMdd"));
   }
 }
