@@ -39,7 +39,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     String indexName = createRequest.indexName();
 
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
-      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다");
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
     }
 
     IndexInfo indexInfo = IndexInfoMapper.toEntity(createRequest, SourceType.USER);
@@ -53,7 +53,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   @Transactional
   public IndexInfoDto update(Integer id, IndexInfoUpdateRequest updateRequest) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
 
     IndexInfoMapper.updateFromDto(updateRequest, indexInfo);
 
@@ -66,7 +66,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   @Transactional
   public void delete(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
 
     indexInfoRepository.delete(indexInfo);
   }
@@ -75,7 +75,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
         .map(IndexInfoMapper::toIndexInfoDto)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
   }
 
   @Override
@@ -97,6 +97,10 @@ public class IndexInfoServiceImpl implements IndexInfoService {
       String sortField,
       String sortDirection,
       int size) {
+
+    if (indexClassification == null || indexClassification.isEmpty()) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
+    }
 
     // 정렬 방향 설정 (오름차순 또는 내림차순)
     boolean isAscending = "asc".equalsIgnoreCase(sortDirection);
