@@ -34,7 +34,7 @@ public class MarketIndexSyncController {
     private final MarketIndexDataSyncService marketIndexDataSyncService;
     private final IndexInfoRepository indexInfoRepository;
 
-    @PostMapping("/sync")
+    @PostMapping("/sync-jobs/index-info")
     public ResponseEntity<Void> syncMarketIndexInfo() {
         marketIndexSyncService.fetchAndStoreMarketIndices();
         return ResponseEntity.ok().build();
