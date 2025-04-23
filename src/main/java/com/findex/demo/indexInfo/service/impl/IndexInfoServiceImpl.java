@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class IndexInfoServiceImpl implements IndexInfoService {
 
   private final IndexInfoRepository indexInfoRepository;
-  private final IndexInfoMapper indexInfoMapper;
 
   @Override
   @Transactional
@@ -34,11 +33,11 @@ public class IndexInfoServiceImpl implements IndexInfoService {
       throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다");
     }
 
-    IndexInfo indexInfo = indexInfoMapper.toEntity(createRequest, SourceType.USER);
+    IndexInfo indexInfo = IndexInfoMapper.toEntity(createRequest, SourceType.USER);
 
     indexInfo = indexInfoRepository.save(indexInfo);
 
-    return indexInfoMapper.toIndexInfoDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }
 
   @Override
@@ -47,11 +46,11 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
 
-    indexInfoMapper.updateFromDto(updateRequest, indexInfo);
+    IndexInfoMapper.updateFromDto(updateRequest, indexInfo);
 
     indexInfoRepository.save(indexInfo);
 
-    return indexInfoMapper.toIndexInfoDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }
 
   @Override
@@ -66,7 +65,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   @Override
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
-        .map(indexInfoMapper::toIndexInfoDto)
+        .map(IndexInfoMapper::toIndexInfoDto)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
   }
 
@@ -75,7 +74,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     List<IndexInfo> indexInfos = indexInfoRepository.findAll();
 
     return indexInfos.stream()
-        .map(indexInfoMapper::toSummaryDto)
+        .map(IndexInfoMapper::toSummaryDto)
         .collect(Collectors.toList());
   }
 

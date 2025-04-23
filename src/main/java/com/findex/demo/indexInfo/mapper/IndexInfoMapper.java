@@ -6,13 +6,11 @@ import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
-import org.springframework.stereotype.Component;
 
-@Component
 public class IndexInfoMapper {
 
   // IndexInfo -> IndexInfoDto 변환
-  public IndexInfoDto toIndexInfoDto(IndexInfo indexInfo) {
+  public static IndexInfoDto toIndexInfoDto(IndexInfo indexInfo) {
     return IndexInfoDto.builder()
         .id(indexInfo.getId())
         .indexClassification(indexInfo.getIndexClassification())
@@ -26,7 +24,7 @@ public class IndexInfoMapper {
   }
 
   // IndexInfoCreateRequest -> IndexInfo 변환
-  public IndexInfo toEntity(IndexInfoCreateRequest createRequest, SourceType sourceType) {
+  public static IndexInfo toEntity(IndexInfoCreateRequest createRequest, SourceType sourceType) {
     return IndexInfo.builder()
         .indexClassification(createRequest.indexClassification())
         .indexName(createRequest.indexName())
@@ -39,7 +37,7 @@ public class IndexInfoMapper {
   }
 
   // IndexInfoUpdateRequest -> IndexInfo 변환
-  public IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
+  public static IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
     existingIndexInfo.setEmployedItemCount(updateRequest.employedItemsCount());
     existingIndexInfo.setBasePointInTime(updateRequest.basePointInTime());
     existingIndexInfo.setBaseIndex(updateRequest.baseIndex());
@@ -49,7 +47,7 @@ public class IndexInfoMapper {
   }
 
   // IndexInfo -> IndexInfoSummaryDto 변환
-  public IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
+  public static IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
     return IndexInfoSummaryDto.builder()
         .id(indexInfo.getId())
         .indexClassification(indexInfo.getIndexClassification())
