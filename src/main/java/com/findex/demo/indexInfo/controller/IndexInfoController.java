@@ -46,4 +46,29 @@ public class IndexInfoController {
     return ResponseEntity.ok(indexInfoService.getIndexInfoSummaries());
   }
 
+  @GetMapping
+  public ResponseEntity<CursorPageResponseIndexInfoDto> getIndexInfoList(
+      @RequestParam(required = false) String indexClassification,
+      @RequestParam(required = false) String indexName,
+      @RequestParam(required = false) Boolean favorite,
+      @RequestParam(required = false) Long idAfter,
+      @RequestParam(required = false) String cursor,
+      @RequestParam(defaultValue = "id") String sortField,
+      @RequestParam(defaultValue = "asc") String sortDirection,
+      @RequestParam(defaultValue = "10") int size) {
+
+    CursorPageResponseIndexInfoDto response = indexInfoService.getIndexInfoList(
+        indexClassification,
+        indexName,
+        favorite,
+        idAfter,
+        cursor,
+        sortField,
+        sortDirection,
+        size
+    );
+
+    return ResponseEntity.ok(response);
+  }
+
 }
