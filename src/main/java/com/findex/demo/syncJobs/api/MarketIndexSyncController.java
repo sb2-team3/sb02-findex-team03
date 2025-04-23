@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/market-index")
+@RequestMapping("/api/sync-jobs")
 @RequiredArgsConstructor
 public class MarketIndexSyncController {
 
     private final MarketIndexSyncService marketIndexSyncService;
 
-    @PostMapping("/sync")
+    @PostMapping("/index-infos")
     public ResponseEntity<Void> syncMarketIndexInfo() {
         marketIndexSyncService.fetchAndStoreMarketIndices();
         return ResponseEntity.ok().build();
