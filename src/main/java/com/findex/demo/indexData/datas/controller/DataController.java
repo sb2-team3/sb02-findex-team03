@@ -4,7 +4,7 @@ import com.findex.demo.indexData.datas.domain.dto.IndexChartDto;
 import com.findex.demo.indexData.datas.domain.dto.IndexPerformanceDto;
 import com.findex.demo.indexData.datas.domain.dto.PeriodType;
 import com.findex.demo.indexData.datas.domain.dto.RankedIndexPerformanceDto;
-import com.findex.demo.indexData.datas.service.IndexDataService;
+import com.findex.demo.indexData.datas.service.DataService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class IndexDataController {
+public class DataController {
 
-    private final IndexDataService indexDataService;
+    private final DataService indexDataService;
 
     @GetMapping("api/index-data/{indexInfoId}/chart")
     public ResponseEntity<IndexChartDto> getIndexChart(
