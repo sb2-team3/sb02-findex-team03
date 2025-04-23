@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface IndexInfoService {
 
-    IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest);
+    IndexInfoDto create(IndexInfoCreateRequest createRequest);
 
-    IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest);
+    IndexInfoDto update(Integer id, IndexInfoUpdateRequest updateRequest);
 
-    void deleteIndexInfo(Integer id);
+    void delete(Integer id);
 
     IndexInfoDto getIndexInfo(Integer id);
 
