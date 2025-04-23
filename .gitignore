@@ -25,6 +25,7 @@ replay_pid*
 HELP.md
 .gradle
 build/
+src/resources/applicai
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -59,3 +60,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+application.yml
