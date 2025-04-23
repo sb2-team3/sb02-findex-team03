@@ -15,12 +15,10 @@ import org.springframework.stereotype.Service;
 public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
 
     private final AutoSyncConfigRepository autoSyncConfigRepository;
-    private final AutoSyncConfigMapper autoSyncConfigMapper;
 
-    public AutoSyncConfigServiceImpl(AutoSyncConfigRepository autoSyncConfigRepository,
-                                     AutoSyncConfigMapper autoSyncConfigMapper) {
+
+    public AutoSyncConfigServiceImpl(AutoSyncConfigRepository autoSyncConfigRepository){
         this.autoSyncConfigRepository = autoSyncConfigRepository;
-        this.autoSyncConfigMapper = autoSyncConfigMapper;
     }
     // private final IndexInfoRepository indexInfoRepository;
 
