@@ -23,10 +23,6 @@ repositories {
     mavenCentral()
 }
 
-// ✅ Jackson 버전 통일용 전역 변수
-ext {
-    jacksonVersion = '2.17.0'
-}
 
 dependencies {
     // Spring Starter
