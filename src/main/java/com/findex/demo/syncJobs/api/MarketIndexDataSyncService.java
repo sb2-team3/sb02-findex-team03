@@ -103,7 +103,7 @@ public class MarketIndexDataSyncService {
     }
 
     ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
-        .indexInfo(indexInfoRepository.findByName(indexName))
+        .indexInfo(indexInfoRepository.findByIndexName(indexName))
         .closePrice(item.path("clpr").asDouble())
         .lowPrice(item.path("lopr").asDouble())
         .openPrice(item.path("mkp").asDouble())

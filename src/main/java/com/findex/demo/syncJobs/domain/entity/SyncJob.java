@@ -5,6 +5,7 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class SyncJob extends BaseTimeEntity {
   private JobType jobType;
 
   @Column(nullable = false)
-  private LocalDateTime targetDate;
+  private LocalDate targetDate;
 
   @Column(nullable = false)
   private String worker;
