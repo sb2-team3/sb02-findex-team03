@@ -45,7 +45,7 @@ public class DataService {
         // indexData를 차트 데이터로 변경 (날짜 + 종가)
         List<DataPoint> dataPoints = indexDataList.stream()
             .map(indexData -> new DataPoint(indexData.getBaseDate(),
-                indexData.getClosePrice().doubleValue())).toList();
+                indexData.getClosePrice())).toList();
 
         // 이동 평균선 만들기.
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
@@ -124,8 +124,8 @@ public class DataService {
                     indexInfo.getIndexName(),
                     versus,
                     fluctuationRate,
-                    endPrice.doubleValue(),
-                    startPrice.doubleValue()
+                    endPrice,
+                    startPrice
                 );
 
                 performanceList.add(dto);
@@ -139,7 +139,7 @@ public class DataService {
         // 상위 limit개만 선택
         List<IndexPerformanceDto> topPerformances = performanceList.stream()
             .limit(limit)
-            .collect(Collectors.toList());
+            .toList();
 
         // RankedIndexPerformanceDto 생성 및 순위 부여
         List<RankedIndexPerformanceDto> result = new ArrayList<>();
@@ -245,8 +245,8 @@ public class DataService {
         IndexData endData = currentDataMap.get(indexInfo.getId());
 
         if (startData != null && endData != null) {
-            double beforePrice = startData.getClosePrice().doubleValue();
-            double currentPrice = endData.getClosePrice().doubleValue();
+            double beforePrice = startData.getClosePrice();
+            double currentPrice = endData.getClosePrice();
             double versus = currentPrice - beforePrice;
             double fluctuationRate = (versus / beforePrice) * 100.0;
 
