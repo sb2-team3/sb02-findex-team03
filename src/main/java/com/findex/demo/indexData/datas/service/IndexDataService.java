@@ -46,7 +46,7 @@ public class IndexDataService {
 
         // indexData를 차트 데이터로 변경 (날짜 + 종가)
         List<DataPoint> dataPoints = indexDataList.stream()
-            .map(indexData -> new DataPoint(indexData.getDate(),
+            .map(indexData -> new DataPoint(indexData.getBaseDate(),
                 indexData.getClosePrice().doubleValue())).toList();
 
         // 이동 평균선 만들기.
@@ -90,11 +90,11 @@ public class IndexDataService {
             indexInfoList, startDate, endDate);
 
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getDate().equals(startDate))
+            .filter(data -> data.getBaseDate().equals(startDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getDate().equals(endDate))
+            .filter(data -> data.getBaseDate().equals(endDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         // 성과 계산 및 DTO 생성
@@ -108,20 +108,17 @@ public class IndexDataService {
                 IndexData startData = startDateMap.get(id);
                 IndexData endData = endDateMap.get(id);
 
-                BigDecimal startPrice = startData.getClosePrice();
-                BigDecimal endPrice = endData.getClosePrice();
+                Double startPrice = startData.getClosePrice();
+                Double endPrice = endData.getClosePrice();
 
                 // 등락률 계산 (%)
                 double fluctuationRate = 0;
-                if (startPrice.compareTo(BigDecimal.ZERO) != 0) {
-                    fluctuationRate = endPrice.subtract(startPrice)
-                        .divide(startPrice, 4, RoundingMode.HALF_UP)
-                        .multiply(BigDecimal.valueOf(100))
-                        .doubleValue();
+                if (startPrice.compareTo(0.0) != 0) {
+                    fluctuationRate = (endPrice - startPrice) / startPrice * 100;
                 }
 
                 // 등락폭 계산
-                double versus = endPrice.subtract(startPrice).doubleValue();
+                double versus = endPrice - startPrice;
 
                 IndexPerformanceDto dto = new IndexPerformanceDto(
                     id,
@@ -195,12 +192,12 @@ public class IndexDataService {
         }
 
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getDate().equals(startDate))
+            .filter(data -> data.getBaseDate().equals(startDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(),
                 Function.identity()));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getDate().equals(endDate))
+            .filter(data -> data.getBaseDate().equals(endDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         return favoriteIndexes.stream()
