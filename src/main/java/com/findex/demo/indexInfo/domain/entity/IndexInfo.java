@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IndexInfo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String indexClassification;
-    private String indexName;
-    private int employedItemCount;
-    private Instant basePointInTime;
-    private double baseIndex;
-    private boolean favorite;
+  private String indexClassification;
+  private String indexName;
+  private int employedItemCount;
+  private Instant basePointInTime;
+  private double baseIndex;
+  private boolean favorite;
 }

@@ -1,19 +1,8 @@
 package com.findex.demo.syncJobs.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.Instant;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "sync_jobs")
@@ -24,35 +13,35 @@ import lombok.Setter;
 @Builder
 public class SyncJob {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private JobType jobType;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private JobType jobType;
 
-    @Column(nullable = false)
-    private Long indexInfoId;
+  @Column(nullable = false)
+  private Long indexInfoId;
 
-    @Column(nullable = false)
-    private Instant targetDate;
+  @Column(nullable = false)
+  private Instant targetDate;
 
-    @Column(nullable = false)
-    private String worker;
+  @Column(nullable = false)
+  private String worker;
 
-    @Column(nullable = false)
-    private Instant jobTime;
+  @Column(nullable = false)
+  private Instant jobTime;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Result result;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Result result;
 
-    public enum JobType {
-        INDEX_INFO, INDEX_DATA
-    }
+  public enum JobType {
+    INDEX_INFO, INDEX_DATA
+  }
 
-    public enum Result {
-        SUCCESS, FAILURE
-    }
+  public enum Result {
+    SUCCESS, FAILURE
+  }
 }
