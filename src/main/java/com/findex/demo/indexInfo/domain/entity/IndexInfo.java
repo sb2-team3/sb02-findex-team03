@@ -10,11 +10,9 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
-@Setter
 @NoArgsConstructor
 public class IndexInfo {
 
