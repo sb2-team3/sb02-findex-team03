@@ -2,10 +2,8 @@ package com.findex.demo.indexData.index.service;
 
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
-import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
-import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexData.index.mapper.IndexDataMapper;
@@ -13,15 +11,9 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
-import java.awt.print.Pageable;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

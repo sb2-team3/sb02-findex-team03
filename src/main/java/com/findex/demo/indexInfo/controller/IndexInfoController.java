@@ -18,20 +18,20 @@ public class IndexInfoController {
   @PostMapping
   public ResponseEntity<IndexInfoDto> create(
       @RequestBody IndexInfoCreateRequest request) {
-    return ResponseEntity.ok(indexInfoService.createIndexInfo(request));
+    return ResponseEntity.ok(indexInfoService.create(request));
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<IndexInfoDto> update(
       @PathVariable Integer id,
       @RequestBody IndexInfoUpdateRequest request) {
-    return ResponseEntity.ok(indexInfoService.updateIndexInfo(id, request));
+    return ResponseEntity.ok(indexInfoService.update(id, request));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(
       @PathVariable Integer id) {
-    indexInfoService.deleteIndexInfo(id);
+    indexInfoService.delete(id);
     return ResponseEntity.noContent().build();
   }
 

@@ -1,22 +1,57 @@
 package com.findex.demo.indexInfo.mapper;
 
-import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoSummaryDto;
+import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 
-@Mapper(componentModel = "spring")
-public interface IndexInfoMapper {
+public class IndexInfoMapper {
 
-  @Mapping(target = "employedItemCount", source = "employedItemsCount")
-  @Mapping(target = "sourceType", constant = "USER")
-  IndexInfo toEntity(IndexInfoCreateRequest createRequest);
+  // IndexInfo -> IndexInfoDto 변환
+  public static IndexInfoDto toIndexInfoDto(IndexInfo indexInfo) {
+    return IndexInfoDto.builder()
+        .id(indexInfo.getId())
+        .indexClassification(indexInfo.getIndexClassification())
+        .indexName(indexInfo.getIndexName())
+        .employedItemsCount(indexInfo.getEmployedItemCount())
+        .basePointInTime(indexInfo.getBasePointInTime())
+        .baseIndex(indexInfo.getBaseIndex())
+        .sourceType(indexInfo.getSourceType())
+        .favorite(indexInfo.isFavorite())
+        .build();
+  }
 
-  IndexInfoDto toDto(IndexInfo indexInfo);
-  IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo);
-  void updateFromDto(IndexInfoUpdateRequest request, @MappingTarget IndexInfo indexInfo);
+  // IndexInfoCreateRequest -> IndexInfo 변환
+  public static IndexInfo toEntity(IndexInfoCreateRequest createRequest, SourceType sourceType) {
+    return IndexInfo.builder()
+        .indexClassification(createRequest.indexClassification())
+        .indexName(createRequest.indexName())
+        .employedItemCount(createRequest.employedItemsCount())
+        .basePointInTime(createRequest.basePointInTime())
+        .baseIndex(createRequest.baseIndex())
+        .sourceType(sourceType)
+        .favorite(createRequest.favorite())
+        .build();
+  }
+
+  // IndexInfoUpdateRequest -> IndexInfo 변환
+  public static IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
+    existingIndexInfo.setEmployedItemCount(updateRequest.employedItemsCount());
+    existingIndexInfo.setBasePointInTime(updateRequest.basePointInTime());
+    existingIndexInfo.setBaseIndex(updateRequest.baseIndex());
+    existingIndexInfo.setFavorite(updateRequest.favorite());
+
+    return existingIndexInfo;
+  }
+
+  // IndexInfo -> IndexInfoSummaryDto 변환
+  public static IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
+    return IndexInfoSummaryDto.builder()
+        .id(indexInfo.getId())
+        .indexClassification(indexInfo.getIndexClassification())
+        .indexName(indexInfo.getIndexName())
+        .build();
+  }
 }

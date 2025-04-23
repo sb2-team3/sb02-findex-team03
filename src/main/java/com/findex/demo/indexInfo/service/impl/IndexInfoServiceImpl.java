@@ -2,6 +2,7 @@ package com.findex.demo.indexInfo.service.impl;
 
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
+import com.findex.demo.indexInfo.domain.dto.CursorPageResponseIndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoSummaryDto;
@@ -9,7 +10,6 @@ import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
-import com.findex.demo.indexInfo.mapper.IndexInfoMapperV1;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
 import jakarta.transaction.Transactional;
@@ -23,58 +23,51 @@ import org.springframework.stereotype.Service;
 public class IndexInfoServiceImpl implements IndexInfoService {
 
   private final IndexInfoRepository indexInfoRepository;
-  private final IndexInfoMapper indexInfoMapper;
 
   @Override
   @Transactional
-  public IndexInfoDto createIndexInfo(IndexInfoCreateRequest createRequest) {
+  public IndexInfoDto create(IndexInfoCreateRequest createRequest) {
     String indexClassification = createRequest.indexClassification();
     String indexName = createRequest.indexName();
 
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
-      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "지수 분류명과 지수명은 중복될 수 없습니다.");
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다");
     }
 
-    IndexInfo indexInfo = indexInfoMapper.toEntity(createRequest);
-
-    indexInfo.setSourceType(SourceType.USER);
+    IndexInfo indexInfo = IndexInfoMapper.toEntity(createRequest, SourceType.USER);
 
     indexInfo = indexInfoRepository.save(indexInfo);
 
-    return IndexInfoMapperV1.toIndexInfoDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }
-
 
   @Override
   @Transactional
-  public IndexInfoDto updateIndexInfo(Integer id, IndexInfoUpdateRequest updateRequest) {
+  public IndexInfoDto update(Integer id, IndexInfoUpdateRequest updateRequest) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
 
-    indexInfoMapper.updateFromDto(updateRequest, indexInfo);
+    IndexInfoMapper.updateFromDto(updateRequest, indexInfo);
 
     indexInfoRepository.save(indexInfo);
 
-    return indexInfoMapper.toDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }
 
   @Override
   @Transactional
-  public void deleteIndexInfo(Integer id) {
+  public void delete(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
 
     indexInfoRepository.delete(indexInfo);
   }
 
-  /*
-  TODO : 읽이 전용 @Transactional(readOnly = true) 구현 시도 해보세요
-   */
   @Override
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
-        .map(indexInfoMapper::toDto)
-        .orElseThrow(() -> new IllegalArgumentException("지수 정보가 존재하지 않습니다."));
+        .map(IndexInfoMapper::toIndexInfoDto)
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
   }
 
   @Override
@@ -82,21 +75,15 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     List<IndexInfo> indexInfos = indexInfoRepository.findAll();
 
     return indexInfos.stream()
-        .map(indexInfoMapper::toSummaryDto)
+        .map(IndexInfoMapper::toSummaryDto)
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<IndexInfoDto> getIndexInfoList(
-      String indexClassification,
-      String indexName,
-      Boolean favorite,
-      Long idAfter,
-      String cursor,
-      String sortField,
-      String sortDirection,
-      int size
-  ) {
-    return List.of();
+  public CursorPageResponseIndexInfoDto getIndexInfoList(String indexClassification,
+      String indexName, Boolean favorite, Long idAfter, String cursor, String sortField,
+      String sortDirection, int size) {
+
+    return null;
   }
 }

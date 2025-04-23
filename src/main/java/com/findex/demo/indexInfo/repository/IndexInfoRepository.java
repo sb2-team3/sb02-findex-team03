@@ -1,8 +1,10 @@
 package com.findex.demo.indexInfo.repository;
 
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
-import java.util.Optional;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
 
 public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
 
@@ -10,6 +12,8 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
   TODO: 쿼리 문 으로 짜보세요
    */
   boolean existsByIndexClassificationAndIndexName(String indexClassification, String indexName);
-  Optional<IndexInfo> findByIndexClassificationAndIndexName(String classification, String name);
+  Optional<IndexInfo> findByIndexClassificationAndIndexName(String indexClassification, String indexName);
 
+  List<IndexInfo> findByFavoriteIsTrue();
+  List<IndexInfo> findByIndexClassification(String indexClassification);
 }
