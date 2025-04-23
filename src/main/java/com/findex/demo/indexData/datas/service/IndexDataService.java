@@ -10,6 +10,8 @@ import com.findex.demo.indexData.datas.repository.IndexDataRepository;
 import com.findex.demo.indexData.datas.repository.IndexInfoRepository;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,8 +46,8 @@ public class IndexDataService {
 
         // indexData를 차트 데이터로 변경 (날짜 + 종가)
         List<DataPoint> dataPoints = indexDataList.stream()
-            .map(indexData -> new DataPoint(indexData.getBaseDate(),
-                indexData.getClosePrice())).toList();
+            .map(indexData -> new DataPoint(indexData.getDate(),
+                indexData.getClosePrice().doubleValue())).toList();
 
         // 이동 평균선 만들기.
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
@@ -88,11 +90,11 @@ public class IndexDataService {
             indexInfoList, startDate, endDate);
 
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(startDate))
+            .filter(data -> data.getDate().equals(startDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(endDate))
+            .filter(data -> data.getDate().equals(endDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         // 성과 계산 및 DTO 생성
@@ -106,17 +108,20 @@ public class IndexDataService {
                 IndexData startData = startDateMap.get(id);
                 IndexData endData = endDateMap.get(id);
 
-                Double startPrice = startData.getClosePrice();
-                Double endPrice = endData.getClosePrice();
+                BigDecimal startPrice = startData.getClosePrice();
+                BigDecimal endPrice = endData.getClosePrice();
 
                 // 등락률 계산 (%)
                 double fluctuationRate = 0;
-                if (startPrice.compareTo(0.0) != 0) {
-                    fluctuationRate = (endPrice - startPrice) / startPrice * 100;
+                if (startPrice.compareTo(BigDecimal.ZERO) != 0) {
+                    fluctuationRate = endPrice.subtract(startPrice)
+                        .divide(startPrice, 4, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100))
+                        .doubleValue();
                 }
 
                 // 등락폭 계산
-                double versus = endPrice - startPrice;
+                double versus = endPrice.subtract(startPrice).doubleValue();
 
                 IndexPerformanceDto dto = new IndexPerformanceDto(
                     id,
@@ -124,8 +129,8 @@ public class IndexDataService {
                     indexInfo.getIndexName(),
                     versus,
                     fluctuationRate,
-                    endPrice,
-                    startPrice
+                    endPrice.doubleValue(),
+                    startPrice.doubleValue()
                 );
 
                 performanceList.add(dto);
@@ -139,7 +144,7 @@ public class IndexDataService {
         // 상위 limit개만 선택
         List<IndexPerformanceDto> topPerformances = performanceList.stream()
             .limit(limit)
-            .toList();
+            .collect(Collectors.toList());
 
         // RankedIndexPerformanceDto 생성 및 순위 부여
         List<RankedIndexPerformanceDto> result = new ArrayList<>();
@@ -190,12 +195,12 @@ public class IndexDataService {
         }
 
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(startDate))
+            .filter(data -> data.getDate().equals(startDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(),
                 Function.identity()));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(endDate))
+            .filter(data -> data.getDate().equals(endDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         return favoriteIndexes.stream()
@@ -218,7 +223,7 @@ public class IndexDataService {
             double average = sum / period;
 
             DataPoint maPoint = new DataPoint(
-                dataPoints.get(cnt_i).getDate(), average
+                dataPoints.get(cnt_i).getData(), average
             );
 
             maLine.add(maPoint);
@@ -245,8 +250,8 @@ public class IndexDataService {
         IndexData endData = currentDataMap.get(indexInfo.getId());
 
         if (startData != null && endData != null) {
-            double beforePrice = startData.getClosePrice();
-            double currentPrice = endData.getClosePrice();
+            double beforePrice = startData.getClosePrice().doubleValue();
+            double currentPrice = endData.getClosePrice().doubleValue();
             double versus = currentPrice - beforePrice;
             double fluctuationRate = (versus / beforePrice) * 100.0;
 
