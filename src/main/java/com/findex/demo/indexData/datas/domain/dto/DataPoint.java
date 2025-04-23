@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DataPoint {
 
-    private LocalDate data;
+    private LocalDate date;
     private double value;
 }
