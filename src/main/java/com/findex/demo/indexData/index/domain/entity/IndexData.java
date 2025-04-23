@@ -107,4 +107,3 @@ public class IndexData extends BaseTimeEntity {
   }
 
 }
-

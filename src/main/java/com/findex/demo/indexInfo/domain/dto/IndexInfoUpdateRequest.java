@@ -1,8 +1,9 @@
 package com.findex.demo.indexInfo.domain.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.Builder;
 
+@Builder
 public record IndexInfoUpdateRequest(
     int employedItemsCount,
     LocalDate basePointInTime,

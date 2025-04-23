@@ -10,11 +10,9 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
-@Setter
 @NoArgsConstructor
 public class IndexInfo {
 
@@ -33,11 +31,6 @@ public class IndexInfo {
 
   private boolean favorite = false;
 
-  /*
-  TODO: 1번 생성자와 함께 @Builder 애노테이션을 적용하여 빌더 패턴으로 생성할 수 있도록 합니다.
-       2번 IndexInfoMapperV1 에서  toIndexInfoDto 구현된 메소드 확인
- */
-
   @Builder
   public IndexInfo(String indexClassification, String indexName, int employedItemCount, LocalDate basePointInTime,
                    Integer baseIndex, SourceType sourceType, boolean favorite) {
@@ -48,5 +41,21 @@ public class IndexInfo {
     this.baseIndex = baseIndex;
     this.sourceType = sourceType;
     this.favorite = favorite;
+  }
+
+  public void setBasePointInTime(LocalDate basePointInTime) {
+    this.basePointInTime = basePointInTime;
+  }
+
+  public void setBaseIndex(int baseIndex) {
+    this.baseIndex = baseIndex;
+  }
+
+  public void setFavorite(boolean favorite) {
+    this.favorite = favorite;
+  }
+
+  public void setEmployedItemCount(int employedItemCount) {
+    this.employedItemCount = employedItemCount;
   }
 }
