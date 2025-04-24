@@ -5,6 +5,7 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,6 +33,7 @@ public class IndexData extends BaseTimeEntity {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
+  @Column(nullable = false, name ="data")
   private LocalDate baseDate;
 
   @Enumerated(EnumType.STRING)

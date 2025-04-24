@@ -1,12 +1,14 @@
 package com.findex.demo.indexInfo.domain.entity;
 
 import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.Builder;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Table(name = "index_info")
 @NoArgsConstructor
 public class IndexInfo {
 
@@ -23,6 +26,8 @@ public class IndexInfo {
   private Integer id;
 
   private String indexClassification;
+
+  @Column(name = "index_name")
   private String indexName;
   private int employedItemCount;
   private LocalDate basePointInTime;

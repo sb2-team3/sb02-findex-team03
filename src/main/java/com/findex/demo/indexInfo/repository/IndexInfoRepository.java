@@ -23,6 +23,9 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
 
   List<IndexInfo> findByIndexClassification(String indexClassification);
 
+
+
+
   IndexInfo findByIndexName(String indexName);
 
   @Query("SELECT i FROM IndexInfo i WHERE " +
@@ -49,5 +52,6 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
       @Param("favorite") Boolean favorite,
       @Param("idAfter") Long idAfter
   );
+
 
 }

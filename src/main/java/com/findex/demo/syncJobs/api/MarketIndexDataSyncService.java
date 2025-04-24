@@ -7,10 +7,13 @@ import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +43,7 @@ public class MarketIndexDataSyncService {
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
     Set<String> seenKeys = new HashSet<>();
-    int totalPages = (int) Math.ceil((double) 199169 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
+    int totalPages = (int) Math.ceil((double) 1000 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
     for (int page = 1; page <= totalPages; page++) {
       try {
@@ -81,10 +84,10 @@ public class MarketIndexDataSyncService {
     String indexName = item.path("idxNm").asText();
     String itemDate = item.path("basPntm").asText();
 
-    if (!itemDate.equals(baseDate)) {
+    /*if (!itemDate.equals(baseDate)) {
       log.debug("📅 날짜 불일치로 건너뜀: {}, 기대값: {}", itemDate, baseDate);
       return;
-    }
+    }*/
 
     if (!indexNames.isEmpty() && !indexNames.contains(indexName)) {
       log.debug("🔍 필터링된 지수로 제외됨: {}", indexName);
@@ -102,18 +105,38 @@ public class MarketIndexDataSyncService {
       return;
     }
 
-    ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
-        .indexInfo(indexInfoRepository.findByIndexName(indexName))
-        .closePrice(item.path("clpr").asDouble())
-        .lowPrice(item.path("lopr").asDouble())
-        .openPrice(item.path("mkp").asDouble())
-        .highPrice(item.path("hipr").asDouble())
-        .fluctuationRate(item.path("fltRt").asDouble())
-        .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
-        .tradingQuantity(item.path("trqu").asLong())
-        .build();
 
-    IndexData indexData = OpenApiIndexDataMapper.toIndexData(dto);
+
+    IndexData indexData = new IndexData();
+    Optional<IndexInfo> optionalInfo =
+        indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
+
+
+    IndexInfo indexInfo = optionalInfo.get();
+
+    try{
+      ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
+          .indexInfo(indexInfo)
+          .closePrice(item.path("clpr").asDouble())
+          .lowPrice(item.path("lopr").asDouble())
+          .openPrice(item.path("mkp").asDouble())
+          .highPrice(item.path("hipr").asDouble())
+          .fluctuationRate(item.path("fltRt").asDouble())
+          .versus(item.path("vs").asDouble())
+          .sourceType(SourceType.OPEN_API)
+
+          .baseDate(LocalDate.parse(item.path("bsDat").asText()) )
+          .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
+          .tradingQuantity(item.path("trqu").asLong())
+          .build();
+          indexData = OpenApiIndexDataMapper.toIndexData(dto);
+    }
+    catch (Exception e) {
+      log.warn("⚠️ ExternalIndexDataDto 오류: {}", key);
+      return;
+    }
+
+
     try {
       indexDataRepository.save(indexData);
       log.info("✅ 저장 완료: {}", indexName);
