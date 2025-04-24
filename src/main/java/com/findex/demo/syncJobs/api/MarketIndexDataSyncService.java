@@ -124,7 +124,7 @@ public class MarketIndexDataSyncService {
           .fluctuationRate(item.path("fltRt").asDouble())
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
-
+          .tradingPrice(item.path("trPrc").asLong())
           .baseDate(LocalDate.parse(item.path("bsDat").asText()) )
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
