@@ -40,11 +40,11 @@ public class IndexDataController {
    */
   @GetMapping
   public ResponseEntity<CursorPageResponseIndexDataDto> findAll(
-      @RequestParam(required = false) Integer indexInfoId,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-      @RequestParam(required = false) Integer idAfter,
-      @RequestParam(required = false) String cursor,
+      @RequestParam(defaultValue = "1") Integer indexInfoId,
+      @RequestParam(defaultValue = "2010-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+      @RequestParam(defaultValue = "2025-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam Integer idAfter,
+      @RequestParam String cursor,
       @RequestParam(defaultValue = "baseDate") String sortField,
       @RequestParam(defaultValue = "desc") String sortDirection,
       @RequestParam(defaultValue = "10") Integer size

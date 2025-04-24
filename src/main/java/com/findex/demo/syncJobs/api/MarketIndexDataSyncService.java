@@ -7,8 +7,10 @@ import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -109,10 +111,6 @@ public class MarketIndexDataSyncService {
     Optional<IndexInfo> optionalInfo =
         indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
 
-    if (optionalInfo.isEmpty()) {
-      log.warn("❌ IndexInfo 조회 실패 (복합키 기준): {}, {}", indexClassification, indexName);
-      return;
-    }
 
     IndexInfo indexInfo = optionalInfo.get();
 
@@ -124,6 +122,10 @@ public class MarketIndexDataSyncService {
           .openPrice(item.path("mkp").asDouble())
           .highPrice(item.path("hipr").asDouble())
           .fluctuationRate(item.path("fltRt").asDouble())
+          .versus(item.path("vs").asDouble())
+          .sourceType(SourceType.OPEN_API)
+
+          .baseDate(LocalDate.parse(item.path("bsDat").asText()) )
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
