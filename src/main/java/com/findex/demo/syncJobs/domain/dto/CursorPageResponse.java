@@ -1,4 +1,4 @@
-package com.findex.demo.syncJobs.dto;
+package com.findex.demo.syncJobs.domain.dto;
 
 import lombok.*;
 import java.util.List;
