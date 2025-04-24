@@ -6,6 +6,7 @@ import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
+import com.findex.demo.indexInfo.domain.entity.SourceType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -99,24 +100,54 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
   public List<IndexData> findWithCursor(Integer indexInfoId, LocalDate startDate,
       LocalDate endDate, Integer cursorId, int size) {
 
-    String sql = """
-            SELECT * FROM index_data
-            WHERE (:indexInfoId IS NULL OR index_info_id = :indexInfoId)
-            AND (:startDate IS NULL OR base_date >= :startDate)
-            AND (:endDate IS NULL OR base_date <= :endDate)
-            AND (:cursorId IS NULL OR id > :cursorId)
-            ORDER BY id ASC
-            LIMIT :limit
-        """;
+    String sql = "SELECT id, index_info_id, base_date, source_type, open_price, close_price, high_price, " +
+        "low_price, versus, fluctuation_rate, trading_quantity, trading_price, market_total_amount " +
+        "FROM index_data " +
+        "WHERE (:indexInfoId IS NULL OR index_info_id = :indexInfoId) " +
+        "AND (:startDate IS NULL OR base_date >= :startDate) " +
+        "AND (:endDate IS NULL OR base_date <= :endDate) " +
+        "AND (:cursorId IS NULL OR id > :cursorId) " +
+        "ORDER BY id ASC " +
+        "LIMIT :limit";
 
-    Query query = em.createNativeQuery(sql, IndexData.class);
+    Query query = em.createNativeQuery(sql);
     query.setParameter("indexInfoId", indexInfoId);
     query.setParameter("startDate", startDate);
     query.setParameter("endDate", endDate);
     query.setParameter("cursorId", cursorId);
-    query.setParameter("limit", size + 1); // for hasNext
+    query.setParameter("limit", size + 1);
 
-    return query.getResultList();
+    List<Object[]> rawResults = query.getResultList();
+
+    List<IndexData> results = rawResults.stream().map(row -> {
+      IndexData data = new IndexData();
+
+      // 기본 키
+      data.setId((Integer) row[0]);
+
+      // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
+      // data.setIndexInfo(...); → 생략하거나 Lazy 로드
+
+      data.setBaseDate(((java.sql.Date) row[2]).toLocalDate());
+
+      if (row[3] != null) {
+        data.setSourceType(SourceType.valueOf((String) row[3]));
+      }
+
+      data.setOpenPrice((Double) row[4]);
+      data.setClosePrice((Double) row[5]);
+      data.setHighPrice((Double) row[6]);
+      data.setLowPrice((Double) row[7]);
+      data.setVersus((Double) row[8]);
+      data.setFluctuationRate((Double) row[9]);
+      data.setTradingQuantity((Long) row[10]);
+      data.setTradingPrice((Long) row[11]);
+      data.setMarketTotalAmount((Long) row[12]);
+
+      return data;
+    }).toList();
+
+    return results;
   }
 }
 

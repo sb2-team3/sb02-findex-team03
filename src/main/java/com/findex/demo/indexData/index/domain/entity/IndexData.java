@@ -20,9 +20,11 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "index_data")
 @NoArgsConstructor
 public class IndexData extends BaseTimeEntity {

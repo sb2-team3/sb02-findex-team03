@@ -41,7 +41,7 @@ public class IndexDataService {
   public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
 
     Integer cursorId = decodeCursor(condition.getCursor());
-    int pageSize = condition.getSize() != 0 ? condition.getSize() : 10;
+    int pageSize = condition.getSize() > 0 ? condition.getSize() : 10;
 
     List<IndexData> results = indexDataRepository.findWithCursor(
         condition.getIndexInfoId(),
