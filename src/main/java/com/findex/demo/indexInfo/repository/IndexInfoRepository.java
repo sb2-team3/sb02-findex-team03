@@ -17,7 +17,7 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
       @Param("indexClassification") String indexClassification,
       @Param("indexName") String indexName);
 
-  Optional<IndexInfo> findByIndexClassificationAndIndexName(String indexClassification, String indexName);
+  List<IndexInfo> findByIndexClassificationAndIndexName(String indexClassification, String indexName);
 
   List<IndexInfo> findByFavoriteIsTrue();
 

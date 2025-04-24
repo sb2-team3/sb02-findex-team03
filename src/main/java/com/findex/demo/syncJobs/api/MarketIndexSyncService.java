@@ -6,18 +6,19 @@ import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
 import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
+import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
 import com.findex.demo.syncJobs.api.OpenApIIndexInfoMapper;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -121,14 +122,15 @@ public class MarketIndexSyncService {
             .build();
 
         try {
-            Optional<IndexInfo> existing = indexInfoRepository
+            List<IndexInfo> existingList = indexInfoRepository
                 .findByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
 
-            if (existing.isPresent()) {
-                IndexInfo indexInfo = existing.get();
-                indexInfo.updateFromDto(dto);
-                indexInfoRepository.save(indexInfo);
-                log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
+            if (!existingList.isEmpty()) {
+                for (IndexInfo indexInfo : existingList) {
+                    indexInfo.updateFromDto(dto);
+                    indexInfoRepository.save(indexInfo);
+                    log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
+                }
                 return 2;
             } else {
                 IndexInfo indexInfo = OpenApIIndexInfoMapper.toIndexInfo(dto);
