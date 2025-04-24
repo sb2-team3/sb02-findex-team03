@@ -37,14 +37,17 @@ public class IndexDataService {
   private final IndexInfoRepository indexInfoRepository;
   private final IndexDataRepository indexDataRepository;
 
+
   @Transactional(readOnly = true)
   public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
 
     Integer cursorId = decodeCursor(condition.getCursor());
     int pageSize = condition.getSize() > 0 ? condition.getSize() : 10;
 
+    Integer indexInfoId = condition.getIndexInfoId();
+
     List<IndexData> results = indexDataRepository.findWithCursor(
-          condition.getIndexInfoId(),
+          indexInfoRepository.findById(indexInfoId).orElseThrow(),
           condition.getStartDate(),
           condition.getEndDate(),
           cursorId,
@@ -52,8 +55,13 @@ public class IndexDataService {
       );
 
 
+    boolean hasNext = false;
+    try{
+      hasNext = results.size() > pageSize;
+    }catch (Exception e){
+      e.printStackTrace();
+    }
 
-    boolean hasNext = results.size() > pageSize;
     List<IndexData> pagedResults = hasNext ? results.subList(0, pageSize) : results;
 
     List<IndexDataDto> content = pagedResults.stream()
