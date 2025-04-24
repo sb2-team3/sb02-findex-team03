@@ -5,6 +5,7 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,13 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
+@Table(name = "index_data")
 @NoArgsConstructor
 public class IndexData extends BaseTimeEntity {
 
@@ -32,6 +37,7 @@ public class IndexData extends BaseTimeEntity {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
+  @Column( name ="base_date")
   private LocalDate baseDate;
 
   @Enumerated(EnumType.STRING)
@@ -46,6 +52,7 @@ public class IndexData extends BaseTimeEntity {
   private Double fluctuationRate;
 
   private Long tradingQuantity;
+  @Column(nullable = false, name = "trading_price")
   private Long tradingPrice;
   private Long marketTotalAmount;
 

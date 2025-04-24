@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class IndexPerformanceDto {
 
-    private long indexInfoId;
+    private Integer indexInfoId;
     private String indexClassification;
     private String indexName;
     private double versus;
