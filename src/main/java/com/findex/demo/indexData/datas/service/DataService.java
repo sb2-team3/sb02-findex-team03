@@ -111,10 +111,7 @@ public class DataService {
                 Double endPrice = endData.getClosePrice();
 
                 // 등락률 계산 (%)
-                double fluctuationRate = 0;
-                if (startPrice.compareTo(0.0) != 0) {
-                    fluctuationRate = (endPrice - startPrice) / startPrice * 100;
-                }
+                double fluctuationRate = (endPrice - startPrice) / startPrice * 100;
 
                 // 등락폭 계산
                 double versus = endPrice - startPrice;
