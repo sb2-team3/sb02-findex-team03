@@ -37,7 +37,7 @@ public class IndexData extends BaseTimeEntity {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  @Column(nullable = false, name ="date")
+  @Column(nullable = false, name ="base_date")
   private LocalDate baseDate;
 
   @Enumerated(EnumType.STRING)

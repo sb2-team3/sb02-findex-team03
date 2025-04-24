@@ -30,6 +30,7 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
         LocalDate startDate, LocalDate endDate);
 
 
+
     @Query("""
     SELECT i FROM IndexData i
     WHERE i.indexInfo.id = :indexInfoId
@@ -38,25 +39,15 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
     AND (:cursorId IS NULL OR i.id > :cursorId)
     ORDER BY i.id ASC
     """)
-    List<IndexData> findWithIndexInfoId(
-        @Param("indexInfoId") Integer indexInfoId,
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("cursorId") Integer cursorId,
-        Pageable pageable
-    );
+    List<IndexData> findWithIndexInfoId(Integer indexInfoId, LocalDate startDate, LocalDate endDate, Integer cursorId, Pageable pageable);
 
     @Query("""
     SELECT i FROM IndexData i
-    WHERE (:startDate IS NULL OR i.baseDate >= :startDate)
+    WHERE i.indexInfo.id = :indexInfoId
+    AND (:startDate IS NULL OR i.baseDate >= :startDate)
     AND (:endDate IS NULL OR i.baseDate <= :endDate)
     AND (:cursorId IS NULL OR i.id > :cursorId)
     ORDER BY i.id ASC
     """)
-    List<IndexData> findWithoutIndexInfoId(
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("cursorId") Integer cursorId,
-        Pageable pageable
-    );
+    List<IndexData> findWithoutIndexInfoId(LocalDate startDate, LocalDate endDate, Integer cursorId, Pageable pageable);
 }
