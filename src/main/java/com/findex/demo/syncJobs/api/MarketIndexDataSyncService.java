@@ -35,7 +35,7 @@ public class MarketIndexDataSyncService {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  @Value("36ID8iOnp68nJoKAhT0Ynow39nMtNDM3idhAa9TSjW9MzNS79979CltA7umRWB%2FbyvbLhPjpqLBnbdJeSophrA%3D%3D")
+  @Value("${external.market-index.service-key}")
   private String serviceKey;
 
   @Value("${external.market-index.base-url}")
@@ -166,7 +166,7 @@ public class MarketIndexDataSyncService {
         rawDate.substring(6, 8);
 
     try {
-      return LocalDate.parse(formatted, DateTimeFormatter.ofPattern("yyyy-MM-dd")); // ISO-8601 기본 포맷 사용
+      return LocalDate.parse(formatted); // ISO-8601 기본 포맷 사용
     } catch (DateTimeParseException e) {
       return null;
     }
