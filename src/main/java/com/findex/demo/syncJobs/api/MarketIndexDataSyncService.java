@@ -85,7 +85,7 @@ public class MarketIndexDataSyncService {
   private void processItem(JsonNode item, Set<String> seenKeys, List<String> indexNames, String baseDate) {
     String indexClassification = item.path("idxCsf").asText();
     String indexName = item.path("idxNm").asText();
-    String itemDate = item.path("basDt").asText();
+    String itemDate = item.path("basPntm").asText();
 
     /*if (!itemDate.equals(baseDate)) {
       log.debug("📅 날짜 불일치로 건너뜀: {}, 기대값: {}", itemDate, baseDate);
