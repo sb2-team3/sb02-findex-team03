@@ -33,7 +33,7 @@ public class IndexInfo {
 
   private boolean favorite = false;
 
-  @Builder
+  @Builder(toBuilder = true)
   public IndexInfo(String indexClassification, String indexName, int employedItemCount, LocalDate basePointInTime,
                    Integer baseIndex, SourceType sourceType, boolean favorite) {
     this.indexClassification = indexClassification;
@@ -43,22 +43,6 @@ public class IndexInfo {
     this.baseIndex = baseIndex;
     this.sourceType = sourceType;
     this.favorite = favorite;
-  }
-
-  public void setBasePointInTime(LocalDate basePointInTime) {
-    this.basePointInTime = basePointInTime;
-  }
-
-  public void setBaseIndex(int baseIndex) {
-    this.baseIndex = baseIndex;
-  }
-
-  public void setFavorite(boolean favorite) {
-    this.favorite = favorite;
-  }
-
-  public void setEmployedItemCount(int employedItemCount) {
-    this.employedItemCount = employedItemCount;
   }
 
   public void updateFromDto(ExternalIndexInfoDto dto) {

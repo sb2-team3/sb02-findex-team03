@@ -98,41 +98,34 @@ public class IndexInfoServiceImpl implements IndexInfoService {
       String sortDirection,
       int size) {
 
-    // 정렬 방향 설정 (오름차순 또는 내림차순)
     boolean isAscending = "asc".equalsIgnoreCase(sortDirection);
 
-    // cursor가 null이면 처음 페이지를 의미하므로 idAfter는 0으로 처리
     Long cursorValue = (idAfter != null) ? idAfter : (cursor != null ? Long.parseLong(cursor) : 0L);
 
-    // Pageable 설정: size와 sortField, sortDirection을 기준으로 정렬
     Pageable pageable = PageRequest.of(0, size, Sort.by(
         isAscending ? Sort.Order.asc(sortField) : Sort.Order.desc(sortField)
     ));
 
-    // Repository에서 동적 쿼리 실행
     Page<IndexInfo> pageResult = indexInfoRepository.findByFilter(
         indexClassification, indexName, favorite, cursorValue, pageable
     );
 
-    // 엔티티를 DTO로 변환
     List<IndexInfoDto> indexInfoDtos = pageResult.getContent().stream()
         .map(IndexInfoMapper::toIndexInfoDto)
         .toList();
 
-    boolean hasNext = pageResult.hasNext();  // 다음 페이지 여부 확인
+    boolean hasNext = pageResult.hasNext();
 
     Integer nextCursor = null;
     if (!indexInfoDtos.isEmpty()) {
       IndexInfoDto lastItem = indexInfoDtos.get(indexInfoDtos.size() - 1);
-      nextCursor = lastItem.id();  // 페이지 마지막 항목의 ID를 커서로 사용
+      nextCursor = lastItem.id();
     }
 
-    long totalElements = 0;
-    if (pageResult.hasContent()) {
-      totalElements = indexInfoRepository.count();  // 전체 데이터 수
-    }
+    Long totalElements = indexInfoRepository.countByFilter(
+        indexClassification, indexName, favorite, null
+    );
 
-    // 커서 기반 페이징을 위한 반환 값
     return new CursorPageResponseIndexInfoDto(
         new ArrayList<>(indexInfoDtos),
         nextCursor,

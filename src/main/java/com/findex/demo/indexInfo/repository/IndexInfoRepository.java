@@ -29,7 +29,7 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
       "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
       "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
       "( :favorite IS NULL OR i.favorite = :favorite ) AND " +
-      "( :idAfter IS NULL OR i.id > :idAfter )")
+      "( :idAfter IS NULL OR i.id > :idAfter ) ORDER BY i.id ASC")
   Page<IndexInfo> findByFilter(
       @Param("indexClassification") String indexClassification,
       @Param("indexName") String indexName,
@@ -37,4 +37,17 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
       @Param("idAfter") Long idAfter,
       Pageable pageable
   );
+
+  @Query("SELECT COUNT(i) FROM IndexInfo i WHERE " +
+      "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
+      "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
+      "( :favorite IS NULL OR i.favorite = :favorite ) AND " +
+      "( :idAfter IS NULL OR i.id > :idAfter )")
+  Long countByFilter(
+      @Param("indexClassification") String indexClassification,
+      @Param("indexName") String indexName,
+      @Param("favorite") Boolean favorite,
+      @Param("idAfter") Long idAfter
+  );
+
 }
