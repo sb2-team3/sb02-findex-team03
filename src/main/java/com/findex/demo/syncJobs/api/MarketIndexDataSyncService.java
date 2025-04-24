@@ -11,6 +11,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class MarketIndexDataSyncService {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  @Value("${external.market-index.service-key}")
+  @Value("36ID8iOnp68nJoKAhT0Ynow39nMtNDM3idhAa9TSjW9MzNS79979CltA7umRWB%2FbyvbLhPjpqLBnbdJeSophrA%3D%3D")
   private String serviceKey;
 
   @Value("${external.market-index.base-url}")
@@ -127,11 +128,13 @@ public class MarketIndexDataSyncService {
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
-          .baseDate(parseFormattedDate(item.path("bsDat").asText()) )
+          .baseDate(Optional.ofNullable(
+              parseFormattedDate(item.path("bsDat").asText()))
+              .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
-          indexDatas.add(OpenApiIndexDataMapper.toIndexData(dto)) ;
+          indexDatas.add(OpenApiIndexDataMapper.toIndexData(dto));
     }
     catch (Exception e) {
       log.warn("⚠️ ExternalIndexDataDto 오류: {}", key);
@@ -153,7 +156,7 @@ public class MarketIndexDataSyncService {
   }
 
   public LocalDate parseFormattedDate(String rawDate) {
-    if (rawDate == null || rawDate.length() != 8 || !rawDate.matches("\\d{8}")) {
+    if (rawDate == null || rawDate.length() != 8 ) {
       return null;
     }
 
@@ -163,7 +166,7 @@ public class MarketIndexDataSyncService {
         rawDate.substring(6, 8);
 
     try {
-      return LocalDate.parse(formatted); // ISO-8601 기본 포맷 사용
+      return LocalDate.parse(formatted, DateTimeFormatter.ofPattern("yyyy-MM-dd")); // ISO-8601 기본 포맷 사용
     } catch (DateTimeParseException e) {
       return null;
     }
