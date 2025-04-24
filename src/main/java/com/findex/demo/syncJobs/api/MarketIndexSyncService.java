@@ -9,6 +9,7 @@ import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
 import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
 import com.findex.demo.syncJobs.api.OpenApIIndexInfoMapper;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,15 +123,14 @@ public class MarketIndexSyncService {
             .build();
 
         try {
-            List<IndexInfo> existingList = indexInfoRepository
-                .findByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
+            Optional<IndexInfo> existingOpt = indexInfoRepository
+                .findOneByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
 
-            if (!existingList.isEmpty()) {
-                for (IndexInfo indexInfo : existingList) {
-                    indexInfo.updateFromDto(dto);
-                    indexInfoRepository.save(indexInfo);
-                    log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
-                }
+            if (existingOpt.isPresent()) {
+                IndexInfo indexInfo = existingOpt.get();
+                indexInfo.updateFromDto(dto);
+                indexInfoRepository.save(indexInfo);
+                log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
                 return 2;
             } else {
                 IndexInfo indexInfo = OpenApIIndexInfoMapper.toIndexInfo(dto);
