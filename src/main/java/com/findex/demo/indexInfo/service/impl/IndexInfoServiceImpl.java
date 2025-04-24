@@ -98,10 +98,6 @@ public class IndexInfoServiceImpl implements IndexInfoService {
       String sortDirection,
       int size) {
 
-    if (indexClassification == null || indexClassification.isEmpty()) {
-      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
-    }
-
     // 정렬 방향 설정 (오름차순 또는 내림차순)
     boolean isAscending = "asc".equalsIgnoreCase(sortDirection);
 
