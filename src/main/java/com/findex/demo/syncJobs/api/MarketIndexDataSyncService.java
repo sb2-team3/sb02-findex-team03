@@ -11,7 +11,9 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +110,7 @@ public class MarketIndexDataSyncService {
 
 
 
-    IndexData indexData = new IndexData();
+    List<IndexData> indexDatas = new ArrayList<>();
     Optional<IndexInfo> optionalInfo =
         indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
 
@@ -126,11 +128,13 @@ public class MarketIndexDataSyncService {
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
-          .baseDate(parseFormattedDate(item.path("bsDat").asText()) )
+          .baseDate(Optional.ofNullable(
+              parseFormattedDate(item.path("basDt").asText()))
+              .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
-          indexData = OpenApiIndexDataMapper.toIndexData(dto);
+          indexDatas.add(OpenApiIndexDataMapper.toIndexData(dto));
     }
     catch (Exception e) {
       log.warn("⚠️ ExternalIndexDataDto 오류: {}", key);
@@ -139,8 +143,11 @@ public class MarketIndexDataSyncService {
 
 
     try {
-      indexDataRepository.save(indexData);
-      log.info("✅ 저장 완료: {}", indexName);
+      for(IndexData indexData : indexDatas) {
+        indexDataRepository.save(indexData);
+        log.debug("저장 되니");
+        log.info("✅ 저장 완료: {}", indexName);
+      }
     } catch (DataIntegrityViolationException e) {
       log.warn("⚠️ 중복된 지수 데이터 무시: {}", key);
     }
@@ -149,7 +156,7 @@ public class MarketIndexDataSyncService {
   }
 
   public LocalDate parseFormattedDate(String rawDate) {
-    if (rawDate == null || rawDate.length() != 8 || !rawDate.matches("\\d{8}")) {
+    if (rawDate == null || rawDate.length() != 8 ) {
       return null;
     }
 
