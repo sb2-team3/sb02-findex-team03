@@ -39,7 +39,7 @@ public class MarketIndexSyncService {
     @Value("${external.market-index.num-of-rows:100}")
     private int numOfRows;
 
-    private static final int TOTAL_COUNT = 100;
+    private static final int TOTAL_COUNT = 199169;
     private static final int TOTAL_PAGES = (int) Math.ceil((double) TOTAL_COUNT / 100);
 
     public OpenApiSyncResultResponse fetchAndStoreMarketIndices() {
