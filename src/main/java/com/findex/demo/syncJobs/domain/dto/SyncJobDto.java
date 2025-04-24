@@ -1,4 +1,4 @@
-package com.findex.demo.syncJobs.dto;
+package com.findex.demo.syncJobs.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.findex.demo.syncJobs.type.JobType;

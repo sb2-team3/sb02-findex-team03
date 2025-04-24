@@ -6,16 +6,19 @@ import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
+import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
+import com.findex.demo.syncJobs.api.OpenApIIndexInfoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -35,11 +38,14 @@ public class MarketIndexSyncService {
     @Value("${external.market-index.num-of-rows:100}")
     private int numOfRows;
 
-    private static final int TOTAL_COUNT = 199169;
+    private static final int TOTAL_COUNT = 100;
     private static final int TOTAL_PAGES = (int) Math.ceil((double) TOTAL_COUNT / 100);
 
-    public void fetchAndStoreMarketIndices() {
+    public OpenApiSyncResultResponse fetchAndStoreMarketIndices() {
         Set<String> seenKeys = new HashSet<>();
+        int createdCount = 0;
+        int updatedCount = 0;
+        int skippedCount = 0;
 
         for (int page = 1; page <= TOTAL_PAGES; page++) {
             try {
@@ -65,11 +71,17 @@ public class MarketIndexSyncService {
                 if (itemNode.isArray()) {
                     log.info("✅ [Page {}] 'item' 배열 총 {}건", page, itemNode.size());
                     for (JsonNode item : itemNode) {
-                        processItem(item, seenKeys);
+                        int result = processItem(item, seenKeys);
+                        if (result == 1) createdCount++;
+                        else if (result == 2) updatedCount++;
+                        else skippedCount++;
                     }
                 } else {
                     log.info("✅ [Page {}] 단일 'item' 처리", page);
-                    processItem(itemNode, seenKeys);
+                    int result = processItem(itemNode, seenKeys);
+                    if (result == 1) createdCount++;
+                    else if (result == 2) updatedCount++;
+                    else skippedCount++;
                 }
 
             } catch (Exception e) {
@@ -78,17 +90,27 @@ public class MarketIndexSyncService {
             }
         }
 
-        log.info("🏁 전체 페이지 수집 및 저장 완료");
+        log.info("🏁 전체 연동 완료: 신규 {}, 수정 {}, 변동없음 {}", createdCount, updatedCount, skippedCount);
+
+        return OpenApiSyncResultResponse.builder()
+            .createdCount(createdCount)
+            .updatedCount(updatedCount)
+            .skippedCount(skippedCount)
+            .totalCount(createdCount + updatedCount + skippedCount)
+            .build();
     }
 
-    private void processItem(JsonNode item, Set<String> seenKeys) {
+    /**
+     * @return 1 = 신규 저장 / 2 = 업데이트 / 0 = 건너뜀
+     */
+    private int processItem(JsonNode item, Set<String> seenKeys) {
         String indexClassification = item.path("idxCsf").asText();
         String indexName = item.path("idxNm").asText();
         String key = indexClassification + "|" + indexName;
 
         if (!seenKeys.add(key)) {
             log.debug("🔁 중복 지수 건너뜀: {}", key);
-            return;
+            return 0;
         }
 
         ExternalIndexInfoDto dto = ExternalIndexInfoDto.builder()
@@ -100,22 +122,26 @@ public class MarketIndexSyncService {
             .build();
 
         try {
-            Optional<IndexInfo> existing = indexInfoRepository
+            List<IndexInfo> existingList = indexInfoRepository
                 .findByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
 
-            if (existing.isPresent()) {
-                IndexInfo indexInfo = existing.get();
-                indexInfo.updateFromDto(dto);
-                indexInfoRepository.save(indexInfo);
-                log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
+            if (!existingList.isEmpty()) {
+                for (IndexInfo indexInfo : existingList) {
+                    indexInfo.updateFromDto(dto);
+                    indexInfoRepository.save(indexInfo);
+                    log.info("🔁 수정 완료: {}", indexInfo.getIndexName());
+                }
+                return 2;
             } else {
                 IndexInfo indexInfo = OpenApIIndexInfoMapper.toIndexInfo(dto);
                 indexInfoRepository.save(indexInfo);
                 log.info("✅ 신규 저장 완료: {}", indexInfo.getIndexName());
+                return 1;
             }
 
         } catch (Exception e) {
             log.error("❌ 저장 중 예외 발생: {}", e.getMessage(), e);
+            return 0;
         }
     }
 }

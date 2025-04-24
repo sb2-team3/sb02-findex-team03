@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
 
 @Slf4j
 @RestController
@@ -35,11 +36,11 @@ public class MarketIndexSyncController {
     private final IndexInfoRepository indexInfoRepository;
 
 
-    @PostMapping("/index-infos")
-    public ResponseEntity<Void> syncMarketIndexInfo() {
-        marketIndexSyncService.fetchAndStoreMarketIndices();
-        return ResponseEntity.ok().build();
-    }
+  @PostMapping("/index-infos")
+  public ResponseEntity<OpenApiSyncResultResponse> syncMarketIndexInfo() {
+    OpenApiSyncResultResponse result = marketIndexSyncService.fetchAndStoreMarketIndices();
+    return ResponseEntity.ok(result);
+  }
 
     //indexdata 연동구현 ref: 이준혁
     @PostMapping("/index-data")
