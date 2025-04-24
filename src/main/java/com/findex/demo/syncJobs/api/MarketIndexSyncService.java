@@ -6,9 +6,6 @@ import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
-import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
-import com.findex.demo.syncJobs.api.OpenApIIndexInfoMapper;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -42,7 +38,7 @@ public class MarketIndexSyncService {
     private static final int TOTAL_COUNT = 199169;
     private static final int TOTAL_PAGES = (int) Math.ceil((double) TOTAL_COUNT / 100);
 
-    public OpenApiSyncResultResponse fetchAndStoreMarketIndices() {
+    public void fetchAndStoreMarketIndices() {
         Set<String> seenKeys = new HashSet<>();
         int createdCount = 0;
         int updatedCount = 0;
@@ -93,12 +89,6 @@ public class MarketIndexSyncService {
 
         log.info("🏁 전체 연동 완료: 신규 {}, 수정 {}, 변동없음 {}", createdCount, updatedCount, skippedCount);
 
-        return OpenApiSyncResultResponse.builder()
-            .createdCount(createdCount)
-            .updatedCount(updatedCount)
-            .skippedCount(skippedCount)
-            .totalCount(createdCount + updatedCount + skippedCount)
-            .build();
     }
 
     /**
@@ -124,7 +114,7 @@ public class MarketIndexSyncService {
 
         try {
             Optional<IndexInfo> existingOpt = indexInfoRepository
-                .findOneByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
+                .findByIndexClassificationAndIndexName(dto.indexClassification(), dto.indexName());
 
             if (existingOpt.isPresent()) {
                 IndexInfo indexInfo = existingOpt.get();
