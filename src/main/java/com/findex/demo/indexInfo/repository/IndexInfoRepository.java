@@ -3,6 +3,8 @@ package com.findex.demo.indexInfo.repository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +24,17 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
   List<IndexInfo> findByIndexClassification(String indexClassification);
 
   IndexInfo findByIndexName(String indexName);
+
+  @Query("SELECT i FROM IndexInfo i WHERE " +
+      "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
+      "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
+      "( :favorite IS NULL OR i.favorite = :favorite ) AND " +
+      "( :idAfter IS NULL OR i.id > :idAfter )")
+  Page<IndexInfo> findByFilter(
+      @Param("indexClassification") String indexClassification,
+      @Param("indexName") String indexName,
+      @Param("favorite") Boolean favorite,
+      @Param("idAfter") Long idAfter,
+      Pageable pageable
+  );
 }
