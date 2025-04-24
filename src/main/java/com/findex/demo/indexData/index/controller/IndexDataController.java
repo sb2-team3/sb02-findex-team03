@@ -43,7 +43,7 @@ public class IndexDataController {
   public ResponseEntity<CursorPageResponseIndexDataDto<IndexDataDto>> findAll(
       @RequestParam(defaultValue = "1") Integer indexInfoId,
       @RequestParam(defaultValue = "2010-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(defaultValue = "2025-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam(defaultValue = "2025-04-24") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
       @RequestParam(defaultValue = "eyJpZCI6MjB9") String cursor,
       @RequestParam(defaultValue = "2") Integer idAfter,
       @RequestParam(defaultValue = "baseDate") String sortField,
