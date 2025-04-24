@@ -35,21 +35,12 @@ public class IndexInfoMapper {
   }
 
   public static IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
-    if (updateRequest.employedItemsCount() != 0) {
-      existingIndexInfo.setEmployedItemCount(updateRequest.employedItemsCount());
-    }
-
-    if (updateRequest.basePointInTime() != null) {
-      existingIndexInfo.setBasePointInTime(updateRequest.basePointInTime());
-    }
-
-    if (updateRequest.baseIndex() != 0) {
-      existingIndexInfo.setBaseIndex(updateRequest.baseIndex());
-    }
-
-      existingIndexInfo.setFavorite(updateRequest.favorite());
-
-    return existingIndexInfo;
+    return existingIndexInfo.toBuilder()
+        .employedItemCount(updateRequest.employedItemsCount() != 0 ? updateRequest.employedItemsCount() : existingIndexInfo.getEmployedItemCount())
+        .basePointInTime(updateRequest.basePointInTime() != null ? updateRequest.basePointInTime() : existingIndexInfo.getBasePointInTime())
+        .baseIndex(updateRequest.baseIndex() != 0 ? updateRequest.baseIndex() : existingIndexInfo.getBaseIndex())
+        .favorite(updateRequest.favorite() != existingIndexInfo.isFavorite() ? updateRequest.favorite() : existingIndexInfo.isFavorite())
+        .build();
   }
 
   public static IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
