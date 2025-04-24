@@ -10,7 +10,7 @@ public record IndexInfoCreateRequest(
     int employedItemsCount,
     LocalDate basePointInTime,
     int baseIndex,
-    boolean favorite
+    Boolean favorite
 ) {
 
 }

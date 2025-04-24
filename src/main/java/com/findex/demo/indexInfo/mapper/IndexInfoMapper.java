@@ -18,7 +18,7 @@ public class IndexInfoMapper {
         .basePointInTime(indexInfo.getBasePointInTime())
         .baseIndex(indexInfo.getBaseIndex())
         .sourceType(indexInfo.getSourceType())
-        .favorite(indexInfo.isFavorite())
+        .favorite(indexInfo.getFavorite() != null ? indexInfo.getFavorite() : false)
         .build();
   }
 
@@ -31,15 +31,6 @@ public class IndexInfoMapper {
         .baseIndex(createRequest.baseIndex())
         .sourceType(sourceType)
         .favorite(createRequest.favorite())
-        .build();
-  }
-
-  public static IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
-    return existingIndexInfo.toBuilder()
-        .employedItemCount(updateRequest.employedItemsCount() != 0 ? updateRequest.employedItemsCount() : existingIndexInfo.getEmployedItemCount())
-        .basePointInTime(updateRequest.basePointInTime() != null ? updateRequest.basePointInTime() : existingIndexInfo.getBasePointInTime())
-        .baseIndex(updateRequest.baseIndex() != 0 ? updateRequest.baseIndex() : existingIndexInfo.getBaseIndex())
-        .favorite(updateRequest.favorite() != existingIndexInfo.isFavorite() ? updateRequest.favorite() : existingIndexInfo.isFavorite())
         .build();
   }
 

@@ -1,5 +1,6 @@
 package com.findex.demo.indexInfo.domain.entity;
 
+import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,11 +37,11 @@ public class IndexInfo {
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
 
-  private boolean favorite = false;
+  private Boolean favorite;
 
-  @Builder(toBuilder = true)
+  @Builder
   public IndexInfo(String indexClassification, String indexName, int employedItemCount, LocalDate basePointInTime,
-                   Integer baseIndex, SourceType sourceType, boolean favorite) {
+                   Integer baseIndex, SourceType sourceType, Boolean favorite) {
     this.indexClassification = indexClassification;
     this.indexName = indexName;
     this.employedItemCount = employedItemCount;
@@ -48,6 +49,25 @@ public class IndexInfo {
     this.baseIndex = baseIndex;
     this.sourceType = sourceType;
     this.favorite = favorite;
+  }
+
+  public void update(IndexInfoUpdateRequest updateRequest) {
+    if (updateRequest.employedItemsCount() != 0 && updateRequest.employedItemsCount() != this.employedItemCount) {
+      this.employedItemCount = updateRequest.employedItemsCount();
+    }
+
+    if (updateRequest.basePointInTime() != null && !updateRequest.basePointInTime().equals(this.basePointInTime)) {
+      this.basePointInTime = updateRequest.basePointInTime();
+    }
+
+    if (updateRequest.baseIndex() != 0 && updateRequest.baseIndex() != this.baseIndex) {
+      this.baseIndex = updateRequest.baseIndex();
+    }
+    if (updateRequest.favorite() != null && !updateRequest.favorite().equals(this.favorite)) {
+      this.favorite = updateRequest.favorite();
+    } else if (updateRequest.favorite() == null && this.favorite == null) {
+      this.favorite = false;
+    }
   }
 
   public void updateFromDto(ExternalIndexInfoDto dto) {
