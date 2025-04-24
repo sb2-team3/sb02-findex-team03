@@ -44,7 +44,7 @@ public class MarketIndexDataSyncService {
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
     Set<String> seenKeys = new HashSet<>();
-    int totalPages = (int) Math.ceil((double) 100 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
+    int totalPages = (int) Math.ceil((double) 1000 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
     for (int page = 1; page <= totalPages; page++) {
       try {
