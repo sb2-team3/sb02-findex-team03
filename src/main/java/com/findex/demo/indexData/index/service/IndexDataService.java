@@ -44,12 +44,14 @@ public class IndexDataService {
     int pageSize = condition.getSize() > 0 ? condition.getSize() : 10;
 
     List<IndexData> results = indexDataRepository.findWithCursor(
-        condition.getIndexInfoId(),
-        condition.getStartDate(),
-        condition.getEndDate(),
-        cursorId,
-        pageSize
-    );
+          condition.getIndexInfoId(),
+          condition.getStartDate(),
+          condition.getEndDate(),
+          cursorId,
+          pageSize
+      );
+
+
 
     boolean hasNext = results.size() > pageSize;
     List<IndexData> pagedResults = hasNext ? results.subList(0, pageSize) : results;
@@ -76,6 +78,7 @@ public class IndexDataService {
         .totalElements(content.size())
         .hasNext(hasNext)
         .build();
+
   }
 
 

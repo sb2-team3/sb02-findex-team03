@@ -145,7 +145,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
     query.setParameter("cursorId", cursorId);
     query.setParameter("limit", size + 1);
 
-    try {
+
       List<Object[]> rawResults = (List<Object[]>) query.getResultList();
 
       // 기본 키
@@ -161,7 +161,15 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
         // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
         // data.setIndexInfo(...); → 생략하거나 Lazy 로드
 
-        data.setBaseDate(((java.sql.Date) row[2]).toLocalDate());
+        try{
+          data.
+              setBaseDate(((java.sql.Date) row[2])
+                  .toLocalDate());
+        }catch (Exception e) {
+          log.debug("dfddd");
+          e.printStackTrace();
+        }
+
 
         if (row[3] != null) {
           data.setSourceType(SourceType.valueOf((String) row[3]));
@@ -179,11 +187,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 
         return data;
       }).toList();
-    } catch (Exception e) {
-      log.debug("Error while fetching index data from database", e);
-      e.printStackTrace();
-      return null;
-    }
+
   }
 }
 
