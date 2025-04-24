@@ -35,7 +35,7 @@ public class MarketIndexDataSyncService {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  @Value("${external.market-index.service-key}")
+  @Value("36ID8iOnp68nJoKAhT0Ynow39nMtNDM3idhAa9TSjW9MzNS79979CltA7umRWB%2FbyvbLhPjpqLBnbdJeSophrA%3D%3D")
   private String serviceKey;
 
   @Value("${external.market-index.base-url}")
@@ -46,11 +46,11 @@ public class MarketIndexDataSyncService {
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
     Set<String> seenKeys = new HashSet<>();
-    int totalPages = (int) Math.ceil((double) 1000 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
+    int totalPages = (int) Math.ceil((double) 100 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
     for (int page = 1; page <= totalPages; page++) {
       try {
-        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basDt=%s",
+        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basPntm=%s",
             baseUrl, serviceKey, page, numOfRows, baseDate);
 
         log.info("📤 [Page {}] 요청 URI: {}", page, apiUrl);
@@ -85,7 +85,7 @@ public class MarketIndexDataSyncService {
   private void processItem(JsonNode item, Set<String> seenKeys, List<String> indexNames, String baseDate) {
     String indexClassification = item.path("idxCsf").asText();
     String indexName = item.path("idxNm").asText();
-    String itemDate = item.path("basPntm").asText();
+    String itemDate = item.path("basDt").asText();
 
     /*if (!itemDate.equals(baseDate)) {
       log.debug("📅 날짜 불일치로 건너뜀: {}, 기대값: {}", itemDate, baseDate);
@@ -129,7 +129,7 @@ public class MarketIndexDataSyncService {
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
           .baseDate(Optional.ofNullable(
-              parseFormattedDate(item.path("basDt").asText()))
+              parseFormattedDate(itemDate))
               .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
