@@ -11,6 +11,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class MarketIndexDataSyncService {
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
     Set<String> seenKeys = new HashSet<>();
-    int totalPages = (int) Math.ceil((double) 10 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
+    int totalPages = (int) Math.ceil((double) 1000 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
     for (int page = 1; page <= totalPages; page++) {
       try {
@@ -124,8 +125,8 @@ public class MarketIndexDataSyncService {
           .fluctuationRate(item.path("fltRt").asDouble())
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
-
-          .baseDate(LocalDate.parse(item.path("bsDat").asText()) )
+          .tradingPrice(item.path("trPrc").asLong())
+          .baseDate(parseFormattedDate(item.path("bsDat").asText()) )
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
@@ -145,6 +146,23 @@ public class MarketIndexDataSyncService {
     }
 
     // 🔄 이력 저장 로직도 여기에 추가 가능
+  }
+
+  public LocalDate parseFormattedDate(String rawDate) {
+    if (rawDate == null || rawDate.length() != 8 || !rawDate.matches("\\d{8}")) {
+      return null;
+    }
+
+    // "20230321" → "2023-03-21"
+    String formatted = rawDate.substring(0, 4) + "-" +
+        rawDate.substring(4, 6) + "-" +
+        rawDate.substring(6, 8);
+
+    try {
+      return LocalDate.parse(formatted); // ISO-8601 기본 포맷 사용
+    } catch (DateTimeParseException e) {
+      return null;
+    }
   }
 }
 
