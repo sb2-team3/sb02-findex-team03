@@ -9,7 +9,6 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 
 public class IndexInfoMapper {
 
-  // IndexInfo -> IndexInfoDto 변환
   public static IndexInfoDto toIndexInfoDto(IndexInfo indexInfo) {
     return IndexInfoDto.builder()
         .id(indexInfo.getId())
@@ -23,7 +22,6 @@ public class IndexInfoMapper {
         .build();
   }
 
-  // IndexInfoCreateRequest -> IndexInfo 변환
   public static IndexInfo toEntity(IndexInfoCreateRequest createRequest, SourceType sourceType) {
     return IndexInfo.builder()
         .indexClassification(createRequest.indexClassification())
@@ -36,17 +34,15 @@ public class IndexInfoMapper {
         .build();
   }
 
-  // IndexInfoUpdateRequest -> IndexInfo 변환
   public static IndexInfo updateFromDto(IndexInfoUpdateRequest updateRequest, IndexInfo existingIndexInfo) {
-    existingIndexInfo.setEmployedItemCount(updateRequest.employedItemsCount());
-    existingIndexInfo.setBasePointInTime(updateRequest.basePointInTime());
-    existingIndexInfo.setBaseIndex(updateRequest.baseIndex());
-    existingIndexInfo.setFavorite(updateRequest.favorite());
-
-    return existingIndexInfo;
+    return existingIndexInfo.toBuilder()
+        .employedItemCount(updateRequest.employedItemsCount() != 0 ? updateRequest.employedItemsCount() : existingIndexInfo.getEmployedItemCount())
+        .basePointInTime(updateRequest.basePointInTime() != null ? updateRequest.basePointInTime() : existingIndexInfo.getBasePointInTime())
+        .baseIndex(updateRequest.baseIndex() != 0 ? updateRequest.baseIndex() : existingIndexInfo.getBaseIndex())
+        .favorite(updateRequest.favorite() != existingIndexInfo.isFavorite() ? updateRequest.favorite() : existingIndexInfo.isFavorite())
+        .build();
   }
 
-  // IndexInfo -> IndexInfoSummaryDto 변환
   public static IndexInfoSummaryDto toSummaryDto(IndexInfo indexInfo) {
     return IndexInfoSummaryDto.builder()
         .id(indexInfo.getId())
