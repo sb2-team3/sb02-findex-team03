@@ -129,7 +129,7 @@ public class MarketIndexDataSyncService {
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
           .baseDate(Optional.ofNullable(
-              parseFormattedDate(item.path("bsDat").asText()))
+              parseFormattedDate(item.path("basDt").asText()))
               .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
