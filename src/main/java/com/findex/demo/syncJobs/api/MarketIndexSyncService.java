@@ -13,7 +13,6 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,7 +34,7 @@ public class MarketIndexSyncService {
     @Value("${external.market-index.num-of-rows:100}")
     private int numOfRows;
 
-    private static final int TOTAL_COUNT = 199169;
+    private static final int TOTAL_COUNT = 100;
     private static final int TOTAL_PAGES = (int) Math.ceil((double) TOTAL_COUNT / 100);
 
     public void fetchAndStoreMarketIndices() {
