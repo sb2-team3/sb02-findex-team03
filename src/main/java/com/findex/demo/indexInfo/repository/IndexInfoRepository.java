@@ -26,15 +26,27 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
   IndexInfo findByIndexName(String indexName);
 
   @Query("SELECT i FROM IndexInfo i WHERE " +
-      "( :indexClassification IS NULL OR i.indexClassification = :indexClassification ) AND " +
+      "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
       "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
-      "( :favorite IS NULL OR i.favorite = :favorite ) AND " +
-      "( :idAfter IS NULL OR i.id > :idAfter )")
+      "( :favorite IS NULL OR i.favorite = :favorite OR (i.favorite IS NULL AND :favorite IS FALSE) ) AND " +
+      "( :idAfter IS NULL OR i.id > :idAfter ) " + "ORDER BY i.id ASC")
   Page<IndexInfo> findByFilter(
       @Param("indexClassification") String indexClassification,
       @Param("indexName") String indexName,
       @Param("favorite") Boolean favorite,
       @Param("idAfter") Long idAfter,
       Pageable pageable
+  );
+
+  @Query("SELECT COUNT(i) FROM IndexInfo i WHERE " +
+      "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
+      "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
+      "( :favorite IS NULL OR i.favorite = :favorite OR (i.favorite IS NULL AND :favorite IS FALSE) ) AND " +
+      "( :idAfter IS NULL OR i.id > :idAfter )")
+  Long countByFilter(
+      @Param("indexClassification") String indexClassification,
+      @Param("indexName") String indexName,
+      @Param("favorite") Boolean favorite,
+      @Param("idAfter") Long idAfter
   );
 }
