@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.findex.demo.syncJobs.domain.dto.OpenApiSyncResultResponse;
 
 @Slf4j
 @RestController
@@ -37,12 +35,24 @@ public class MarketIndexSyncController {
 
 
   @PostMapping("/index-infos")
-  public ResponseEntity<OpenApiSyncResultResponse> syncMarketIndexInfo() {
-    OpenApiSyncResultResponse result = marketIndexSyncService.fetchAndStoreMarketIndices();
-    return ResponseEntity.ok(result);
+  public ResponseEntity<List<SyncJob>> syncMarketIndexInfo() {
+    marketIndexSyncService.fetchAndStoreMarketIndices();
+
+    List<SyncJob> jobs = indexInfoRepository.findAll().stream()
+        .map(info -> SyncJob.builder()
+            .jobType(JobType.INDEX_INFO)
+            .result(Result.SUCCESS)
+            .jobTime(LocalDateTime.now())
+            .worker("OpenAPI") // 또는 InetAddress.getLocalHost().getHostAddress()
+            .indexInfo(info)
+            .build())
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(jobs);
   }
 
-    //indexdata 연동구현 ref: 이준혁
+
+  //indexdata 연동구현 ref: 이준혁
     @PostMapping("/index-data")
     public ResponseEntity<List<SyncJob>> syncIndexData(@RequestBody IndexDataSyncRequestDto request) {
         try {
