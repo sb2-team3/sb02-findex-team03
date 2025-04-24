@@ -1,5 +1,7 @@
 package com.findex.demo.indexData.index.repository;
 
+import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
+import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import java.time.LocalDate;
@@ -27,19 +29,25 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
     List<IndexData> findByIndexInfoInAndBaseDateBetween(List<IndexInfo> indexInfoList,
         LocalDate startDate, LocalDate endDate);
 
+
+
     @Query("""
-        SELECT i FROM IndexData i
-        WHERE (:indexInfoId IS NULL OR i.indexInfo.id = :indexInfoId)
-        AND (:startDate IS NULL OR i.baseDate >= :startDate)
-        AND (:endDate IS NULL OR i.baseDate <= :endDate)
-        AND (:cursorId IS NULL OR i.id > :cursorId)
-        ORDER BY i.id ASC
-        """)
-    List<IndexData> findWithCursorPaging(
-        @Param("indexInfoId") Integer indexInfoId,
-        @Param("startDate") LocalDate startDate,
-        @Param("endDate") LocalDate endDate,
-        @Param("cursorId") Integer cursorId,
-        Pageable pageable
-    );
+    SELECT i FROM IndexData i
+    WHERE i.indexInfo.id = :indexInfoId
+    AND (:startDate IS NULL OR i.baseDate >= :startDate)
+    AND (:endDate IS NULL OR i.baseDate <= :endDate)
+    AND (:cursorId IS NULL OR i.id > :cursorId)
+    ORDER BY i.id ASC
+    """)
+    List<IndexData> findWithIndexInfoId(Integer indexInfoId, LocalDate startDate, LocalDate endDate, Integer cursorId, Pageable pageable);
+
+    @Query("""
+    SELECT i FROM IndexData i
+    WHERE i.indexInfo.id = :indexInfoId
+    AND (:startDate IS NULL OR i.baseDate >= :startDate)
+    AND (:endDate IS NULL OR i.baseDate <= :endDate)
+    AND (:cursorId IS NULL OR i.id > :cursorId)
+    ORDER BY i.id ASC
+    """)
+    List<IndexData> findWithoutIndexInfoId(LocalDate startDate, LocalDate endDate, Integer cursorId, Pageable pageable);
 }
