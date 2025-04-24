@@ -9,9 +9,15 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 public class IndexDataMapper {
 
   public static IndexDataDto toIndexDto(IndexData entity) {
+    Integer indexInfoId = 0;
+    try{
+       indexInfoId =  entity.getIndexInfo().getId();
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     return new IndexDataDto(
         entity.getId(),
-        entity.getIndexInfo().getId(),
+        indexInfoId,
         entity.getBaseDate(),
         entity.getSourceType(),
         entity.getOpenPrice(),

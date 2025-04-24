@@ -117,6 +117,9 @@ public class MarketIndexDataSyncService {
 
     IndexInfo indexInfo = optionalInfo.get();
 
+    DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+
     try{
       ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
           .indexInfo(indexInfo)
@@ -128,8 +131,8 @@ public class MarketIndexDataSyncService {
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
-          .baseDate(Optional.ofNullable(
-              parseFormattedDate(itemDate))
+          .baseDate(Optional.of(
+              LocalDate.parse(itemDate, yyyyMMdd))
               .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
@@ -155,21 +158,6 @@ public class MarketIndexDataSyncService {
     // 🔄 이력 저장 로직도 여기에 추가 가능
   }
 
-  public LocalDate parseFormattedDate(String rawDate) {
-    if (rawDate == null || rawDate.length() != 8 ) {
-      return null;
-    }
 
-    // "20230321" → "2023-03-21"
-    String formatted = rawDate.substring(0, 4) + "-" +
-        rawDate.substring(4, 6) + "-" +
-        rawDate.substring(6, 8);
-
-    try {
-      return LocalDate.parse(formatted); // ISO-8601 기본 포맷 사용
-    } catch (DateTimeParseException e) {
-      return null;
-    }
-  }
 }
 

@@ -6,7 +6,9 @@ import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
+import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
+import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -101,7 +103,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
   }
 
   @Override
-  public List<IndexData> findWithCursor(Integer indexInfoId, LocalDate startDate,
+  public List<IndexData> findWithCursor(IndexInfo indexInfo, LocalDate startDate,
       LocalDate endDate, Integer cursorId, int size) {
 
 //    String sql =
@@ -124,9 +126,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
             FROM index_data
             """);
 
-    if (indexInfoId != null) {
-      sql.append(" WHERE index_info_id = :indexInfoId");
-    }
+
     if (startDate != null) {
       sql.append(" AND base_date >= :startDate");
     }
@@ -139,13 +139,13 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
     sql.append(" ORDER BY id ASC LIMIT :limit");
     
     Query query = em.createNativeQuery(sql.toString());
-    query.setParameter("indexInfoId", indexInfoId);
+
     query.setParameter("startDate", startDate);
     query.setParameter("endDate", endDate);
     query.setParameter("cursorId", cursorId);
     query.setParameter("limit", size + 1);
 
-    try {
+
       List<Object[]> rawResults = (List<Object[]>) query.getResultList();
 
       // 기본 키
@@ -156,17 +156,31 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
         IndexData data = new IndexData();
 
         // 기본 키
-        data.setId((Integer) row[0]);
+        if (row[0] instanceof Number) {
+          data.setId(((Number) row[0]).intValue());
+        } else {
+          log.warn("row[0] is not a number: {}", row[0]);
+        }
+
+
 
         // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
         // data.setIndexInfo(...); → 생략하거나 Lazy 로드
 
-        data.setBaseDate(((java.sql.Date) row[2]).toLocalDate());
+        if (row[2] instanceof java.sql.Date) {
+          java.sql.Date sqlDate = (java.sql.Date) row[2];
+          if (sqlDate != null) {
+            data.setBaseDate(sqlDate.toLocalDate());
+          }
+        } else {
+          log.warn("row[2] is not java.sql.Date: {}", row[2]);
+        }
+
 
         if (row[3] != null) {
           data.setSourceType(SourceType.valueOf((String) row[3]));
         }
-
+        data.setIndexInfo(indexInfo);
         data.setOpenPrice((Double) row[4]);
         data.setClosePrice((Double) row[5]);
         data.setHighPrice((Double) row[6]);
@@ -179,11 +193,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 
         return data;
       }).toList();
-    } catch (Exception e) {
-      log.debug("Error while fetching index data from database", e);
-      e.printStackTrace();
-      return null;
-    }
+
   }
 }
 
