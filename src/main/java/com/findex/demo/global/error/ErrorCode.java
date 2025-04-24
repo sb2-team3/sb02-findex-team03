@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // --- 400 Bad Request ---
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "잘못된 입력입니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     MISSING_REQUIRED_FIELD(HttpStatus.BAD_REQUEST, "필수 값이 누락되었습니다."),
     TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "요청 타입이 잘못되었습니다."),
     ENUM_TYPE_INVALID(HttpStatus.BAD_REQUEST, "유효하지 않은 열거형 값입니다."),
