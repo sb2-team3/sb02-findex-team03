@@ -112,7 +112,7 @@ public class MarketIndexDataSyncService {
 
     List<IndexData> indexDatas = new ArrayList<>();
     Optional<IndexInfo> optionalInfo =
-        indexInfoRepository.findOneByIndexClassificationAndIndexName(indexClassification, indexName);
+        indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
 
 
     IndexInfo indexInfo = optionalInfo.get();
