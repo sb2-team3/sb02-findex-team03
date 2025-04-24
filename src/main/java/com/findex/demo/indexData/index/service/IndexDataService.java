@@ -1,5 +1,6 @@
 package com.findex.demo.indexData.index.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
@@ -16,9 +17,11 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +29,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class IndexDataService {
@@ -36,34 +40,30 @@ public class IndexDataService {
   @Transactional(readOnly = true)
   public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
 
-    // 커서 디코딩 (Base64 → ID)
     Integer cursorId = decodeCursor(condition.getCursor());
-
-    // Page size + 1 → hasNext 판별용
     int pageSize = condition.getSize() != 0 ? condition.getSize() : 10;
-    Pageable pageable = PageRequest.of(0, pageSize + 1,
-        Sort.by(Sort.Direction.fromString(condition.getSortDirection()), condition.getSortField()));
 
-    // 실제 데이터 조회
-    List<IndexData> results = indexDataRepository.findWithCursorPaging(condition.getIndexInfoId(),
-        condition.getStartDate(),condition.getEndDate(), cursorId, pageable);
+    List<IndexData> results = indexDataRepository.findWithCursor(
+        condition.getIndexInfoId(),
+        condition.getStartDate(),
+        condition.getEndDate(),
+        cursorId,
+        pageSize
+    );
 
-    // hasNext 판별
     boolean hasNext = results.size() > pageSize;
+    List<IndexData> pagedResults = hasNext ? results.subList(0, pageSize) : results;
 
-    // 커서 응답 처리용: 실제 응답은 size 만큼만 자르기
-    List<IndexData> pagedResult = hasNext ? results.subList(0, pageSize) : results;
-
-    IndexDataMapper indexDataMapper = new IndexDataMapper();
-    List<IndexDataDto> content = pagedResult.stream()
-        .map(indexData -> indexDataMapper.toIndexDto(indexData))
+    List<IndexDataDto> content = pagedResults.stream()
+        .map(data ->
+            new IndexDataMapper().toIndexDto(data))
         .toList();
 
     String nextCursor = null;
     Integer nextIdAfter = null;
 
-    if (hasNext && !pagedResult.isEmpty()) {
-      Integer lastId = pagedResult.get(pagedResult.size() - 1).getId();
+    if (hasNext && !pagedResults.isEmpty()) {
+      Integer lastId = pagedResults.get(pagedResults.size() - 1).getId();
       nextCursor = encodeCursor(lastId);
       nextIdAfter = lastId;
     }
@@ -73,10 +73,11 @@ public class IndexDataService {
         .nextCursor(nextCursor)
         .nextIdAfter(nextIdAfter)
         .size(pageSize)
-        .totalElements(content.size()) // 전체 count는 성능상 생략 권장
-        .hashNext(hasNext)
+        .totalElements(content.size())
+        .hasNext(hasNext)
         .build();
   }
+
 
 
 
@@ -126,11 +127,15 @@ public class IndexDataService {
   public Integer decodeCursor(String cursor) {
     try {
       String json = new String(Base64.getDecoder().decode(cursor), StandardCharsets.UTF_8);
-      int cursor_ = new ObjectMapper().readTree(json).path("id").asInt();
-      return Integer.valueOf(cursor_);
+      JsonNode node = new ObjectMapper().readTree(json);
+      if (!node.has("id") || node.get("id").isNull()) {
+        return null;
+      }
+      return node.get("id").asInt();
     } catch (Exception e) {
       return null;
     }
   }
+
 
 }

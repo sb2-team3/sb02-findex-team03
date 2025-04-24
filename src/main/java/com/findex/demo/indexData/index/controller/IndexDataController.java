@@ -5,11 +5,12 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
+import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
-import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/index-data")
@@ -39,12 +40,12 @@ public class IndexDataController {
    * 지수 데이터 목록조회
    */
   @GetMapping
-  public ResponseEntity<CursorPageResponseIndexDataDto> findAll(
+  public ResponseEntity<CursorPageResponseIndexDataDto<IndexDataDto>> findAll(
       @RequestParam(defaultValue = "1") Integer indexInfoId,
       @RequestParam(defaultValue = "2010-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
       @RequestParam(defaultValue = "2025-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-      @RequestParam Integer idAfter,
-      @RequestParam String cursor,
+      @RequestParam(defaultValue = "eyJpZCI6MjB9") String cursor,
+      @RequestParam(defaultValue = "2") Integer idAfter,
       @RequestParam(defaultValue = "baseDate") String sortField,
       @RequestParam(defaultValue = "desc") String sortDirection,
       @RequestParam(defaultValue = "10") Integer size
@@ -53,7 +54,12 @@ public class IndexDataController {
         indexInfoId, startDate, endDate, idAfter, cursor,
         sortField, sortDirection, size
     );
-    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
+
+
+      CursorPageResponseIndexDataDto<IndexDataDto> dto = indexDataService.findAll(request);
+
+
+
     return ResponseEntity.status(HttpStatus.OK).body(dto);
   }
   /**
