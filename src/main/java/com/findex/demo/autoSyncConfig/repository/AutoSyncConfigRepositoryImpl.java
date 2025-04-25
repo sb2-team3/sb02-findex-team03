@@ -5,23 +5,22 @@ import com.findex.demo.autoSyncConfig.domain.entity.QAutoSyncConfig;
 import com.findex.demo.global.pagination.dto.PagedResponse;
 import com.findex.demo.global.pagination.dto.SortDirection;
 import com.findex.demo.global.pagination.dto.SortField;
-import com.findex.demo.global.pagination.sort.AutoSyncConfigPredicateBuilder;
-import com.findex.demo.global.pagination.sort.SortFieldOrderResolver;
-import com.findex.demo.global.pagination.util.GenericCursor;
+import com.findex.demo.indexInfo.domain.entity.QIndexInfo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class AutoSyncConfigRepositoryImpl implements AutoSyncConfigRepositoryCustom {
+public class AutoSyncConfigRepositoryImpl implements
+        AutoSyncConfigRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -30,58 +29,84 @@ public class AutoSyncConfigRepositoryImpl implements AutoSyncConfigRepositoryCus
                                                  SortField sortField, SortDirection sortDirection, int size) {
         QAutoSyncConfig q = QAutoSyncConfig.autoSyncConfig;
 
-        GenericCursor genericCursor = GenericCursor.from(cursor);
-        log.info("이게 문제인가? " + genericCursor.getIndexInfoId(), genericCursor.getSortField());
+        BooleanBuilder where = buildWhereClause(q, indexInfoId, enabled, idAfter);
+        OrderSpecifier<?> orderSpecifier = resolveOrderSpecifier(q, sortField, sortDirection);
 
-        BooleanBuilder where = AutoSyncConfigPredicateBuilder.build(q,  genericCursor);
+        JPAQuery<AutoSyncConfig> query = queryFactory.selectFrom(q);
 
-        log.info(where.toString());
 
-        OrderSpecifier<?>[] orderSpecifiers = SortFieldOrderResolver.resolve(q, genericCursor);
-
-        List<AutoSyncConfig> result = queryFactory
-                .selectFrom(q)
+        List<AutoSyncConfig> result = query
+                .select(q)
+                .leftJoin(q.indexInfo).fetchJoin()
                 .where(where)
-                .orderBy(orderSpecifiers)
+                .orderBy(orderSpecifier)
                 .limit(size + 1)
                 .fetch();
 
-        boolean hasNext = result.size() > size;
-        if (hasNext) {
+
+        boolean hasNext = false;
+        if (result.size() > size) {
             result.remove(result.size() - 1);
+            hasNext = true;
         }
 
-        String nextCursor = null;
         String nextIdAfter = null;
-        if (hasNext) {
-            AutoSyncConfig last = result.get(result.size() - 1);
-            nextCursor = createNextCursor(last, sortField, sortDirection, genericCursor);
-            nextIdAfter = String.valueOf(last.getId());
+        if (!result.isEmpty()) {
+            nextIdAfter = String.valueOf(result.get(result.size() - 1).getId());
         }
 
-        return new PagedResponse<>(result, nextCursor, nextIdAfter, size, result.size(), hasNext);
+        return new PagedResponse<>(
+                result,
+                null,
+                nextIdAfter,
+                size,
+                result.size(),
+                hasNext
+        );
     }
 
-    private String createNextCursor(AutoSyncConfig last, SortField field, SortDirection direction, GenericCursor cursor) {
-        String sortValue;
-        String idAfter = null;
-
-        if (field == SortField.INDEX_NAME) {
-            sortValue = last.getIndexInfo().getIndexName();
-            idAfter = String.valueOf(last.getIndexInfo().getId());
-        } else if (field == SortField.ENABLED) {
-            sortValue = String.valueOf(last.getEnabled());
-            idAfter = String.valueOf(last.getId());
-        } else if (field == SortField.INDEX_INFO_ID) {
-            sortValue = String.valueOf(last.getIndexInfo().getId());
-        } else {
-            throw new IllegalArgumentException("지원하지 않는 정렬 필드");
+    private BooleanBuilder buildWhereClause(QAutoSyncConfig q, Integer indexInfoId, Boolean enabled, int idAfter) {
+        BooleanBuilder where = new BooleanBuilder();
+        boolean hasCondition = false;
+        if (indexInfoId != null) {
+            where.and(q.indexInfo.id.eq(indexInfoId));
+            hasCondition = true;
+        }
+        if (enabled != null) {
+            where.and(q.enabled.eq(enabled));
+            hasCondition = true;
+        }
+        if (idAfter > 0) {
+            where.and(q.id.gt(idAfter));
+            hasCondition = true;
         }
 
-        if (cursor.hasId()) {
-            return new GenericCursor(field.toString(), sortValue, idAfter, direction.toString()).toCursorString();
-        } else {
-            return new GenericCursor(field.toString(), sortValue, null, direction.toString()).toCursorString();
+        if (!hasCondition) {
+            where.and(q.indexInfo.id.isNotNull());
         }
+
+        return where;
+    }
+
+    private OrderSpecifier<?> resolveOrderSpecifier(QAutoSyncConfig q, SortField sortField, SortDirection sortDirection) {
+        if (SortField.INDEX_NAME.equals(sortField)) {
+            if (SortDirection.DESC.equals(sortDirection)) {
+                return q.indexInfo.indexName.desc();
+            }
+            return q.indexInfo.indexName.asc();
+        }
+        if (SortField.ENABLED.equals(sortField)) {
+            if (SortDirection.DESC.equals(sortDirection)) {
+                return q.enabled.desc();
+            }
+            return q.enabled.asc();
+        }
+        if (SortField.INDEX_INFO_ID.equals(sortField)) {
+            if (SortDirection.DESC.equals(sortDirection)) {
+                return q.indexInfo.id.desc();
+            }
+            return q.indexInfo.id.asc();
+        }
+        return q.indexInfo.id.asc();
     }
 }
