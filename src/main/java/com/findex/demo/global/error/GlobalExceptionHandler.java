@@ -1,5 +1,6 @@
 package com.findex.demo.global.error;
 
+import java.time.format.DateTimeParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,10 +20,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleMissingBody(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        String errorMessage = "잘못된 요청입니다.";
+
+        if (ex.getMessage().contains("LocalDate")) {
+            errorMessage = "날짜 형식이 올바르지 않습니다. yyyy-MM-dd 형식이어야 합니다.";
+        } else {
+            errorMessage = "입력된 body가 없습니다.";
+        }
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR, "요청 body가 존재하지 않습니다."));
+                .body(new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE, errorMessage));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -31,7 +40,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR, ex.getBindingResult().getFieldError().getDefaultMessage()));
     }
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(Exception ex) {
