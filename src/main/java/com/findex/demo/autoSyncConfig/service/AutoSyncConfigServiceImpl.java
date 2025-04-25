@@ -26,7 +26,7 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
 
     @Override
     @Transactional
-    public AutoSyncConfigDto updateAutoSyncConfig(Integer indexInfoId, Boolean enabled) {
+    public AutoSyncConfigDto updateAutoSyncConfig(Integer indexInfoId, AutoSyncConfigUpdateRequest request) {
         IndexInfo indexInfo = indexInfoRepository.findById(indexInfoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "자동 연동된 지수를 찾을 수 없습니다"));
 
@@ -35,9 +35,9 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
 
         if (existingConfig.isPresent()) {
             autoSyncConfig = existingConfig.get();
-            autoSyncConfig.update(enabled);
+            autoSyncConfig.update(request.enabled());
         } else {
-            autoSyncConfig = AutoSyncConfigMapper.toAutoSyncConfig(enabled, indexInfo);
+            autoSyncConfig = AutoSyncConfigMapper.toAutoSyncConfig(request.enabled(), indexInfo);
         }
 
         autoSyncConfigRepository.save(autoSyncConfig);

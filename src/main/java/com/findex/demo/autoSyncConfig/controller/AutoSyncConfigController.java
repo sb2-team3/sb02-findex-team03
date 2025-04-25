@@ -29,13 +29,7 @@ public class AutoSyncConfigController {
 
     @PatchMapping("/{indexInfoId}")
     public ResponseEntity<AutoSyncConfigDto> updateAutoSyncConfig(@PathVariable Integer indexInfoId,@RequestBody AutoSyncConfigUpdateRequest request) {
-
-        boolean enabled = false;
-        if (request.enabled() != null) {
-            enabled = request.enabled();
-            log.info("en" + enabled);
-        }
-        AutoSyncConfigDto autoSyncConfigDto = autoSyncConfigService.updateAutoSyncConfig(indexInfoId, enabled);
+        AutoSyncConfigDto autoSyncConfigDto = autoSyncConfigService.updateAutoSyncConfig(indexInfoId, request);
         return ResponseEntity.ok(autoSyncConfigDto);
     }
 
