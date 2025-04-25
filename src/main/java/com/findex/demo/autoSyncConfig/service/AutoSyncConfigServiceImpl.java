@@ -29,7 +29,6 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
     public AutoSyncConfigDto updateAutoSyncConfig(Integer indexInfoId, AutoSyncConfigUpdateRequest request) {
         IndexInfo indexInfo = indexInfoRepository.findById(indexInfoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "자동 연동된 지수를 찾을 수 없습니다"));
-
         AutoSyncConfig autoSyncConfig;
         Optional<AutoSyncConfig> existingConfig = autoSyncConfigRepository.findByIndexInfo_Id(indexInfoId);
 

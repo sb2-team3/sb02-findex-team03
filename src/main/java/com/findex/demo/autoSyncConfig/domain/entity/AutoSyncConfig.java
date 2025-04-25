@@ -1,6 +1,7 @@
 package com.findex.demo.autoSyncConfig.domain.entity;
 
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,8 @@ public class AutoSyncConfig {
     @OneToOne
     @JoinColumn(name = "index_info_id")
     private IndexInfo indexInfo;
-  
+
+    @Column(nullable = false)
     private Boolean enabled;
 
     public void update(Boolean enabled) {
