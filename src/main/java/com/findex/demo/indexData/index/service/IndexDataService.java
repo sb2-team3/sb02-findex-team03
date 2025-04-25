@@ -56,7 +56,7 @@ public class IndexDataService {
     );
 
     // hasNext 판별
-    boolean hasNext = results.size() > pageSize;
+
 
     boolean hasNext = false;
     try{

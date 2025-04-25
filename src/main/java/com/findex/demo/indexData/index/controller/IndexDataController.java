@@ -40,12 +40,12 @@ public class IndexDataController {
    * 지수 데이터 목록조회
    */
   @GetMapping
-  public ResponseEntity<CursorPageResponseIndexDataDto> findAll(
+  public ResponseEntity<CursorPageResponseIndexDataDto<IndexDataDto>> findAll(
       @RequestParam(defaultValue = "1") Integer indexInfoId,
       @RequestParam(defaultValue = "2010-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(defaultValue = "2025-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-      @RequestParam Integer idAfter,
-      @RequestParam String cursor,
+      @RequestParam(defaultValue = "2025-04-24") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam(defaultValue = "eyJpZCI6MjB9") String cursor,
+      @RequestParam(defaultValue = "2") Integer idAfter,
       @RequestParam(defaultValue = "baseDate") String sortField,
       @RequestParam(defaultValue = "desc") String sortDirection,
       @RequestParam(defaultValue = "10") Integer size
@@ -54,7 +54,12 @@ public class IndexDataController {
         indexInfoId, startDate, endDate, idAfter, cursor,
         sortField, sortDirection, size
     );
-    CursorPageResponseIndexDataDto dto = indexDataService.findAll(request);
+
+
+      CursorPageResponseIndexDataDto<IndexDataDto> dto = indexDataService.findAll(request);
+
+
+
     return ResponseEntity.status(HttpStatus.OK).body(dto);
   }
   /**
@@ -90,19 +95,19 @@ public class IndexDataController {
   /**
    * csv export
    */
-  @GetMapping("/export/csv")
-  public ResponseEntity<byte[]> downloadCsvFile() throws Exception{
-
-    byte[] response = csvExportIndexDataService.downloadCsv();
-
-    if(response == null) {
-      return ResponseEntity.internalServerError().build();
-    }
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
-    return new ResponseEntity<>(response, headers, HttpStatus.OK);
-  }
+//  @GetMapping("/export/csv")
+//  public ResponseEntity<byte[]> downloadCsvFile() throws Exception{
+//
+//    byte[] response = csvExportIndexDataService.downloadCsv();
+//
+//    if(response == null) {
+//      return ResponseEntity.internalServerError().build();
+//    }
+//
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
+//    return new ResponseEntity<>(response, headers, HttpStatus.OK);
+//  }
 }
 
 

@@ -5,6 +5,7 @@ import com.findex.demo.autoSyncConfig.domain.dto.AutoSyncConfigDto;
 import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 
+
 public class AutoSyncConfigMapper {
 
     public static AutoSyncConfigDto toAutoSyncConfigDto(AutoSyncConfig autoSyncConfig) {
