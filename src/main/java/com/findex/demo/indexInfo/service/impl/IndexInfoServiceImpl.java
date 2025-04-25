@@ -35,6 +35,13 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     String indexClassification = createRequest.indexClassification();
     String indexName = createRequest.indexName();
 
+    if (indexClassification == null || indexClassification.trim().isEmpty()) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
+    }
+    if (indexName == null || indexName.trim().isEmpty()) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
+    }
+
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
       throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
     }
