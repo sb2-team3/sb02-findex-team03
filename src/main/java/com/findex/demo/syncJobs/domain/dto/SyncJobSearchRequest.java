@@ -1,5 +1,4 @@
-
-package com.findex.demo.syncJobs.dto;
+package com.findex.demo.syncJobs.domain.dto;
 
 import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;

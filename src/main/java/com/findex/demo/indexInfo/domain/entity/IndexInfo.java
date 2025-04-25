@@ -1,12 +1,15 @@
 package com.findex.demo.indexInfo.domain.entity;
 
+import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.syncJobs.api.ExternalIndexInfoDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import lombok.Builder;
@@ -15,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Table(name = "index_info")
 @NoArgsConstructor
 public class IndexInfo {
 
@@ -23,6 +27,8 @@ public class IndexInfo {
   private Integer id;
 
   private String indexClassification;
+
+  @Column(name = "index_name")
   private String indexName;
   private int employedItemCount;
   private LocalDate basePointInTime;
@@ -31,11 +37,11 @@ public class IndexInfo {
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
 
-  private boolean favorite = false;
+  private Boolean favorite;
 
   @Builder
   public IndexInfo(String indexClassification, String indexName, int employedItemCount, LocalDate basePointInTime,
-                   Integer baseIndex, SourceType sourceType, boolean favorite) {
+                   Integer baseIndex, SourceType sourceType, Boolean favorite) {
     this.indexClassification = indexClassification;
     this.indexName = indexName;
     this.employedItemCount = employedItemCount;
@@ -45,20 +51,23 @@ public class IndexInfo {
     this.favorite = favorite;
   }
 
-  public void setBasePointInTime(LocalDate basePointInTime) {
-    this.basePointInTime = basePointInTime;
-  }
+  public void update(IndexInfoUpdateRequest updateRequest) {
+    if (updateRequest.employedItemsCount() != 0 && updateRequest.employedItemsCount() != this.employedItemCount) {
+      this.employedItemCount = updateRequest.employedItemsCount();
+    }
 
-  public void setBaseIndex(int baseIndex) {
-    this.baseIndex = baseIndex;
-  }
+    if (updateRequest.basePointInTime() != null && !updateRequest.basePointInTime().equals(this.basePointInTime)) {
+      this.basePointInTime = updateRequest.basePointInTime();
+    }
 
-  public void setFavorite(boolean favorite) {
-    this.favorite = favorite;
-  }
-
-  public void setEmployedItemCount(int employedItemCount) {
-    this.employedItemCount = employedItemCount;
+    if (updateRequest.baseIndex() != 0 && updateRequest.baseIndex() != this.baseIndex) {
+      this.baseIndex = updateRequest.baseIndex();
+    }
+    if (updateRequest.favorite() != null && !updateRequest.favorite().equals(this.favorite)) {
+      this.favorite = updateRequest.favorite();
+    } else if (updateRequest.favorite() == null && this.favorite == null) {
+      this.favorite = false;
+    }
   }
 
   public void updateFromDto(ExternalIndexInfoDto dto) {

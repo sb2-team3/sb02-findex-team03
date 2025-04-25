@@ -12,10 +12,18 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +39,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     String indexName = createRequest.indexName();
 
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
-      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다");
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
     }
 
     IndexInfo indexInfo = IndexInfoMapper.toEntity(createRequest, SourceType.USER);
@@ -44,30 +52,31 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   @Override
   @Transactional
   public IndexInfoDto update(Integer id, IndexInfoUpdateRequest updateRequest) {
-    IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+    IndexInfo existingIndexInfo = indexInfoRepository.findById(id)
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
 
-    IndexInfoMapper.updateFromDto(updateRequest, indexInfo);
+    existingIndexInfo.update(updateRequest);
 
-    indexInfoRepository.save(indexInfo);
+    IndexInfo updated = indexInfoRepository.save(existingIndexInfo);
 
-    return IndexInfoMapper.toIndexInfoDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(updated);
   }
 
   @Override
   @Transactional
   public void delete(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
 
     indexInfoRepository.delete(indexInfo);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
         .map(IndexInfoMapper::toIndexInfoDto)
-        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수 입니다"));
+        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
   }
 
   @Override
@@ -80,10 +89,52 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   }
 
   @Override
-  public CursorPageResponseIndexInfoDto getIndexInfoList(String indexClassification,
-      String indexName, Boolean favorite, Long idAfter, String cursor, String sortField,
-      String sortDirection, int size) {
+  @Transactional(readOnly = true)
+  public CursorPageResponseIndexInfoDto getIndexInfoList(
+      String indexClassification,
+      String indexName,
+      Boolean favorite,
+      Long idAfter,
+      String cursor,
+      String sortField,
+      String sortDirection,
+      int size) {
 
-    return null;
+    boolean isAscending = "asc".equalsIgnoreCase(sortDirection);
+
+    Long cursorValue = (idAfter != null) ? idAfter : (cursor != null ? Long.parseLong(cursor) : 0L);
+
+    Pageable pageable = PageRequest.of(0, size, Sort.by(
+        isAscending ? Sort.Order.asc(sortField) : Sort.Order.desc(sortField)
+    ));
+
+    Page<IndexInfo> pageResult = indexInfoRepository.findByFilter(
+        indexClassification, indexName, favorite, cursorValue, pageable
+    );
+
+    List<IndexInfoDto> indexInfoDtos = pageResult.getContent().stream()
+        .map(IndexInfoMapper::toIndexInfoDto)
+        .toList();
+
+    boolean hasNext = pageResult.hasNext();
+
+    Integer nextCursor = null;
+    if (!indexInfoDtos.isEmpty()) {
+      IndexInfoDto lastItem = indexInfoDtos.get(indexInfoDtos.size() - 1);
+      nextCursor = lastItem.id();
+    }
+
+    Long totalElements = indexInfoRepository.countByFilter(
+        indexClassification, indexName, favorite, null
+    );
+
+    return new CursorPageResponseIndexInfoDto(
+        new ArrayList<>(indexInfoDtos),
+        nextCursor,
+        nextCursor != null ? nextCursor.longValue() : null,
+        size,
+        totalElements,
+        hasNext
+    );
   }
 }

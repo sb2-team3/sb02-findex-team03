@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +34,25 @@ public class MarketIndexSyncController {
     private final IndexInfoRepository indexInfoRepository;
 
 
-    @PostMapping("/index-infos")
-    public ResponseEntity<Void> syncMarketIndexInfo() {
-        marketIndexSyncService.fetchAndStoreMarketIndices();
-        return ResponseEntity.ok().build();
-    }
+  @PostMapping("/index-infos")
+  public ResponseEntity<List<SyncJob>> syncMarketIndexInfo() {
+    marketIndexSyncService.fetchAndStoreMarketIndices();
 
-    //indexdata 연동구현 ref: 이준혁
+    List<SyncJob> jobs = indexInfoRepository.findAll().stream()
+        .map(info -> SyncJob.builder()
+            .jobType(JobType.INDEX_INFO)
+            .result(Result.SUCCESS)
+            .jobTime(LocalDateTime.now())
+            .worker("OpenAPI") // 또는 InetAddress.getLocalHost().getHostAddress()
+            .indexInfo(info)
+            .build())
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(jobs);
+  }
+
+
+  //indexdata 연동구현 ref: 이준혁
     @PostMapping("/index-data")
     public ResponseEntity<List<SyncJob>> syncIndexData(@RequestBody IndexDataSyncRequestDto request) {
         try {
