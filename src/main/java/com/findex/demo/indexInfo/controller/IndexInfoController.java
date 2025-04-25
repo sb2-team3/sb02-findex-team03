@@ -40,6 +40,7 @@ public class IndexInfoController {
   public ResponseEntity<IndexInfoDto> get(
       @PathVariable Integer id) {
     return ResponseEntity.ok(indexInfoService.getIndexInfo(id));
+
   }
 
   @GetMapping("/summaries")
