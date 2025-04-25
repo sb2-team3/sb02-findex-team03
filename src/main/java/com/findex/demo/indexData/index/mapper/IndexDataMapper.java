@@ -17,7 +17,7 @@ public class IndexDataMapper {
     }
     return new IndexDataDto(
         entity.getId(),
-        indexInfoId,
+        entity.getIndexInfo().getId(),
         entity.getBaseDate(),
         entity.getSourceType(),
         entity.getOpenPrice(),

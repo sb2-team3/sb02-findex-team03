@@ -23,42 +23,68 @@ repositories {
     mavenCentral()
 }
 
-// ✅ Jackson 버전 통일용 전역 변수
+// 전역 변수 설정
 ext {
     jacksonVersion = '2.17.0'
 }
 
+
 dependencies {
-    // Spring Starter
+    // Spring Starters
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
     // Lombok + MapStruct
-    implementation "org.projectlombok:lombok"
-    implementation "org.mapstruct:mapstruct:1.5.2.Final"
+    implementation 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
-    // DB
+    // QueryDSL (Jakarta + JPA)
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+
+    // PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
-    // Dev tools
+    // Dev Tools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    // Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-
+    // Jackson
     implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
-    implementation 'com.opencsv:opencsv:5.6'  // OpenCSV 라이브러리 의존성 추가
+    // CSV
+    implementation 'com.opencsv:opencsv:5.6'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+    main {
+        java.srcDirs += querydslDir
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+            "-Aquerydsl.generatedSourcesDir=${querydslDir}"
+    ]
+}
+
+tasks.named("clean") {
+    doLast {
+        delete querydslDir
+    }
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()

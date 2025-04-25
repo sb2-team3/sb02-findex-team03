@@ -50,6 +50,7 @@ public class IndexData extends BaseTimeEntity {
   private Double fluctuationRate;
 
   private Long tradingQuantity;
+  @Column(nullable = false, name = "trading_price")
   private Long tradingPrice;
   private Long marketTotalAmount;
 

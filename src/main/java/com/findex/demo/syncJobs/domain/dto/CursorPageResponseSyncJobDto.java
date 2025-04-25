@@ -1,4 +1,4 @@
-package com.findex.demo.syncJobs.dto;
+package com.findex.demo.syncJobs.domain.dto;
 
 import lombok.*;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CursorPageResponse<T> {
+public class CursorPageResponseSyncJobDto<T> {
 
   private List<T> content;
   private String nextCursor;

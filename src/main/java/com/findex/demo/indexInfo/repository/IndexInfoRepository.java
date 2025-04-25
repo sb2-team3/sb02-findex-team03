@@ -23,9 +23,6 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
 
   List<IndexInfo> findByIndexClassification(String indexClassification);
 
-
-
-
   IndexInfo findByIndexName(String indexName);
 
   @Query("SELECT i FROM IndexInfo i WHERE " +
@@ -44,7 +41,7 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
   @Query("SELECT COUNT(i) FROM IndexInfo i WHERE " +
       "( :indexClassification IS NULL OR i.indexClassification LIKE %:indexClassification% ) AND " +
       "( :indexName IS NULL OR i.indexName LIKE %:indexName% ) AND " +
-      "( :favorite IS NULL OR i.favorite = :favorite ) AND " +
+      "( :favorite IS NULL OR i.favorite = :favorite OR (i.favorite IS NULL AND :favorite IS FALSE) ) AND " +
       "( :idAfter IS NULL OR i.id > :idAfter )")
   Long countByFilter(
       @Param("indexClassification") String indexClassification,
@@ -52,6 +49,4 @@ public interface IndexInfoRepository extends JpaRepository<IndexInfo, Integer> {
       @Param("favorite") Boolean favorite,
       @Param("idAfter") Long idAfter
   );
-
-
 }

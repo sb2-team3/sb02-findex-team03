@@ -12,10 +12,7 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -52,14 +49,14 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   @Override
   @Transactional
   public IndexInfoDto update(Integer id, IndexInfoUpdateRequest updateRequest) {
-    IndexInfo indexInfo = indexInfoRepository.findById(id)
+    IndexInfo existingIndexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
 
-    IndexInfoMapper.updateFromDto(updateRequest, indexInfo);
+    existingIndexInfo.update(updateRequest);
 
-    indexInfoRepository.save(indexInfo);
+    IndexInfo updated = indexInfoRepository.save(existingIndexInfo);
 
-    return IndexInfoMapper.toIndexInfoDto(indexInfo);
+    return IndexInfoMapper.toIndexInfoDto(updated);
   }
 
   @Override
@@ -72,6 +69,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public IndexInfoDto getIndexInfo(Integer id) {
     return indexInfoRepository.findById(id)
         .map(IndexInfoMapper::toIndexInfoDto)
@@ -88,6 +86,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public CursorPageResponseIndexInfoDto getIndexInfoList(
       String indexClassification,
       String indexName,

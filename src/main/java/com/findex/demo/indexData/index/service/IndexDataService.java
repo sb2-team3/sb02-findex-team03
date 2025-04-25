@@ -41,6 +41,7 @@ public class IndexDataService {
   @Transactional(readOnly = true)
   public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
 
+    // 커서 디코딩 (Base64 → ID)
     Integer cursorId = decodeCursor(condition.getCursor());
     int pageSize = condition.getSize() > 0 ? condition.getSize() : 10;
 
@@ -54,6 +55,8 @@ public class IndexDataService {
         pageSize
     );
 
+    // hasNext 판별
+    boolean hasNext = results.size() > pageSize;
 
     boolean hasNext = false;
     try{

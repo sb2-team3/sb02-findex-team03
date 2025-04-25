@@ -13,7 +13,7 @@ public record IndexInfoDto(
     LocalDate basePointInTime,
     Integer baseIndex,
     SourceType sourceType,
-    boolean favorite
+    Boolean favorite
 ) {
 
 }

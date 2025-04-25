@@ -12,12 +12,16 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,28 +30,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DataService {
 
-    IndexInfoRepository indexInfoRepository;
-    IndexDataRepository dataRepository;
+    private final IndexInfoRepository indexInfoRepository;
+    private final IndexDataRepository dataRepository;
 
     @Transactional(readOnly = true)
     public IndexChartDto getIndexChart(PeriodType periodType, Integer indexInfoId) {
         LocalDate startDate = calculateStartDate(periodType);
         LocalDate endDate = LocalDate.now();
 
-        // ID로 지수 정보 가져오기 .
         IndexInfo indexInfo = indexInfoRepository.findById(indexInfoId)
             .orElseThrow(() -> new NoSuchElementException("[ERROR] index info not found"));
 
-        // IndexInfo와 기준 일자로 데이터 뽑아오기
         List<IndexData> indexDataList = dataRepository
             .findByIndexInfoAndBaseDateBetweenOrderByBaseDateAsc(indexInfo, startDate, endDate);
 
-        // indexData를 차트 데이터로 변경 (날짜 + 종가)
         List<DataPoint> dataPoints = indexDataList.stream()
             .map(indexData -> new DataPoint(indexData.getBaseDate(),
                 indexData.getClosePrice())).toList();
 
-        // 이동 평균선 만들기.
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
         List<DataPoint> ma20DataPoints = calculateMovingAverage(dataPoints, 20);
 
@@ -63,151 +63,129 @@ public class DataService {
     }
 
     // 특정 지수 성과 순위 조회.
+    @Transactional(readOnly = true)
     public List<RankedIndexPerformanceDto> getIndexPerformanceRank(PeriodType periodType,
         Integer indexInfoId, int limit) {
 
-        LocalDate startDate = calculateStartDate(periodType);
         LocalDate endDate = LocalDate.now();
+        LocalDate startDate = calculateStartDate(periodType);
+
+        LocalDate actualEndDate = findNearestTradingDay(endDate, false);
+        LocalDate actualStartDate = findNearestTradingDay(startDate, true);
 
         List<IndexInfo> indexInfoList;
 
         if (indexInfoId == null || indexInfoId <= 0) {
-            indexInfoList = indexInfoRepository.findAll();  // 모든 IndexInfo 조회
+            indexInfoList = indexInfoRepository.findAll();
         } else {
             IndexInfo targetIndexInfo = indexInfoRepository.findById(indexInfoId)
-                .orElse(null);
-            if (targetIndexInfo == null) {
-                throw new NoSuchElementException("[ERROR] index info not found");
-            }
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] index info not found"));
 
             indexInfoList = indexInfoRepository.findByIndexClassification(
                 targetIndexInfo.getIndexClassification());
         }
 
-        List<IndexData> indexDataList = dataRepository.findByIndexInfoInAndBaseDateBetween(
-            indexInfoList, startDate, endDate);
+        Map<Integer, IndexData> startDateMap = new HashMap<>();
+        Map<Integer, IndexData> endDateMap = new HashMap<>();
 
-        Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(startDate))
-            .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
+        for (IndexInfo info : indexInfoList) {
+            Optional<IndexData> startData = dataRepository.findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
+                info, actualStartDate);
+            Optional<IndexData> endData = dataRepository.findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
+                info, actualEndDate);
 
-        Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(endDate))
-            .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
-
-        // 성과 계산 및 DTO 생성
-        List<IndexPerformanceDto> performanceList = new ArrayList<>();
-
-        for (IndexInfo indexInfo : indexInfoList) {
-            Integer id = indexInfo.getId();
-
-            // 시작일과 종료일 데이터가 모두 있는 경우에만 성과 계산
-            if (startDateMap.containsKey(id) && endDateMap.containsKey(id)) {
-                IndexData startData = startDateMap.get(id);
-                IndexData endData = endDateMap.get(id);
-
-                Double startPrice = startData.getClosePrice();
-                Double endPrice = endData.getClosePrice();
-
-                // 등락률 계산 (%)
-                double fluctuationRate = 0;
-                if (startPrice.compareTo(0.0) != 0) {
-                    fluctuationRate = (endPrice - startPrice) / startPrice * 100;
-                }
-
-                // 등락폭 계산
-                double versus = endPrice - startPrice;
-
-                IndexPerformanceDto dto = new IndexPerformanceDto(
-                    id,
-                    indexInfo.getIndexClassification(),
-                    indexInfo.getIndexName(),
-                    versus,
-                    fluctuationRate,
-                    endPrice,
-                    startPrice
-                );
-
-                performanceList.add(dto);
-            }
+            startData.ifPresent(data -> startDateMap.put(info.getId(), data));
+            endData.ifPresent(data -> endDateMap.put(info.getId(), data));
         }
 
-        // 등락률 기준으로 내림차순 정렬
-        performanceList.sort(
-            Comparator.comparingDouble(IndexPerformanceDto::getFluctuationRate).reversed());
-
-        // 상위 limit개만 선택
-        List<IndexPerformanceDto> topPerformances = performanceList.stream()
+        List<IndexPerformanceDto> performanceList = indexInfoList.stream()
+            .map(indexInfo -> createIndexPerformanceDto(indexInfo, startDateMap, endDateMap))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .sorted(Comparator.comparingDouble(IndexPerformanceDto::getFluctuationRate).reversed())
             .limit(limit)
             .toList();
 
-        // RankedIndexPerformanceDto 생성 및 순위 부여
-        List<RankedIndexPerformanceDto> result = new ArrayList<>();
-        for (int i = 0; i < topPerformances.size(); i++) {
-            IndexPerformanceDto perfDto = topPerformances.get(i);
-
-            // Performance 객체 생성 (생성자 사용)
-            Performance performance = new Performance(
-                perfDto.getIndexInfoId(),
-                perfDto.getIndexClassification(),
-                perfDto.getIndexName(),
-                perfDto.getVersus(),
-                perfDto.getFluctuationRate(),
-                perfDto.getCurrentPrice(),
-                perfDto.getBeforePrice()
-            );
-
-            // RankedIndexPerformanceDto 생성 (생성자 사용)
-            RankedIndexPerformanceDto rankedDto = new RankedIndexPerformanceDto(performance, i + 1);
-
-            result.add(rankedDto);
-        }
-
-        return result;
+        // 순위 부여
+        return IntStream.range(0, performanceList.size())
+            .mapToObj(i -> new RankedIndexPerformanceDto(
+                convertToPerformance(performanceList.get(i)), i + 1))
+            .collect(Collectors.toList());
     }
 
-    // 관심 지수 성과 조회 ..
     @Transactional(readOnly = true)
     public List<IndexPerformanceDto> getInterestIndexPerformance(PeriodType periodType) {
         List<IndexInfo> favoriteIndexes = indexInfoRepository.findByFavoriteIsTrue();
+        if (favoriteIndexes.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        // 일간 or 주간 or 월간 성과
-        LocalDate startDate = calculateStartDate(periodType);
         LocalDate endDate = LocalDate.now();
 
-        // 관심 종목 ID 리스트 ..
+        LocalDate actualEndDate = findNearestTradingDay(endDate, true);
+
+        LocalDate theoreticalStartDate = calculateStartDate(periodType);
+        LocalDate actualStartDate = findNearestTradingDay(theoreticalStartDate, true);
+
         List<Integer> favoriteIndexIds = favoriteIndexes.stream()
             .map(IndexInfo::getId)
             .toList();
 
-        // 관심 종목 ID로 indexData 가져오기 ..
-        List<IndexData> indexDataList = new ArrayList<>();
-        for (Integer favoriteIndexId : favoriteIndexIds) {
-            IndexData data = dataRepository.findByIndexInfoIdAndBaseDateBetween(
-                favoriteIndexId, startDate, endDate);
+        List<IndexData> indexDataList = dataRepository.findByIndexInfoIdInAndBaseDateIn(
+            favoriteIndexIds, List.of(actualStartDate, actualEndDate));
 
-            indexDataList.add(data);
+        if (indexDataList.isEmpty()) {
+            return Collections.emptyList();
         }
 
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(startDate))
+            .filter(data -> data.getBaseDate().equals(actualStartDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(),
                 Function.identity()));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
-            .filter(data -> data.getBaseDate().equals(endDate))
+            .filter(data -> data.getBaseDate().equals(actualEndDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
 
         return favoriteIndexes.stream()
             .map(indexInfo -> createIndexPerformanceDto(indexInfo, startDateMap, endDateMap))
+            .flatMap(Optional::stream)
             .toList();
     }
 
-    // 최근 5일의 주가 종가 더한 후 5로 나눈 값 .
+    private LocalDate findNearestTradingDay(LocalDate date, boolean findPrevious) {
+        boolean hasData = dataRepository.existsByBaseDate(date);
+
+        if (hasData) {
+            return date;
+        }
+
+        if (findPrevious) {
+            Optional<LocalDate> prevDate = dataRepository.findMaxBaseDateBeforeDate(date);
+            return prevDate.orElseThrow(() ->
+                new NoSuchElementException("No trading day found before " + date));
+        } else {
+            Optional<LocalDate> nextDate = dataRepository.findMinBaseDateAfterDate(date);
+            return nextDate.orElseThrow(() ->
+                new NoSuchElementException("No trading day found after " + date));
+        }
+    }
+
+    private Performance convertToPerformance(IndexPerformanceDto dto) {
+        return new Performance(
+            dto.getIndexInfoId(),
+            dto.getIndexClassification(),
+            dto.getIndexName(),
+            dto.getVersus(),
+            dto.getFluctuationRate(),
+            dto.getCurrentPrice(),
+            dto.getBeforePrice()
+        );
+    }
+
     private List<DataPoint> calculateMovingAverage(List<DataPoint> dataPoints, int period) {
         List<DataPoint> maLine = new ArrayList<>();
 
-        // 먄약에 데이터가 20개면 앞에 4개(index=0,1,2,3)은 이동 평균을 구할 수 없음. 과거 데이터가 없기 때문에.
         for (int cnt_i = period - 1; cnt_i < dataPoints.size(); cnt_i++) {
             double sum = 0;
 
@@ -239,7 +217,7 @@ public class DataService {
         };
     }
 
-    private IndexPerformanceDto createIndexPerformanceDto(IndexInfo
+    private Optional<IndexPerformanceDto> createIndexPerformanceDto(IndexInfo
         indexInfo, Map<Integer, IndexData> beforeDataMap, Map<Integer, IndexData> currentDataMap) {
         IndexData startData = beforeDataMap.get(indexInfo.getId());
         IndexData endData = currentDataMap.get(indexInfo.getId());
@@ -250,7 +228,7 @@ public class DataService {
             double versus = currentPrice - beforePrice;
             double fluctuationRate = (versus / beforePrice) * 100.0;
 
-            return new IndexPerformanceDto(
+            return Optional.of(new IndexPerformanceDto(
                 indexInfo.getId(),
                 indexInfo.getIndexClassification(),
                 indexInfo.getIndexName(),
@@ -258,9 +236,9 @@ public class DataService {
                 fluctuationRate,
                 currentPrice,
                 beforePrice
-            );
+            ));
         }
 
-        return null;
+        return Optional.empty();
     }
 }
