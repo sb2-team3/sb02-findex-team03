@@ -7,6 +7,7 @@ import com.findex.demo.autoSyncConfig.service.AutoSyncConfigService;
 import com.findex.demo.global.pagination.dto.PagedResponse;
 import com.findex.demo.global.pagination.dto.SortDirection;
 import com.findex.demo.global.pagination.dto.SortField;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @Slf4j
 @RestController()
 @RequestMapping("/api/auto-sync-configs")
@@ -28,7 +28,7 @@ public class AutoSyncConfigController {
     private final AutoSyncConfigService autoSyncConfigService;
 
     @PatchMapping("/{indexInfoId}")
-    public ResponseEntity<AutoSyncConfigDto> updateAutoSyncConfig(@PathVariable Integer indexInfoId,@RequestBody AutoSyncConfigUpdateRequest request) {
+    public ResponseEntity<AutoSyncConfigDto> updateAutoSyncConfig(@PathVariable Integer indexInfoId,@RequestBody @Valid AutoSyncConfigUpdateRequest request) {
         AutoSyncConfigDto autoSyncConfigDto = autoSyncConfigService.updateAutoSyncConfig(indexInfoId, request);
         return ResponseEntity.ok(autoSyncConfigDto);
     }
