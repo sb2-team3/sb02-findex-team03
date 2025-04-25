@@ -3,10 +3,9 @@ package com.findex.demo.syncJobs.domain.entity;
 import com.findex.demo.global.times.BaseTimeEntity;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.syncJobs.domain.type.JobType;
-import com.findex.demo.syncJobs.domain.type.Result;
+import com.findex.demo.syncJobs.domain.type.StatusType;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.*;
 
 
@@ -41,7 +40,7 @@ public class SyncJob extends BaseTimeEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Result result;
+  private StatusType statusType;
 
 
 
