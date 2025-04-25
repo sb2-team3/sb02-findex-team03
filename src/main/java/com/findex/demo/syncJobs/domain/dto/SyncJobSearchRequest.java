@@ -1,7 +1,7 @@
 package com.findex.demo.syncJobs.domain.dto;
 
 import com.findex.demo.syncJobs.domain.type.JobType;
-import com.findex.demo.syncJobs.domain.type.Result;
+import com.findex.demo.syncJobs.domain.type.StatusType;
 import lombok.*;
 
 @Getter
@@ -17,5 +17,5 @@ public class SyncJobSearchRequest {
   private String worker;
   private String jobTimeFrom;
   private String jobTimeTo;
-  private Result result;
+  private StatusType status;
 }
