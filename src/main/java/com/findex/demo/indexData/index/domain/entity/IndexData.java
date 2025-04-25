@@ -19,9 +19,11 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class IndexData extends BaseTimeEntity {
 
@@ -33,7 +35,7 @@ public class IndexData extends BaseTimeEntity {
   @JoinColumn(name = "index_info_id")
   private IndexInfo indexInfo;
 
-  @Column(nullable = false, name ="data")
+  @Column(nullable = false, name ="base_date")
   private LocalDate baseDate;
 
   @Enumerated(EnumType.STRING)

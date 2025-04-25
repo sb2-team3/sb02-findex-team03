@@ -13,5 +13,5 @@ public class CursorPageResponseIndexDataDto<IndexDataDto> {
   Integer nextIdAfter;
   Integer size;
   Integer totalElements;
-  boolean hashNext;
+  boolean hasNext;
 }

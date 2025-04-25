@@ -11,6 +11,9 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +35,7 @@ public class MarketIndexDataSyncService {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  @Value("${external.market-index.service-key}")
+  @Value("36ID8iOnp68nJoKAhT0Ynow39nMtNDM3idhAa9TSjW9MzNS79979CltA7umRWB%2FbyvbLhPjpqLBnbdJeSophrA%3D%3D")
   private String serviceKey;
 
   @Value("${external.market-index.base-url}")
@@ -43,11 +46,11 @@ public class MarketIndexDataSyncService {
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
     Set<String> seenKeys = new HashSet<>();
-    int totalPages = (int) Math.ceil((double) 1000 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
+    int totalPages = (int) Math.ceil((double) 100 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
     for (int page = 1; page <= totalPages; page++) {
       try {
-        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basDt=%s",
+        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basPntm=%s",
             baseUrl, serviceKey, page, numOfRows, baseDate);
 
         log.info("📤 [Page {}] 요청 URI: {}", page, apiUrl);
@@ -107,12 +110,15 @@ public class MarketIndexDataSyncService {
 
 
 
-    IndexData indexData = new IndexData();
+    List<IndexData> indexDatas = new ArrayList<>();
     Optional<IndexInfo> optionalInfo =
         indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
 
 
     IndexInfo indexInfo = optionalInfo.get();
+
+    DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+
 
     try{
       ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
@@ -124,12 +130,14 @@ public class MarketIndexDataSyncService {
           .fluctuationRate(item.path("fltRt").asDouble())
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
-
-          .baseDate(LocalDate.parse(item.path("bsDat").asText()) )
+          .tradingPrice(item.path("trPrc").asLong())
+          .baseDate(Optional.of(
+                  LocalDate.parse(itemDate, yyyyMMdd))
+              .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
-          indexData = OpenApiIndexDataMapper.toIndexData(dto);
+      indexDatas.add(OpenApiIndexDataMapper.toIndexData(dto));
     }
     catch (Exception e) {
       log.warn("⚠️ ExternalIndexDataDto 오류: {}", key);
@@ -138,13 +146,18 @@ public class MarketIndexDataSyncService {
 
 
     try {
-      indexDataRepository.save(indexData);
-      log.info("✅ 저장 완료: {}", indexName);
+      for(IndexData indexData : indexDatas) {
+        indexDataRepository.save(indexData);
+        log.debug("저장 되니");
+        log.info("✅ 저장 완료: {}", indexName);
+      }
     } catch (DataIntegrityViolationException e) {
       log.warn("⚠️ 중복된 지수 데이터 무시: {}", key);
     }
 
     // 🔄 이력 저장 로직도 여기에 추가 가능
   }
+
+
 }
 
