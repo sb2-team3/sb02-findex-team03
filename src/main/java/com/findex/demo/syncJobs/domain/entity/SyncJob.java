@@ -2,8 +2,8 @@ package com.findex.demo.syncJobs.domain.entity;
 
 import com.findex.demo.global.times.BaseTimeEntity;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
-import com.findex.demo.syncJobs.type.JobType;
-import com.findex.demo.syncJobs.type.Result;
+import com.findex.demo.syncJobs.domain.type.JobType;
+import com.findex.demo.syncJobs.domain.type.Result;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ public class SyncJob extends BaseTimeEntity {
   private String worker;
 
   @Column(nullable = false)
-  private LocalDateTime jobTime;
+  private LocalDate jobTime;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)

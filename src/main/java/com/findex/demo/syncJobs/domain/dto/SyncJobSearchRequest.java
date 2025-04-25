@@ -1,7 +1,7 @@
 package com.findex.demo.syncJobs.domain.dto;
 
-import com.findex.demo.syncJobs.type.JobType;
-import com.findex.demo.syncJobs.type.Result;
+import com.findex.demo.syncJobs.domain.type.JobType;
+import com.findex.demo.syncJobs.domain.type.Result;
 import lombok.*;
 
 @Getter
