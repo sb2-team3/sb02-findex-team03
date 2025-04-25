@@ -1,9 +1,6 @@
 package com.findex.demo.syncJobs.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.findex.demo.syncJobs.domain.type.JobType;
-import com.findex.demo.syncJobs.domain.type.Result;
-import java.time.Instant;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,5 +24,5 @@ public class SyncJobDto {
 
   private LocalDate jobTime;
 
-  private Result result;
+  private String result;
 }
