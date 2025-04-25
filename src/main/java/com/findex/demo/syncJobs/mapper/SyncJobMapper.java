@@ -5,7 +5,7 @@ import com.findex.demo.syncJobs.domain.entity.SyncJob;
 
 public class SyncJobMapper {
 
-  public static SyncJobDto toDto(SyncJob entity) {
+  public static SyncJobDto toSyncJobDto(SyncJob entity) {
     return SyncJobDto.builder()
         .id(entity.getId())
         .jobType(entity.getJobType())
@@ -13,7 +13,7 @@ public class SyncJobMapper {
         .targetDate(entity.getTargetDate())
         .worker(entity.getWorker())
         .jobTime(entity.getJobTime())
-        .status(entity.getStatusType())
+        .result("NEW")
         .build();
   }
 
