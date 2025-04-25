@@ -1,6 +1,6 @@
 package com.findex.demo.indexData.index.repository;
 
-import static org.antlr.v4.runtime.tree.xpath.XPath.findAll;
+
 
 import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -118,40 +115,47 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 //            "ORDER BY id ASC " +
 //            "LIMIT :limit";
 
-
     StringBuilder sql = new StringBuilder("""
-    SELECT id, index_info_id, base_date, source_type, open_price, close_price, high_price,
-            low_price, versus, fluctuation_rate, trading_quantity, trading_price, 
-            market_total_amount 
-            FROM index_data
-            """);
+            SELECT id, index_info_id, base_date, source_type, open_price, close_price, high_price,
+                   low_price, versus, fluctuation_rate, trading_quantity, trading_price, 
+                   market_total_amount 
+              FROM index_data
+        """);
 
+    boolean hasWhere = false;
 
+    if (indexInfo.getId() != null) {
+      sql.append(" WHERE index_info_id = :indexInfoId");
+      hasWhere = true;
+    }
     if (startDate != null) {
-      sql.append(" AND base_date >= :startDate");
+      sql.append(hasWhere ? " AND" : " WHERE");
+      sql.append(" base_date >= :startDate");
+      hasWhere = true;
     }
     if (endDate != null) {
-      sql.append(" AND base_date <= :endDate");
+      sql.append(hasWhere ? " AND" : " WHERE");
+      sql.append(" base_date <= :endDate");
+      hasWhere = true;
     }
     if (cursorId != null) {
-      sql.append(" AND id > :cursorId");
+      sql.append(hasWhere ? " AND" : " WHERE");
+      sql.append(" id > :cursorId");
     }
     sql.append(" ORDER BY id ASC LIMIT :limit");
 
     Query query = em.createNativeQuery(sql.toString());
 
-
+    if (indexInfo.getId() != null) {
+      query.setParameter("indexInfoId", indexInfo.getId());
+    }
     query.setParameter("startDate", startDate);
     query.setParameter("endDate", endDate);
     query.setParameter("cursorId", cursorId);
     query.setParameter("limit", size + 1);
 
-
+    try {
       List<Object[]> rawResults = (List<Object[]>) query.getResultList();
-
-      // 기본 키
-      // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
-      // data.setIndexInfo(...); → 생략하거나 Lazy 로드
 
       return rawResults.stream().map(row -> {
         IndexData data = new IndexData();
@@ -162,8 +166,6 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
         } else {
           log.warn("row[0] is not a number: {}", row[0]);
         }
-
-
 
         // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
         // data.setIndexInfo(...); → 생략하거나 Lazy 로드
@@ -176,7 +178,6 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
         } else {
           log.warn("row[2] is not java.sql.Date: {}", row[2]);
         }
-
 
         if (row[3] != null) {
           data.setSourceType(SourceType.valueOf((String) row[3]));
@@ -194,6 +195,14 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 
         return data;
       }).toList();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+
+    // 기본 키
+    // indexInfo는 ID만 받아오므로 null 처리하거나 별도로 fetch 필요
+    // data.setIndexInfo(...); → 생략하거나 Lazy 로드
 
   }
 }

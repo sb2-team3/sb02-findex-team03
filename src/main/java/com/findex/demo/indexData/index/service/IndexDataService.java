@@ -20,8 +20,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,13 +49,23 @@ public class IndexDataService {
 
     Integer indexInfoId = condition.getIndexInfoId();
 
-    List<IndexData> results = indexDataRepository.findWithCursor(
-        indexInfoRepository.findById(indexInfoId).orElseThrow(),
-        condition.getStartDate(),
-        condition.getEndDate(),
-        cursorId,
-        pageSize
-    );
+    List<IndexData> results = new ArrayList<>();
+    Optional<IndexInfo> indexInfo_ = Optional.empty();
+    try{
+      indexInfo_ = indexInfoRepository.findById(indexInfoId);
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+
+      results = indexDataRepository.findWithCursor(
+          indexInfo_.orElseThrow(),
+          condition.getStartDate(),
+          condition.getEndDate(),
+          cursorId,
+          pageSize
+      );
+
+
 
     // hasNext 판별
 
