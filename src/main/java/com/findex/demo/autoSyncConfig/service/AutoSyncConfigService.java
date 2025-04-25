@@ -9,7 +9,7 @@ import com.findex.demo.global.pagination.dto.SortField;
 
 public interface AutoSyncConfigService {
 
-    AutoSyncConfigDto updateAutoSyncConfig(Integer autoSyConfigId, AutoSyncConfigUpdateRequest request);
+    AutoSyncConfigDto updateAutoSyncConfig(Integer autoSyConfigId, Boolean enabled);
     PagedResponse<AutoSyncConfig> getPageAutoSynConfig(Integer indexInfoId, Boolean enabled, int idAfter, String cursor,
                                           SortField sortField, SortDirection sortDirection, int size);
 

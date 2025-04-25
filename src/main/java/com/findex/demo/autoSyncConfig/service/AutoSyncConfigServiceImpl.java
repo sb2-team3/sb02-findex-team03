@@ -3,13 +3,16 @@ package com.findex.demo.autoSyncConfig.service;
 import com.findex.demo.autoSyncConfig.domain.dto.AutoSyncConfigDto;
 import com.findex.demo.autoSyncConfig.domain.dto.AutoSyncConfigUpdateRequest;
 import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
+import com.findex.demo.autoSyncConfig.mapper.AutoSyncConfigMapper;
 import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.global.pagination.dto.PagedResponse;
 import com.findex.demo.global.pagination.dto.SortDirection;
 import com.findex.demo.global.pagination.dto.SortField;
+import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +24,27 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
     private final AutoSyncConfigRepository autoSyncConfigRepository;
     private final IndexInfoRepository indexInfoRepository;
 
-
     @Override
-    @Transactional()
-    public AutoSyncConfigDto updateAutoSyncConfig(Integer autoSyConfigId, AutoSyncConfigUpdateRequest request) {
-        AutoSyncConfig autoSyncConfig = autoSyncConfigRepository.findById(autoSyConfigId)
+    @Transactional
+    public AutoSyncConfigDto updateAutoSyncConfig(Integer indexInfoId, Boolean enabled) {
+        IndexInfo indexInfo = indexInfoRepository.findById(indexInfoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "자동 연동된 지수를 찾을 수 없습니다"));
-        autoSyncConfig.update(request.enabled());
-        autoSyncConfigRepository.save(autoSyncConfig);
-        // TODO indexInfoRepository 에서  autoSyConfigId 조회 후 정보 가져오기
-        /*
-        indexInfoRepository.findByAutoSyConfigId(autoSycConfigId).orElseThrow
-         autoSyncConfigMapper.toAutoSyncConfigUpdateRequest(autoSyConfigId)
-         */
 
-        return null;
+        AutoSyncConfig autoSyncConfig;
+        Optional<AutoSyncConfig> existingConfig = autoSyncConfigRepository.findByIndexInfo_Id(indexInfoId);
+
+        if (existingConfig.isPresent()) {
+            autoSyncConfig = existingConfig.get();
+            autoSyncConfig.update(enabled);
+        } else {
+            autoSyncConfig = AutoSyncConfigMapper.toAutoSyncConfig(enabled, indexInfo);
+        }
+
+        autoSyncConfigRepository.save(autoSyncConfig);
+        return AutoSyncConfigMapper.toAutoSyncConfigDto(autoSyncConfig);
     }
+
+
 
     @Override
     @Transactional(readOnly = true)
