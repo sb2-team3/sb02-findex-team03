@@ -50,7 +50,7 @@ public class MarketIndexDataSyncService {
 
     for (int page = 1; page <= totalPages; page++) {
       try {
-        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basPntm=%s",
+        String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basDt=%s",
             baseUrl, serviceKey, page, numOfRows, baseDate);
 
         log.info("📤 [Page {}] 요청 URI: {}", page, apiUrl);
@@ -85,14 +85,15 @@ public class MarketIndexDataSyncService {
   private void processItem(JsonNode item, Set<String> seenKeys, List<String> indexNames, String baseDate) {
     String indexClassification = item.path("idxCsf").asText();
     String indexName = item.path("idxNm").asText();
-    String itemDate = item.path("basPntm").asText();
+    String itemDate = item.path("basDt").asText();
 
-    /*if (!itemDate.equals(baseDate)) {
+    if (!itemDate.equals(baseDate)) {
       log.debug("📅 날짜 불일치로 건너뜀: {}, 기대값: {}", itemDate, baseDate);
       return;
-    }*/
+    }
 
-    if (!indexNames.isEmpty() && !indexNames.contains(indexName)) {
+    //
+    if ( !indexNames.isEmpty() &&!indexNames.contains(indexName)) {
       log.debug("🔍 필터링된 지수로 제외됨: {}", indexName);
       return;
     }
