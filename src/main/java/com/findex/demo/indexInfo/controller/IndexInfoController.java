@@ -2,6 +2,7 @@ package com.findex.demo.indexInfo.controller;
 
 import com.findex.demo.indexInfo.domain.dto.*;
 import com.findex.demo.indexInfo.service.IndexInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,14 @@ public class IndexInfoController {
 
   @PostMapping
   public ResponseEntity<IndexInfoDto> create(
-      @RequestBody IndexInfoCreateRequest request) {
+      @RequestBody @Valid IndexInfoCreateRequest request) {
     return ResponseEntity.ok(indexInfoService.create(request));
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<IndexInfoDto> update(
       @PathVariable Integer id,
-      @RequestBody IndexInfoUpdateRequest request) {
+      @RequestBody @Valid IndexInfoUpdateRequest request) {
     return ResponseEntity.ok(indexInfoService.update(id, request));
   }
 
