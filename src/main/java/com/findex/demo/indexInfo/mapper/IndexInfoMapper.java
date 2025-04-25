@@ -3,7 +3,6 @@ package com.findex.demo.indexInfo.mapper;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoSummaryDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
-import com.findex.demo.indexInfo.domain.dto.IndexInfoUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 
@@ -30,7 +29,7 @@ public class IndexInfoMapper {
         .basePointInTime(createRequest.basePointInTime())
         .baseIndex(createRequest.baseIndex())
         .sourceType(sourceType)
-        .favorite(createRequest.favorite())
+        .favorite(createRequest.favorite() != null ? createRequest.favorite() : false)
         .build();
   }
 
