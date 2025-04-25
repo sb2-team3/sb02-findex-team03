@@ -26,8 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "index_info")
 @NoArgsConstructor
-public class
-IndexInfo {
+public class IndexInfo {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
