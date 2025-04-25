@@ -151,6 +151,7 @@ public class MarketIndexDataSyncService {
         indexDataRepository.save(indexData);
         log.debug("저장 되니");
         log.info("✅ 저장 완료: {}", indexName);
+
       }
     } catch (DataIntegrityViolationException e) {
       log.warn("⚠️ 중복된 지수 데이터 무시: {}", key);

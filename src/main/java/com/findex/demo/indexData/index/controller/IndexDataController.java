@@ -9,6 +9,7 @@ import com.findex.demo.indexData.index.domain.entity.IndexData;
 //import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +70,7 @@ public class IndexDataController {
    * 지수 데이터 생성
    */
   @PostMapping
-  public ResponseEntity<IndexDataDto> create(@RequestBody IndexDataCreateRequest request) {
+  public ResponseEntity<IndexDataDto> create(@RequestBody @Valid IndexDataCreateRequest request) {
     IndexDataDto created = indexDataService.create(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }

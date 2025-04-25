@@ -93,12 +93,20 @@ public class IndexDataService {
       nextIdAfter = lastId;
     }
 
+
+
+    long totalElements = indexDataRepository.countWithFilter(
+        indexInfo_.orElseThrow(),
+        condition.getStartDate(),
+        condition.getEndDate()
+    );
+
     return CursorPageResponseIndexDataDto.<IndexDataDto>builder()
         .content(content)
         .nextCursor(nextCursor)
         .nextIdAfter(nextIdAfter)
         .size(pageSize)
-        .totalElements(content.size())
+        .totalElements(totalElements)
         .hasNext(hasNext)
         .build();
 
