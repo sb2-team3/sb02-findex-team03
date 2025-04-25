@@ -3,6 +3,10 @@ package com.findex.demo.syncJobs.domain.dto;
 import com.findex.demo.syncJobs.type.JobType;
 import com.findex.demo.syncJobs.type.Result;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -12,10 +16,19 @@ public class SyncJobSearchRequest {
 
   private JobType jobType;
   private Long indexInfoId;
-  private String baseDateFrom;
-  private String baseDateTo;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private LocalDate baseDateFrom;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  private LocalDate baseDateTo;
+
   private String worker;
-  private String jobTimeFrom;
-  private String jobTimeTo;
-  private Result result;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private LocalDateTime jobTimeFrom;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+  private LocalDateTime jobTimeTo;
+
 }
