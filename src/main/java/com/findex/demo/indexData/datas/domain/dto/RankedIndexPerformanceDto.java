@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RankedIndexPerformanceDto {
 
-    private IndexPerformanceDto performance;
+    private Performance performance;
     private int rank;
 }
