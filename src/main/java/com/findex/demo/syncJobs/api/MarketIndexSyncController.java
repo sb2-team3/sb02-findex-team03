@@ -5,8 +5,8 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.syncJobs.domain.dto.IndexDataSyncRequestDto;
 import com.findex.demo.syncJobs.domain.entity.SyncJob;
-import com.findex.demo.syncJobs.type.JobType;
-import com.findex.demo.syncJobs.type.Result;
+import com.findex.demo.syncJobs.domain.type.JobType;
+import com.findex.demo.syncJobs.domain.type.Result;
 import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class MarketIndexSyncController {
         .map(info -> SyncJob.builder()
             .jobType(JobType.INDEX_INFO)
             .result(Result.SUCCESS)
-            .jobTime(LocalDateTime.now())
+            .jobTime(LocalDate.now())
             .worker("OpenAPI") // 또는 InetAddress.getLocalHost().getHostAddress()
             .indexInfo(info)
             .build())
@@ -76,7 +76,7 @@ public class MarketIndexSyncController {
                         .indexInfo(indexInfoRepository.findById(info.getId()).orElseThrow() )
                         .targetDate(LocalDate.parse( request.getBaseDateFrom() ))
 
-                        .jobTime(LocalDateTime.now())
+                        .jobTime(LocalDate.now())
                         .result(Result.SUCCESS)
                         .build());
                 }
