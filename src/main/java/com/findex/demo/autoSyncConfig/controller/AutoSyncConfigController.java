@@ -13,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @Slf4j
 @RestController()
@@ -25,11 +27,18 @@ public class AutoSyncConfigController {
 
     private final AutoSyncConfigService autoSyncConfigService;
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<AutoSyncConfigDto> updateAutoSyncConfig(@PathVariable Integer id, AutoSyncConfigUpdateRequest request) {
-        AutoSyncConfigDto autoSyncConfigDto = autoSyncConfigService.updateAutoSyncConfig(id, request);
+    @PatchMapping("/{indexInfoId}")
+    public ResponseEntity<AutoSyncConfigDto> updateAutoSyncConfig(@PathVariable Integer indexInfoId,@RequestBody AutoSyncConfigUpdateRequest request) {
+
+        boolean enabled = false;
+        if (request.enabled() != null) {
+            enabled = request.enabled();
+            log.info("en" + enabled);
+        }
+        AutoSyncConfigDto autoSyncConfigDto = autoSyncConfigService.updateAutoSyncConfig(indexInfoId, enabled);
         return ResponseEntity.ok(autoSyncConfigDto);
     }
+
     @GetMapping
     public ResponseEntity<PagedResponse<AutoSyncConfig>> pageAutoSyncConfigs(
             @RequestParam(required = false) Integer indexInfoId,
@@ -41,7 +50,6 @@ public class AutoSyncConfigController {
             @RequestParam(defaultValue = "10") int size) {
 
         SortField resolved = SortField.from(sortField);
-        log.info("넌 뭐야 :" + resolved.toString());
         SortDirection resolvedDirection = SortDirection.from(sortDirection);
         PagedResponse<AutoSyncConfig> page = autoSyncConfigService.getPageAutoSynConfig(
                 indexInfoId, enabled, idAfter, cursor, resolved, resolvedDirection, size);

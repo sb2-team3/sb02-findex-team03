@@ -7,12 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class AutoSyncConfig {
 
     @Id
@@ -22,12 +26,11 @@ public class AutoSyncConfig {
     @OneToOne
     @JoinColumn(name = "index_info_id")
     private IndexInfo indexInfo;
-  
     private Boolean enabled;
 
-    public void update(Boolean enabled) {
-        if (enabled != null) {
-            this.enabled = enabled;
-        }
+    public void update(Boolean enabled){
+        this.enabled = enabled;
     }
+
+
 }
