@@ -5,18 +5,15 @@ import com.findex.demo.autoSyncConfig.domain.entity.QAutoSyncConfig;
 import com.findex.demo.global.pagination.dto.PagedResponse;
 import com.findex.demo.global.pagination.dto.SortDirection;
 import com.findex.demo.global.pagination.dto.SortField;
-import com.findex.demo.indexInfo.domain.entity.QIndexInfo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class AutoSyncConfigRepositoryImpl implements
