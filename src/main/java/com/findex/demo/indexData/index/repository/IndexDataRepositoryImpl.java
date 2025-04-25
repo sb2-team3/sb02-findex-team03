@@ -75,7 +75,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
   }
 
   @Override
-  public Integer countByCondition(IndexDataSearchCondition condition) {
+  public Long countByCondition(IndexDataSearchCondition condition) {
     CriteriaBuilder cb = em.getCriteriaBuilder();
     CriteriaQuery<Long> cq = cb.createQuery(Long.class);
     Root<IndexData> root = cq.from(IndexData.class);
@@ -96,7 +96,7 @@ public class IndexDataRepositoryImpl implements IndexDataRepositoryCustom {
 
     cq.select(cb.count(root)).where(predicates.toArray(new Predicate[0]));
 
-    return Math.toIntExact(em.createQuery(cq).getSingleResult());
+    return Long.valueOf(Math.toIntExact(em.createQuery(cq).getSingleResult())) ;
   }
 
   @Override

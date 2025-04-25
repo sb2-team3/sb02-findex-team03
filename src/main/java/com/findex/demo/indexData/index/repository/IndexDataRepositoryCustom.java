@@ -11,7 +11,9 @@ import org.springframework.data.domain.Page;
 public interface IndexDataRepositoryCustom {
   List<IndexData> findByCondition(IndexDataSearchCondition condition, Pageable pageable);
 
-  Integer countByCondition(IndexDataSearchCondition condition);
+  Long countByCondition(IndexDataSearchCondition condition);
+
+
 
   List<IndexData> findWithCursor(IndexInfo indexInfo, LocalDate startDate,
       LocalDate endDate, Integer cursorId, int size);
