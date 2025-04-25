@@ -70,4 +70,10 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
 
     Optional<IndexData> findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
         IndexInfo info, LocalDate date);
+
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateGreaterThanOrderByBaseDateAsc(
+        IndexInfo indexInfo, LocalDate endDate);
+
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateLessThanOrderByBaseDateDesc(
+        IndexInfo indexInfo, LocalDate startDate);
 }
