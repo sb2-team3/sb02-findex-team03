@@ -50,6 +50,15 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
     List<IndexData> findByIndexInfoIdInAndBaseDateIn(List<Integer> favoriteIndexIds,
         List<LocalDate> startDate);
 
+    // 필터 조건에 맞는 카운트를 계산하는 메서드
+    @Query("SELECT COUNT(i) FROM IndexData i WHERE " +
+        "i.indexInfo = :indexInfo AND " +
+        "(i.baseDate BETWEEN :startDate AND :endDate)")
+    long countWithFilter(
+        IndexInfo indexInfo,
+        LocalDate startDate,
+        LocalDate endDate
+    );
 
     boolean existsByBaseDate(LocalDate date);
 
@@ -61,4 +70,10 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
 
     Optional<IndexData> findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
         IndexInfo info, LocalDate date);
+
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateGreaterThanOrderByBaseDateAsc(
+        IndexInfo indexInfo, LocalDate endDate);
+
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateLessThanOrderByBaseDateDesc(
+        IndexInfo indexInfo, LocalDate startDate);
 }

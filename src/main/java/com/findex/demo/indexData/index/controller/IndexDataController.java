@@ -7,7 +7,9 @@ import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 //import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
+import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexDataController {
 
   private final IndexDataService indexDataService;
-  //private final CSVExportIndexDataService csvExportIndexDataService;
+  private final CSVExportIndexDataService csvExportIndexDataService;
   /*
   TODO : 목요일 에  같이 구현
    */
@@ -68,7 +70,7 @@ public class IndexDataController {
    * 지수 데이터 생성
    */
   @PostMapping
-  public ResponseEntity<IndexDataDto> create(@RequestBody IndexDataCreateRequest request) {
+  public ResponseEntity<IndexDataDto> create(@RequestBody @Valid IndexDataCreateRequest request) {
     IndexDataDto created = indexDataService.create(request);
     return ResponseEntity.status(HttpStatus.CREATED).body(created);
   }
@@ -95,19 +97,19 @@ public class IndexDataController {
   /**
    * csv export
    */
-//  @GetMapping("/export/csv")
-//  public ResponseEntity<byte[]> downloadCsvFile() throws Exception{
-//
-//    byte[] response = csvExportIndexDataService.downloadCsv();
-//
-//    if(response == null) {
-//      return ResponseEntity.internalServerError().build();
-//    }
-//
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
-//    return new ResponseEntity<>(response, headers, HttpStatus.OK);
-//  }
+  @GetMapping("/export/csv")
+  public ResponseEntity<byte[]> downloadCsvFile() throws Exception{
+
+    byte[] response = csvExportIndexDataService.downloadCsv();
+
+    if(response == null) {
+      return ResponseEntity.internalServerError().build();
+    }
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=users.csv");
+    return new ResponseEntity<>(response, headers, HttpStatus.OK);
+  }
 }
 
 

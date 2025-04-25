@@ -35,6 +35,13 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     String indexClassification = createRequest.indexClassification();
     String indexName = createRequest.indexName();
 
+    if (indexClassification == null || indexClassification.trim().isEmpty()) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
+    }
+    if (indexName == null || indexName.trim().isEmpty()) {
+      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
+    }
+
     if (indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
       throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다");
     }
@@ -99,7 +106,12 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     boolean isAscending = "asc".equalsIgnoreCase(sortDirection);
 
-    Long cursorValue = (idAfter != null) ? idAfter : (cursor != null ? Long.parseLong(cursor) : 0L);
+    Long cursorValue = 0L;
+    if (idAfter != null) {
+      cursorValue = idAfter;
+    } else if (cursor != null) {
+      cursorValue = Long.parseLong(cursor);
+    }
 
     Pageable pageable = PageRequest.of(0, size, Sort.by(
         isAscending ? Sort.Order.asc(sortField) : Sort.Order.desc(sortField)
@@ -121,6 +133,11 @@ public class IndexInfoServiceImpl implements IndexInfoService {
       nextCursor = lastItem.id();
     }
 
+    Long nextCursorValue = null;
+    if (nextCursor != null) {
+      nextCursorValue = nextCursor.longValue();
+    }
+
     Long totalElements = indexInfoRepository.countByFilter(
         indexClassification, indexName, favorite, null
     );
@@ -128,7 +145,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     return new CursorPageResponseIndexInfoDto(
         new ArrayList<>(indexInfoDtos),
         nextCursor,
-        nextCursor != null ? nextCursor.longValue() : null,
+        nextCursorValue,
         size,
         totalElements,
         hasNext
