@@ -3,7 +3,6 @@ package com.findex.demo.indexData.datas.service;
 import com.findex.demo.indexData.datas.domain.dto.DataPoint;
 import com.findex.demo.indexData.datas.domain.dto.IndexChartDto;
 import com.findex.demo.indexData.datas.domain.dto.IndexPerformanceDto;
-import com.findex.demo.indexData.datas.domain.dto.Performance;
 import com.findex.demo.indexData.datas.domain.dto.PeriodType;
 import com.findex.demo.indexData.datas.domain.dto.RankedIndexPerformanceDto;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
@@ -14,14 +13,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,51 +63,63 @@ public class DataService {
     @Transactional(readOnly = true)
     public List<RankedIndexPerformanceDto> getIndexPerformanceRank(PeriodType periodType,
         Integer indexInfoId, int limit) {
-
-        LocalDate endDate = LocalDate.now();
         LocalDate startDate = calculateStartDate(periodType);
+        LocalDate endDate = LocalDate.now();
 
-        LocalDate actualEndDate = findNearestTradingDay(endDate, false);
-        LocalDate actualStartDate = findNearestTradingDay(startDate, true);
+        List<IndexPerformanceDto> result = new ArrayList<>();
 
-        List<IndexInfo> indexInfoList;
+        List<IndexInfo> indexInfoList = indexInfoRepository.findAll();
+        for (IndexInfo indexInfo : indexInfoList) {
+            Optional<IndexData> start = dataRepository
+                .findFirstByIndexInfoAndBaseDateGreaterThanOrderByBaseDateAsc(indexInfo, startDate);
 
-        if (indexInfoId == null || indexInfoId <= 0) {
-            indexInfoList = indexInfoRepository.findAll();
+            Optional<IndexData> end = dataRepository
+                .findFirstByIndexInfoAndBaseDateLessThanOrderByBaseDateDesc(indexInfo, endDate);
+
+            if (start.isEmpty() || end.isEmpty()) {
+                continue;
+            }
+
+            IndexPerformanceDto indexPerformanceDto = createIndexPerformanceDto(
+                indexInfo, start.get(), end.get()
+            );
+            result.add(indexPerformanceDto);
+        }
+
+        result.sort(Comparator.comparing(IndexPerformanceDto::getFluctuationRate).reversed());
+        List<RankedIndexPerformanceDto> dtos = new ArrayList<>();
+        int rank = 0;
+        for (IndexPerformanceDto indexPerformanceDto : result) {
+            dtos.add(new RankedIndexPerformanceDto(indexPerformanceDto, rank++));
+        }
+
+        if (indexInfoId != null) {
+            return dtos.stream()
+                .filter(dto -> dto.getPerformance().getIndexInfoId().equals(indexInfoId))
+                .toList();
         } else {
-            IndexInfo targetIndexInfo = indexInfoRepository.findById(indexInfoId)
-                .orElseThrow(() -> new NoSuchElementException("[ERROR] index info not found"));
-
-            indexInfoList = indexInfoRepository.findByIndexClassification(
-                targetIndexInfo.getIndexClassification());
+            return dtos.size() < limit ? dtos : dtos.subList(0, limit);
         }
+    }
 
-        Map<Integer, IndexData> startDateMap = new HashMap<>();
-        Map<Integer, IndexData> endDateMap = new HashMap<>();
+    private IndexPerformanceDto createIndexPerformanceDto(IndexInfo index, IndexData start,
+        IndexData end) {
 
-        for (IndexInfo info : indexInfoList) {
-            Optional<IndexData> startData = dataRepository.findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
-                info, actualStartDate);
-            Optional<IndexData> endData = dataRepository.findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
-                info, actualEndDate);
+        Double startPrice = start.getClosePrice();
+        Double endPrice = end.getClosePrice();
+        double versus = endPrice - startPrice;
+        double fluctuationRate = (versus / startPrice) * 100;
+        fluctuationRate = Math.round(fluctuationRate * 100) / 100.0;
 
-            startData.ifPresent(data -> startDateMap.put(info.getId(), data));
-            endData.ifPresent(data -> endDateMap.put(info.getId(), data));
-        }
-
-        List<IndexPerformanceDto> performanceList = indexInfoList.stream()
-            .map(indexInfo -> createIndexPerformanceDto(indexInfo, startDateMap, endDateMap))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .sorted(Comparator.comparingDouble(IndexPerformanceDto::getFluctuationRate).reversed())
-            .limit(limit)
-            .toList();
-
-        // 순위 부여
-        return IntStream.range(0, performanceList.size())
-            .mapToObj(i -> new RankedIndexPerformanceDto(
-                convertToPerformance(performanceList.get(i)), i + 1))
-            .collect(Collectors.toList());
+        return new IndexPerformanceDto(
+            index.getId(),
+            index.getIndexClassification(),
+            index.getIndexName(),
+            versus,
+            fluctuationRate,
+            startPrice,
+            endPrice
+        );
     }
 
     @Transactional(readOnly = true)
@@ -171,26 +180,18 @@ public class DataService {
         }
     }
 
-    private Performance convertToPerformance(IndexPerformanceDto dto) {
-        return new Performance(
-            dto.getIndexInfoId(),
-            dto.getIndexClassification(),
-            dto.getIndexName(),
-            dto.getVersus(),
-            dto.getFluctuationRate(),
-            dto.getCurrentPrice(),
-            dto.getBeforePrice()
-        );
-    }
-
     private List<DataPoint> calculateMovingAverage(List<DataPoint> dataPoints, int period) {
         List<DataPoint> maLine = new ArrayList<>();
+
+        if (dataPoints.size() < period) {
+            return maLine;
+        }
 
         for (int cnt_i = period - 1; cnt_i < dataPoints.size(); cnt_i++) {
             double sum = 0;
 
-            for (int cnt_j = 0; cnt_j < period; cnt_j++) {
-                sum += dataPoints.get(cnt_i - cnt_j).getValue();
+            for (int cnt_j = cnt_i - period + 1; cnt_j <= cnt_i; cnt_j++) {
+                sum += dataPoints.get(cnt_j).getValue();
             }
 
             double average = sum / period;
