@@ -7,7 +7,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CursorPageResponse<T> {
+public class CursorPageResponseSyncJobDto<T> {
 
   private List<T> content;
   private String nextCursor;

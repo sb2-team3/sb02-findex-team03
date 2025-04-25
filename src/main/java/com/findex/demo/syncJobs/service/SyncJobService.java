@@ -4,8 +4,6 @@ import com.findex.demo.syncJobs.domain.entity.SyncJob;
 import com.findex.demo.syncJobs.domain.dto.*;
 import com.findex.demo.syncJobs.mapper.SyncJobMapper;
 import com.findex.demo.syncJobs.repository.SyncJobRepository;
-import com.findex.demo.syncJobs.type.JobType;
-import com.findex.demo.syncJobs.type.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +23,7 @@ public class SyncJobService {
 
   private final SyncJobRepository syncJobRepository;
 
-  public CursorPageResponse<SyncJobDto> searchSyncJobs(SyncJobSearchRequest request, String sortField, String sortDirection, Long idAfter, int size) {
+  public CursorPageResponseSyncJobDto<SyncJobDto> searchSyncJobs(SyncJobSearchRequest request, String sortField, String sortDirection, Long idAfter, int size) {
     Pageable pageable = PageRequest.of(0, size, getSort(sortField, sortDirection));
 
     Page<SyncJob> page = syncJobRepository.findByFilter(
@@ -47,7 +45,7 @@ public class SyncJobService {
 
     Long nextIdAfter = dtos.isEmpty() ? null : dtos.get(dtos.size() - 1).getId().longValue();
 
-    return CursorPageResponse.<SyncJobDto>builder()
+    return CursorPageResponseSyncJobDto.<SyncJobDto>builder()
         .content(dtos)
         .nextCursor(nextIdAfter != null ? String.valueOf(nextIdAfter) : null)
         .nextIdAfter(nextIdAfter)
