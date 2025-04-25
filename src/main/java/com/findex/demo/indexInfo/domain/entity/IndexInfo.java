@@ -37,7 +37,7 @@ public class IndexInfo {
   @Enumerated(EnumType.STRING)
   private SourceType sourceType;
 
-  private Boolean favorite;
+  private Boolean favorite = false;
 
   @Builder
   public IndexInfo(String indexClassification, String indexName, int employedItemCount, LocalDate basePointInTime,
@@ -48,7 +48,7 @@ public class IndexInfo {
     this.basePointInTime = basePointInTime;
     this.baseIndex = baseIndex;
     this.sourceType = sourceType;
-    this.favorite = favorite;
+    this.favorite = (favorite != null) ? favorite : false;
   }
 
   public void update(IndexInfoUpdateRequest updateRequest) {
