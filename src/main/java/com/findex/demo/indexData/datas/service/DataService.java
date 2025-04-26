@@ -129,12 +129,11 @@ public class DataService {
             return Collections.emptyList();
         }
 
+        LocalDate startDate = calculateStartDate(periodType);
+        LocalDate actualStartDate = findNearestTradingDay(startDate, false);
+
         LocalDate endDate = LocalDate.now();
-
         LocalDate actualEndDate = findNearestTradingDay(endDate, true);
-
-        LocalDate theoreticalStartDate = calculateStartDate(periodType);
-        LocalDate actualStartDate = findNearestTradingDay(theoreticalStartDate, true);
 
         List<Integer> favoriteIndexIds = favoriteIndexes.stream()
             .map(IndexInfo::getId)
@@ -147,14 +146,17 @@ public class DataService {
             return Collections.emptyList();
         }
 
+        // IndexInfo 에 대한 성과
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
             .filter(data -> data.getBaseDate().equals(actualStartDate))
             .collect(Collectors.toMap(data -> data.getIndexInfo().getId(),
-                Function.identity()));
+                Function.identity(), (existing, replacement) -> existing
+            ));
 
         Map<Integer, IndexData> endDateMap = indexDataList.stream()
             .filter(data -> data.getBaseDate().equals(actualEndDate))
-            .collect(Collectors.toMap(data -> data.getIndexInfo().getId(), Function.identity()));
+            .collect(Collectors.toMap(data -> data.getIndexInfo().getId(),
+                Function.identity(), (existing, replacement) -> existing));
 
         return favoriteIndexes.stream()
             .map(indexInfo -> createIndexPerformanceDto(indexInfo, startDateMap, endDateMap))
@@ -190,8 +192,8 @@ public class DataService {
         for (int cnt_i = period - 1; cnt_i < dataPoints.size(); cnt_i++) {
             double sum = 0;
 
-            for (int cnt_j = cnt_i - period + 1; cnt_j <= cnt_i; cnt_j++) {
-                sum += dataPoints.get(cnt_j).getValue();
+            for (int cnt_j = 0; cnt_j < period; cnt_j++) {
+                sum += dataPoints.get(cnt_i - cnt_j).getValue();
             }
 
             double average = sum / period;
