@@ -1,12 +1,14 @@
 package com.findex.demo.syncJobs.api;
 
 
+import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.syncJobs.domain.dto.IndexDataSyncRequestDto;
 import com.findex.demo.syncJobs.domain.entity.SyncJob;
 import com.findex.demo.syncJobs.domain.type.JobType;
 import com.findex.demo.syncJobs.domain.type.StatusType;
+import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.net.InetAddress;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +33,8 @@ public class MarketIndexSyncController {
     private final MarketIndexSyncService marketIndexSyncService;
     private final MarketIndexDataSyncService marketIndexDataSyncService;
     private final IndexInfoRepository indexInfoRepository;
-
+  private final SyncJobRepository syncJobRepository;
+  //private final AutoSyncConfigRepository autoSyncConfigRepository;
 
   @PostMapping("/index-infos")
   public ResponseEntity<List<SyncJob>> syncMarketIndexInfo() {
@@ -41,12 +44,14 @@ public class MarketIndexSyncController {
         .map(info -> SyncJob.builder()
             .jobType(JobType.INDEX_INFO)
             .statusType(StatusType.SUCCESS)
+            .targetDate(info.getBasePointInTime())
             .jobTime(LocalDate.now())
             .worker("OpenAPI") // 또는 InetAddress.getLocalHost().getHostAddress()
             .indexInfo(info)
             .build())
         .collect(Collectors.toList());
 
+    syncJobRepository.saveAll(jobs);
     return ResponseEntity.ok(jobs);
   }
 
@@ -65,7 +70,10 @@ public class MarketIndexSyncController {
 
             List<SyncJob> results = new ArrayList<>();
 
-            for (String date : dateList) {
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+
+          for (String date : dateList) {
                 marketIndexDataSyncService.fetchIndexData(date, indexNames);
                 for (IndexInfo info : indexInfos) {
                     results.add(SyncJob.builder()
@@ -73,15 +81,17 @@ public class MarketIndexSyncController {
                         .id(null) // 저장 시 자동생성
                         .jobType(JobType.INDEX_DATA)
                         .indexInfo(indexInfoRepository.findById(info.getId()).orElseThrow() )
-                        .targetDate(LocalDate.parse( request.getBaseDateFrom() ))
+                        .targetDate(LocalDate.parse(date, formatter)  )
 
                         .jobTime(LocalDate.now())
                         .statusType(StatusType.SUCCESS)
                         .build());
                 }
             }
+            syncJobRepository.saveAll(results);
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(results);
+
+            return ResponseEntity.ok(results);
 
         } catch (Exception e) {
             log.error("❌ 연동 실패: {}", e.getMessage(), e);
