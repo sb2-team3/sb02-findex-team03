@@ -22,7 +22,7 @@ public class DataController {
     @GetMapping("/api/index-data/{indexInfoId}/chart")
     public ResponseEntity<IndexChartDto> getIndexChart(
         @PathVariable int indexInfoId,
-        @RequestParam(required = false, defaultValue = "DAILY") PeriodType periodType
+        @RequestParam(required = false, defaultValue = "MONTHLY") PeriodType periodType
     ) {
         IndexChartDto indexChartDto = indexDataService.getIndexChart(periodType,
             indexInfoId);
