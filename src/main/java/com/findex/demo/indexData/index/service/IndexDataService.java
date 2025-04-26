@@ -42,7 +42,6 @@ public class IndexDataService {
 
   @Transactional(readOnly = true)
   public CursorPageResponseIndexDataDto<IndexDataDto> findAll(IndexDataSearchCondition condition) {
-
     // 커서 디코딩 (Base64 → ID)
     Integer cursorId = decodeCursor(condition.getCursor());
     int pageSize = condition.getSize() > 0 ? condition.getSize() : 10;
@@ -50,38 +49,26 @@ public class IndexDataService {
     Integer indexInfoId = condition.getIndexInfoId();
 
     List<IndexData> results = new ArrayList<>();
-    Optional<IndexInfo> indexInfo_ = Optional.empty();
-    try{
-      indexInfo_ = indexInfoRepository.findById(indexInfoId);
-    }catch (Exception e){
-      e.printStackTrace();
-    }
+    Optional<IndexInfo> _indexInfo = indexInfoRepository.findById(indexInfoId);
 
-      results = indexDataRepository.findWithCursor(
-          indexInfo_.orElseThrow(),
-          condition.getStartDate(),
-          condition.getEndDate(),
-          cursorId,
-          pageSize
-      );
+    // Optional 값이 없으면 예외를 던짐
+    IndexInfo indexInfo = _indexInfo.orElseThrow();
 
-
+    results = indexDataRepository.findWithCursor(
+        indexInfo,
+        condition.getStartDate(),
+        condition.getEndDate(),
+        cursorId,
+        pageSize
+    );
 
     // hasNext 판별
-
-
-    boolean hasNext = false;
-    try{
-      hasNext = results.size() > pageSize;
-    }catch (Exception e){
-      e.printStackTrace();
-    }
+    boolean hasNext = results.size() > pageSize;
 
     List<IndexData> pagedResults = hasNext ? results.subList(0, pageSize) : results;
 
     List<IndexDataDto> content = pagedResults.stream()
-        .map(data ->
-            new IndexDataMapper().toIndexDto(data))
+        .map(data -> new IndexDataMapper().toIndexDto(data))
         .toList();
 
     String nextCursor = null;
@@ -93,10 +80,8 @@ public class IndexDataService {
       nextIdAfter = lastId;
     }
 
-
-
     long totalElements = indexDataRepository.countWithFilter(
-        indexInfo_.orElseThrow(),
+        indexInfo,
         condition.getStartDate(),
         condition.getEndDate()
     );
@@ -109,7 +94,6 @@ public class IndexDataService {
         .totalElements(totalElements)
         .hasNext(hasNext)
         .build();
-
   }
 
 
