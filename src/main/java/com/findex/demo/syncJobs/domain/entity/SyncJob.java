@@ -15,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SyncJob extends BaseTimeEntity {
+public class SyncJob {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class SyncJob extends BaseTimeEntity {
   @Column(nullable = false)
   private JobType jobType;
 
-  @Column(nullable = false)
+  @Column
   private LocalDate targetDate;
 
   @Column(nullable = false)

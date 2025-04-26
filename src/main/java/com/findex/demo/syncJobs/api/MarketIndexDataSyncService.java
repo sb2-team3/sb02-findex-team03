@@ -2,6 +2,7 @@ package com.findex.demo.syncJobs.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
@@ -9,6 +10,7 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
+import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +34,7 @@ public class MarketIndexDataSyncService {
 
   private final IndexDataRepository indexDataRepository;
   private final IndexInfoRepository indexInfoRepository;
+
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
@@ -149,6 +152,7 @@ public class MarketIndexDataSyncService {
     try {
       for(IndexData indexData : indexDatas) {
         indexDataRepository.save(indexData);
+
         log.debug("저장 되니");
         log.info("✅ 저장 완료: {}", indexName);
 
