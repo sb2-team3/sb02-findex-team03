@@ -12,6 +12,8 @@ import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.mapper.IndexInfoMapper;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.indexInfo.service.IndexInfoService;
+import com.findex.demo.syncJobs.domain.entity.SyncJob;
+import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class IndexInfoServiceImpl implements IndexInfoService {
 
   private final IndexInfoRepository indexInfoRepository;
+
 
   @Override
   @Transactional
@@ -49,6 +52,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
     IndexInfo indexInfo = IndexInfoMapper.toEntity(createRequest, SourceType.USER);
 
     indexInfo = indexInfoRepository.save(indexInfo);
+
 
     return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }

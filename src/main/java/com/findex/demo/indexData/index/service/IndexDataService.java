@@ -48,13 +48,22 @@ public class IndexDataService {
 
     Integer indexInfoId = condition.getIndexInfoId();
 
-    List<IndexData> results = new ArrayList<>();
-    Optional<IndexInfo> _indexInfo = indexInfoRepository.findById(indexInfoId);
+    Optional<IndexInfo> optionalIndexInfo = indexInfoRepository.findById(indexInfoId);
 
-    // Optional 값이 없으면 예외를 던짐
-    IndexInfo indexInfo = _indexInfo.orElseThrow();
+    if (optionalIndexInfo.isEmpty()) {
+      return CursorPageResponseIndexDataDto.<IndexDataDto>builder()
+          .content(List.of())
+          .nextCursor(null)
+          .nextIdAfter(null)
+          .size(0)
+          .totalElements(0L)
+          .hasNext(false)
+          .build();
+    }
 
-    results = indexDataRepository.findWithCursor(
+    IndexInfo indexInfo = optionalIndexInfo.get();
+
+    List<IndexData> results = indexDataRepository.findWithCursor(
         indexInfo,
         condition.getStartDate(),
         condition.getEndDate(),

@@ -65,7 +65,7 @@ public class SyncJobService {
     List<SyncJobDto> content = queryResult.stream()
             .map(SyncJobMapper::toSyncJobDto)
             .collect(Collectors.toList());
-
+    syncJobRepository.saveAll(queryResult);
 
     return new PagedResponse<>(content,null, nextIdAfter, size, content.size() , hasNext);
   }

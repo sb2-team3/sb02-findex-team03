@@ -76,6 +76,7 @@ public class SyncJobController {
                 sortDirection,
                 size
         );
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
