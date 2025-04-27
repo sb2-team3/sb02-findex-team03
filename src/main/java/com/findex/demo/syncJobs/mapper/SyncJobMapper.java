@@ -13,7 +13,7 @@ public class SyncJobMapper {
         .targetDate(entity.getTargetDate())
         .worker(entity.getWorker())
         .jobTime(entity.getJobTime())
-        .result("SUCCESS")
+        .result(entity.getStatusType().name())
         .build();
   }
 
