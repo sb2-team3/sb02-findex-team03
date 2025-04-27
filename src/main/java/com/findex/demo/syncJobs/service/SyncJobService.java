@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 @RequiredArgsConstructor
 public class SyncJobService {
@@ -22,35 +21,39 @@ public class SyncJobService {
   private final SyncJobRepository syncJobRepository;
 
   public PagedResponse<SyncJobDto> searchSyncJobs(
-          JobType jobType,
-          Integer indexInfoId,
-          LocalDate baseDateFrom,
-          LocalDate baseDateTo,
-          String worker,
-          LocalDate jobTimeFrom,
-          LocalDate jobTimeTo,
-          StatusType status,
-          Integer idAfter,
-          String cursor,
-          String sortField,
-          String sortDirection,
-          int size
+      JobType jobType,
+      Integer indexInfoId,
+      LocalDate baseDateFrom,
+      LocalDate baseDateTo,
+      String worker,
+      LocalDate jobTimeFrom,
+      LocalDate jobTimeTo,
+      StatusType status,
+      Integer idAfter,
+      String cursor,
+      String sortField,
+      String sortDirection,
+      int size
   ) {
-    List<SyncJob> queryResult = syncJobRepository.findPage(jobType,
-            indexInfoId,
-            baseDateFrom,
-            baseDateTo,
-            worker,
-            jobTimeFrom,
-            jobTimeTo,
-            status,
-            idAfter,
-            cursor,
-            sortField,
-            sortDirection,
-            size
+    List<SyncJob> queryResult = syncJobRepository.findPage(
+        jobType,
+        indexInfoId,
+        baseDateFrom,
+        baseDateTo,
+        worker,
+        jobTimeFrom,
+        jobTimeTo,
+        status,
+        idAfter,
+        cursor,
+        sortField,
+        sortDirection,
+        size
     ).fetch();
 
+    if (queryResult == null) {
+      queryResult = List.of();
+    }
 
     boolean hasNext = false;
     String nextIdAfter = null;
@@ -63,15 +66,18 @@ public class SyncJobService {
     }
 
     List<SyncJobDto> content = queryResult.stream()
-            .map(SyncJobMapper::toSyncJobDto)
-            .collect(Collectors.toList());
+        .map(SyncJobMapper::toSyncJobDto)
+        .collect(Collectors.toList());
+
     syncJobRepository.saveAll(queryResult);
 
-    return new PagedResponse<>(content,null, nextIdAfter, size, content.size() , hasNext);
+    return new PagedResponse<>(
+        content,
+        null,
+        nextIdAfter,
+        size,
+        content.size(),
+        hasNext
+    );
   }
-
-
 }
-
-
-
