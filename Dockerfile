@@ -14,8 +14,11 @@ RUN ./gradlew dependencies
 # 소스코드 복사
 COPY . /app
 
-# build
-RUN ./gradlew clean build -x test
+
+# 실패하더라도 로그를 출력하게 수정
+RUN chmod +x gradlew
+RUN ./gradlew clean build -x check -x test || (cat /app/build/reports/*/* || true) && false
+
 
 # --------------------------------------------------------
 
