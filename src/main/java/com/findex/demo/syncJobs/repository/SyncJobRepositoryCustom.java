@@ -1,11 +1,9 @@
 package com.findex.demo.syncJobs.repository;
 
-import com.findex.demo.syncJobs.domain.dto.SyncJobDto;
 import com.findex.demo.syncJobs.domain.entity.SyncJob;
 import com.findex.demo.syncJobs.domain.type.JobType;
 import com.findex.demo.syncJobs.domain.type.StatusType;
 import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.time.LocalDate;
 
 public interface SyncJobRepositoryCustom {

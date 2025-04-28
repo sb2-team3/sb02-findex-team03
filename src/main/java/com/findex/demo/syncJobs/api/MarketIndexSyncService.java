@@ -68,9 +68,12 @@ public class MarketIndexSyncService {
 
         // Step 4: AutoSyncConfig 생성 및 저장
         List<AutoSyncConfig> autoSyncConfigs = indexInfos.stream()
+                .filter(indexInfo -> !autoSyncConfigRepository.existsByIndexInfoId(indexInfo.getId()))
                 .map(OpenApIIndexInfoMapper::toAutoSyncConfig)
                 .collect(Collectors.toList());
-        autoSyncConfigRepository.saveAll(autoSyncConfigs);
+        if (!autoSyncConfigs.isEmpty()) {
+            autoSyncConfigRepository.saveAll(autoSyncConfigs);
+        }
 
         // Step 5: 저장된 SyncJob을 DTO로 변환하여 반환
         return savedJobs.stream()
