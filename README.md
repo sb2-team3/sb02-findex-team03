@@ -5,12 +5,16 @@
 ## **팀원 구성**
 | 이름 | GitHub | 사진 |
 |:---:|:---:|:---:|
-| 이준엽 (팀장) | [leejunnyeop](https://github.com/leejunnyeop) | ![이준엽]() |
-| 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | ![이유나](🐰) |
-| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | ![김태우](![image](https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17)
-) |
-| 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | ![이준혁]() |
-| 김세은 | [Seeun126](https://github.com/Seeun126) | ![김세은]() |
+| 이준엽 (팀장) | [leejunnyeop](https://github.com/leejunnyeop) | ![image](https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616)
+ |
+| 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | ![image](https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d)
+ |
+| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) |![image](https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17)
+ |
+| 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | ![image](https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd)
+ |
+| 김세은 | [Seeun126](https://github.com/Seeun126) | ![image](https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc)
+ |
 
 
 ## **프로젝트 소개**
