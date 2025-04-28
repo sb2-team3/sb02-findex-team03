@@ -2,6 +2,7 @@ package com.findex.demo.syncJobs.domain.dto;
 
 import com.findex.demo.syncJobs.domain.type.JobType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class SyncJobDto {
 
   private String worker;
 
-  private LocalDate jobTime;
+  private LocalDateTime jobTime;
 
   private String result;
 }
