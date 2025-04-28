@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -84,20 +85,20 @@ public class IndexDataController {
   /**
    * 지수 데이터 수정
    */
-  @PutMapping("/{indexDataId}")
+  @PatchMapping("/{id}")
   public ResponseEntity<IndexDataDto> update(
-      @PathVariable Integer indexDataId,
+      @PathVariable Integer id,
       @RequestBody  IndexDataUpdateRequest request) {
-    IndexDataDto updated = indexDataService.update(indexDataId, request);
+    IndexDataDto updated = indexDataService.update(id, request);
     return ResponseEntity.ok(updated);
   }
 
   /**
    * 지수 데이터 삭제
    */
-  @DeleteMapping("/{indexDataId}")
-  public ResponseEntity<Void> delete(@PathVariable Integer indexDataId) {
-    indexDataService.delete(indexDataId);
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    indexDataService.delete(id);
     return ResponseEntity.noContent().build(); // HTTP 204
   }
 

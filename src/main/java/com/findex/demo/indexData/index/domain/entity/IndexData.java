@@ -74,19 +74,23 @@ public class IndexData extends BaseTimeEntity {
 
 
   public void update(IndexDataUpdateRequest request) {
-    if (request.getMarketPrice() != null) {
+    if (request.getMarketPrice() != null &&
+    request.getMarketPrice() > 0) {
       this.openPrice = request.getMarketPrice();
     }
 
-    if (request.getClosingPrice() != null) {
+    if (request.getClosingPrice() != null &&
+        request.getClosingPrice() > 0) {
       this.closePrice = request.getClosingPrice();
     }
 
-    if (request.getHighPrice() != null) {
+    if (request.getHighPrice() != null &&
+    request.getHighPrice() > 0) {
       this.highPrice = request.getHighPrice();
     }
 
-    if (request.getLowPrice() != null) {
+    if (request.getLowPrice() != null
+    && request.getLowPrice() > 0) {
       this.lowPrice = request.getLowPrice();
     }
 
