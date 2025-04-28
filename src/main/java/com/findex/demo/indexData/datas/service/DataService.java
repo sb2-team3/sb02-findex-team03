@@ -139,21 +139,13 @@ public class DataService {
             .map(IndexInfo::getId)
             .toList();
 
-        List<IndexData> indexDataList = dataRepository.findByIndexInfoIdInAndBaseDateIn(
-            favoriteIndexIds, List.of(actualStartDate, actualEndDate));
-
-        if (indexDataList.isEmpty()) {
+        if (actualStartDate == null || actualEndDate == null) {
             return Collections.emptyList();
         }
-
-        boolean flag = true;
-        for (Integer favoriteIndexId : favoriteIndexIds) {
-            if (dataRepository.existsByIndexInfoId(favoriteIndexId)) {
-                flag = false;
-                break;
-            }
-        }
-        if (!flag) {
+        
+        List<IndexData> indexDataList = dataRepository.findByIndexInfoIdInAndBaseDateIn(
+            favoriteIndexIds, List.of(actualStartDate, actualEndDate));
+        if (indexDataList.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -184,12 +176,10 @@ public class DataService {
 
         if (findPrevious) {
             Optional<LocalDate> prevDate = dataRepository.findMaxBaseDateBeforeDate(date);
-            return prevDate.orElseThrow(() ->
-                new NoSuchElementException("No trading day found before " + date));
+            return prevDate.orElse(null);
         } else {
             Optional<LocalDate> nextDate = dataRepository.findMinBaseDateAfterDate(date);
-            return nextDate.orElseThrow(() ->
-                new NoSuchElementException("No trading day found after " + date));
+            return nextDate.orElse(null);
         }
     }
 
