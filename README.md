@@ -6,11 +6,11 @@ https://github.com/sb2-team3/sb02-findex-team03
 
 ## **팀원 구성**
 
-이준엽 ([https://github.com/leejunnyeop](https://github.com/LeejunHyeok7170))
+이준엽 (https://github.com/leejunnyeop)
 김태우 (https://github.com/kimtaewoo9)
 이유나 (https://github.com/nayu-yuna)
 이준혁 (https://github.com/LeejunHyeok7170)
-김세은 ([https://github.com/Seeun126](https://github.com/LeejunHyeok7170))
+김세은 (https://github.com/Seeun126)
 
 ---
 
@@ -111,12 +111,12 @@ https://github.com/sb2-team3/sb02-findex-team03
             - 화면을 고려해 적절한 페이지네이션 전략을 선택합니다.
 
 ## 파일 구조
+![스크린샷 2025-04-28 151531](https://github.com/user-attachments/assets/f5371587-dece-48e7-894a-f5e3f52d660f)
 
-![image.png](attachment:4532604b-c70e-4c63-9883-fe35c84fef29:image.png)
 
 ## 구현 홈페이지
 
-[https://www.](https://www.notion.so/4L-1e0987eef3c68016a9f4ee169b9c816a?pvs=21)codezooFindex.com/
+https://www.codezooFindex.com/
 
 ## **프로젝트 회고록**
 
