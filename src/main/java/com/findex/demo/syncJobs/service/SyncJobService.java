@@ -51,6 +51,17 @@ public class SyncJobService {
         size
     ).fetch();
 
+    Long pageTotalSize = syncJobRepository.countByConditions(
+            jobType,
+            indexInfoId,
+            baseDateFrom,
+            baseDateTo,
+            worker,
+            jobTimeFrom,
+            jobTimeTo,
+            status
+    );
+
     if (queryResult == null) {
       queryResult = List.of();
     }
@@ -69,14 +80,12 @@ public class SyncJobService {
         .map(SyncJobMapper::toSyncJobDto)
         .collect(Collectors.toList());
 
-    syncJobRepository.saveAll(queryResult);
-
     return new PagedResponse<>(
         content,
         null,
         nextIdAfter,
         size,
-        content.size(),
+        pageTotalSize,
         hasNext
     );
   }

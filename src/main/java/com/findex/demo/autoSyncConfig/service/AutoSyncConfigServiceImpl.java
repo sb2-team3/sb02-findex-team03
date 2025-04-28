@@ -62,7 +62,7 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
                 entityPage.nextCursor(),
                 entityPage.nextIdAfter(),
                 entityPage.size(),
-                dtoList.size(),
+                (long) dtoList.size(),
                 entityPage.hasNext()
         );
 

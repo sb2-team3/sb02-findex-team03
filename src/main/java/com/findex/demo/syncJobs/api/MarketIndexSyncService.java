@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -52,6 +53,7 @@ public class MarketIndexSyncService {
      * 1. 외부 API로부터 시장 지수 데이터 수집 및 저장
      * 2. 수집된 데이터 기반으로 SyncJob 및 AutoSyncConfig 생성 및 저장
      */
+
     @Transactional
     public List<SyncJobDto> createSyncJobsAndConfigs() {
         // Step 1: 시장 지수 fetch + 저장

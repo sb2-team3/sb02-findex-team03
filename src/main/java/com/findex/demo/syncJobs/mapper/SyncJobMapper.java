@@ -2,6 +2,8 @@ package com.findex.demo.syncJobs.mapper;
 
 import com.findex.demo.syncJobs.domain.dto.SyncJobDto;
 import com.findex.demo.syncJobs.domain.entity.SyncJob;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class SyncJobMapper {
 
@@ -12,7 +14,7 @@ public class SyncJobMapper {
         .indexInfoId(entity.getIndexInfo().getId())
         .targetDate(entity.getTargetDate())
         .worker(entity.getWorker())
-        .jobTime(entity.getJobTime())
+        .jobTime(LocalDateTime.now())
         .result(entity.getStatusType().name())
         .build();
   }
