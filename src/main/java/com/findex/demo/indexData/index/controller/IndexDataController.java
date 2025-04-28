@@ -88,7 +88,7 @@ public class IndexDataController {
   @PatchMapping("/{id}")
   public ResponseEntity<IndexDataDto> update(
       @PathVariable Integer id,
-      @RequestBody  IndexDataUpdateRequest request) {
+      @RequestBody @Valid IndexDataUpdateRequest request) {
     IndexDataDto updated = indexDataService.update(id, request);
     return ResponseEntity.ok(updated);
   }
