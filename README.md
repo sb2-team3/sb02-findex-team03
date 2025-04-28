@@ -3,11 +3,13 @@
 [Notion](https://ballistic-teller-d42.notion.site/1d9987eef3c680bea1cbeb1e529f6c91?pvs=4)
 
 ## **팀원 구성**
-- [이준엽 (팀장)](https://github.com/leejunnyeop)
-- [이유나](https://github.com/nayu-yuna)
-- [김태우](https://github.com/kimtaewoo9)
-- [이준혁](https://github.com/LeejunHyeok7170)
-- [김세은](https://github.com/Seeun126)
+| 이름 | GitHub | 사진 |
+|:---:|:---:|:---:|
+| 이준엽 (팀장) | [leejunnyeop](https://github.com/leejunnyeop) | ![이준엽]() |
+| 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | ![이유나](🐰) |
+| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | ![김태우]() |
+| 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | ![이준혁]() |
+| 김세은 | [Seeun126](https://github.com/Seeun126) | ![김세은]() |
 
 
 ## **프로젝트 소개**
