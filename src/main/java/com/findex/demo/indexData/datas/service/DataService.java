@@ -48,6 +48,7 @@ public class DataService {
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
         List<DataPoint> ma20DataPoints = calculateMovingAverage(dataPoints, 20);
 
+        // 가장 과거 데이터에 null 값을 넣어야함 .
         List<DataPoint> alignedMa5 = alignMovingAverageWithOriginal(dataPoints, ma5DataPoints);
         List<DataPoint> alignedMa20 = alignMovingAverageWithOriginal(dataPoints, ma20DataPoints);
 
