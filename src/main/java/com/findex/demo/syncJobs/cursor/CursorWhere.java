@@ -8,15 +8,15 @@ import java.time.LocalDate;
 
 public class CursorWhere {
 
-    public static BooleanBuilder  booleanBuilder(QSyncJob qSyncJob, JobType jobType,
-                                                  Integer indexInfoId,
-                                                  LocalDate baseDateFrom,
-                                                  LocalDate baseDateTo,
-                                                  String worker,
-                                                  LocalDate jobTimeFrom,
-                                                  LocalDate jobTimeTo,
-                                                  StatusType status,
-                                                  Integer idAfter) {
+    public static BooleanBuilder booleanBuilder(QSyncJob qSyncJob, JobType jobType,
+        Integer indexInfoId,
+        LocalDate baseDateFrom,
+        LocalDate baseDateTo,
+        String worker,
+        LocalDate jobTimeFrom,
+        LocalDate jobTimeTo,
+        StatusType status,
+        Integer idAfter) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if (jobType != null) {
@@ -26,13 +26,15 @@ public class CursorWhere {
         if (indexInfoId != null) {
             booleanBuilder.and(qSyncJob.indexInfo.id.eq(indexInfoId));
         }
+
         if (baseDateFrom != null && baseDateTo != null) {
-            booleanBuilder.and(qSyncJob.indexInfo.basePointInTime.between(baseDateFrom, baseDateTo));
+            booleanBuilder.and(qSyncJob.jobTime.between(baseDateFrom, baseDateTo));
         } else if (baseDateFrom != null) {
-            booleanBuilder.and(qSyncJob.indexInfo.basePointInTime.goe(baseDateFrom));
+            booleanBuilder.and(qSyncJob.jobTime.goe(baseDateFrom));
         } else if (baseDateTo != null) {
-            booleanBuilder.and(qSyncJob.indexInfo.basePointInTime.loe(baseDateTo));
+            booleanBuilder.and(qSyncJob.jobTime.loe(baseDateTo));
         }
+
         if (worker != null) {
             booleanBuilder.and(qSyncJob.worker.eq(worker));
         }
@@ -44,7 +46,6 @@ public class CursorWhere {
         } else if (jobTimeTo != null) {
             booleanBuilder.and(qSyncJob.jobTime.loe(jobTimeTo));
         }
-
 
         if (status != null) {
             booleanBuilder.and(qSyncJob.statusType.eq(status));
