@@ -1,11 +1,10 @@
-
 spring:
   profiles:
     active: prod
   datasource:
-    url: jdbc:postgresql://sb02-findex-team03-production-1b20.up.railway.app/
-    username: junhyeok
-    password: 1234
+    url: jdbc:postgresql://postgres:paaLVKDCkjopiGOskumyTShEYYTxsDHS@shuttle.proxy.rlwy.net:55408/railway
+    username: postgres
+    password: paaLVKDCkjopiGOskumyTShEYYTxsDHS
     driver-class-name: org.postgresql.Driver
 
   jpa:
