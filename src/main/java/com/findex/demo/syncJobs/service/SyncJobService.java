@@ -51,19 +51,15 @@ public class SyncJobService {
         size
     ).fetch();
 
-    Long pageTotalSize = syncJobRepository.countByConditions(jobType,
+    Long pageTotalSize = syncJobRepository.countByConditions(
+            jobType,
             indexInfoId,
             baseDateFrom,
             baseDateTo,
             worker,
             jobTimeFrom,
             jobTimeTo,
-            status,
-            idAfter,
-            cursor,
-            sortField,
-            sortDirection,
-            size
+            status
     );
 
     if (queryResult == null) {
