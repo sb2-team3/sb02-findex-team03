@@ -142,13 +142,13 @@ public class DataService {
         if (actualStartDate == null || actualEndDate == null) {
             return Collections.emptyList();
         }
-
+        
         List<IndexData> indexDataList = dataRepository.findByIndexInfoIdInAndBaseDateIn(
             favoriteIndexIds, List.of(actualStartDate, actualEndDate));
         if (indexDataList.isEmpty()) {
             return Collections.emptyList();
         }
-        
+
         // IndexInfo 에 대한 성과
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
             .filter(data -> data.getBaseDate().equals(actualStartDate))
