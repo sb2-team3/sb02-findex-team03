@@ -4,10 +4,11 @@
 
 ## **팀원 구성**
 
-| <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336656185102409/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336696639160350/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336787651493969/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336909000839188/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336869675171840/image.png?ex=681093df&is=680f425f&hm=97c549efe11cbe7ee47a5ca7ea0c564db186851c5a0e7a50cf26d344e28a9453&=&format=webp&quality=lossless&width=419&height=566" width="80" style="border-radius:50%"/> |
+| <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336656185102409/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336696639160350/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336787651493969/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336909000839188/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336869675171840/image.png?format=webp&width=80" style="border-radius:50%"/> |
 | :---: | :---: | :---: | :---: | :---: |
 | 이준엽 (팀장) | 김세은 | 이유나 | 이준혁 | 김태우 |
 | [GitHub](https://github.com/leejunnyeop) | [GitHub](https://github.com/Seeun126) | [GitHub](https://github.com/nayu-yuna) | [GitHub](https://github.com/LeejunHyeok7170) | [GitHub](https://github.com/kimtaewoo9) |
+
 
 
 
