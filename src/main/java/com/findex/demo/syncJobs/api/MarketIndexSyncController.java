@@ -1,5 +1,8 @@
 package com.findex.demo.syncJobs.api;
 
+import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
+import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig.AutoSyncConfigBuilder;
+import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.syncJobs.domain.dto.IndexDataSyncRequestDto;
@@ -9,6 +12,7 @@ import com.findex.demo.syncJobs.domain.type.JobType;
 import com.findex.demo.syncJobs.domain.type.StatusType;
 import com.findex.demo.syncJobs.mapper.SyncJobMapper;
 import com.findex.demo.syncJobs.repository.SyncJobRepository;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,26 +40,8 @@ public class MarketIndexSyncController {
 
   @PostMapping("/index-infos")
   public ResponseEntity<List<SyncJobDto>> syncMarketIndexInfo() {
-    marketIndexSyncService.fetchAndStoreMarketIndices();
-
-    List<SyncJob> jobs = indexInfoRepository.findAll().stream()
-        .map(info -> SyncJob.builder()
-            .jobType(JobType.INDEX_INFO)
-            .statusType(StatusType.SUCCESS)
-            .targetDate(info.getBasePointInTime())
-            .jobTime(LocalDate.now())
-            .worker("OpenAPI")
-            .indexInfo(info)
-            .build())
-        .collect(Collectors.toList());
-
-    List<SyncJob> savedJobs = syncJobRepository.saveAll(jobs);
-
-    List<SyncJobDto> dtoList = savedJobs.stream()
-        .map(SyncJobMapper::toSyncJobDto)
-        .collect(Collectors.toList());
-
-    return ResponseEntity.ok(dtoList);
+    List<SyncJobDto> syncJobsAndConfigs = marketIndexSyncService.createSyncJobsAndConfigs();
+    return ResponseEntity.ok(syncJobsAndConfigs);
   }
 
   @PostMapping("/index-data")
