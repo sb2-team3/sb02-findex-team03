@@ -3,13 +3,11 @@
 [Notion](https://ballistic-teller-d42.notion.site/1d9987eef3c680bea1cbeb1e529f6c91?pvs=4)
 
 ## **팀원 구성**
-| 이름 | GitHub | 사진 |
-|:---:|:---:|:---:|
-| 이준엽 (팀장) | [leejunnyeop](https://github.com/leejunnyeop) | <img src="https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616" width="100" style="border-radius:50%"/> |
-| 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> |
-| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> |
-| 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> |
-| 김세은 | [Seeun126](https://github.com/Seeun126) | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
+| 이준엽 (팀장) | 이유나 | 김태우 | 이준혁 | 김세은 |
+|:---:|:---:|:---:|:---:|:---:|
+| [leejunnyeop](https://github.com/leejunnyeop) | [nayu-yuna](https://github.com/nayu-yuna) | [kimtaewoo9](https://github.com/kimtaewoo9) | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | [Seeun126](https://github.com/Seeun126) |
+| <img src="https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
+
 
 
 
