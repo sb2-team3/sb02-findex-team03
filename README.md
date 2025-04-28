@@ -6,11 +6,11 @@ https://github.com/sb2-team3/sb02-findex-team03
 
 ## **팀원 구성**
 
-이준엽 ([https://github.com/leejunnyeop](https://github.com/LeejunHyeok7170))
+이준엽 (https://github.com/leejunnyeop)
 김태우 (https://github.com/kimtaewoo9)
 이유나 (https://github.com/nayu-yuna)
 이준혁 (https://github.com/LeejunHyeok7170)
-김세은 ([https://github.com/Seeun126](https://github.com/LeejunHyeok7170))
+김세은 (https://github.com/Seeun126)
 
 ---
 
