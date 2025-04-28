@@ -35,6 +35,14 @@
 - **배치에 의한 지수 데이터 연동 자동화**
     - **지수 데이터 연동 프로세스**를 일정 주기(1일)마다 자동화
 
+ ### **김세은**
+- **지수 정보 연동**
+    - `/api/sync-jobs/index-infos`에서 OpenAPI를 통해 지수 정보를 등록, 수정
+- **연동 작업 목록 조회**
+    - `/api/sync-jobs`에서 연동 작업 목록 조회 기능 구현
+    - **{유형}, {지수}, {대상 날짜}, {작업자}, {결과}, {작업일시}** 조건으로 조회 및 페이지네이션 처리
+      
+
 ### **이유나**
 - **지수 정보 등록 API**
     - `POST /api/index-infos`에서 지수 정보 등록 기능 구현
@@ -48,19 +56,7 @@
 - **지수 목록 조회 및 페이지네이션**
     - `GET /api/index-infos`에서 지수 목록 조회 및 페이지네이션 기능 구현
     - 다양한 필터링 및 페이지네이션 처리
-
-### **김태우**
-- **지수 차트 조회 API**
-    - `POST /api/index-data/{id}/chart`에서 지수 차트 조회 기능 구현
-    - {즐겨찾기}된 지수의 성과 정보를 포함
-- **지수 성과 랭킹 조회 API**
-    - `POST /api/index-data/performance/rank`에서 지수 성과 랭킹 조회 기능 구현
-    - 월/분기/년 단위 시계열 데이터
-    - 이동평균선 (5일, 20일) 데이터 제공
-- **관심 지수 성과 조회 API**
-    - `POST /api/index-data/performance/rank`에서 관심 지수 성과 조회 기능 구현
-    - 전일/전주/전월 대비 성과 랭킹 제공
-
+ 
 ### **이준혁**
 - **데이터 OpenAPI 연동 API**
     - `POST /api/sync-jobs/index-data`에서 OpenAPI를 통한 지수 데이터 연동
@@ -76,12 +72,18 @@
 - **데이터 정보 삭제 API**
     - `POST /api/index-data/{id}`에서 지수 데이터 삭제
 
-### **김세은**
-- **지수 정보 연동**
-    - `/api/sync-jobs/index-infos`에서 OpenAPI를 통해 지수 정보를 등록, 수정
-- **연동 작업 목록 조회**
-    - `/api/sync-jobs`에서 연동 작업 목록 조회 기능 구현
-    - **{유형}, {지수}, {대상 날짜}, {작업자}, {결과}, {작업일시}** 조건으로 조회 및 페이지네이션 처리
+### **김태우**
+- **지수 차트 조회 API**
+    - `POST /api/index-data/{id}/chart`에서 지수 차트 조회 기능 구현
+    - {즐겨찾기}된 지수의 성과 정보를 포함
+- **지수 성과 랭킹 조회 API**
+    - `POST /api/index-data/performance/rank`에서 지수 성과 랭킹 조회 기능 구현
+    - 월/분기/년 단위 시계열 데이터
+    - 이동평균선 (5일, 20일) 데이터 제공
+- **관심 지수 성과 조회 API**
+    - `POST /api/index-data/performance/rank`에서 관심 지수 성과 조회 기능 구현
+    - 전일/전주/전월 대비 성과 랭킹 제공
+
 
 
 ## **파일 구조**
@@ -89,7 +91,7 @@
 
 
 ## **구현 홈페이지**
-[www.codezooFindex.com](https://www.codezooFindex.com/)
+[www.codezooFindex.com](sb02-findex-team03-production-531a.up.railway.app)
 
 
 ## **프로젝트 회고록**
