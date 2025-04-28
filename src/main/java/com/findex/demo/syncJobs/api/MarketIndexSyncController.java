@@ -1,8 +1,6 @@
 package com.findex.demo.syncJobs.api;
 
-import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
-import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig.AutoSyncConfigBuilder;
-import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
+
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
 import com.findex.demo.syncJobs.domain.dto.IndexDataSyncRequestDto;
@@ -12,22 +10,19 @@ import com.findex.demo.syncJobs.domain.type.JobType;
 import com.findex.demo.syncJobs.domain.type.StatusType;
 import com.findex.demo.syncJobs.mapper.SyncJobMapper;
 import com.findex.demo.syncJobs.repository.SyncJobRepository;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.InetAddress;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @RestController
 @RequestMapping("/api/sync-jobs")
 @RequiredArgsConstructor
@@ -80,7 +75,6 @@ public class MarketIndexSyncController {
       return ResponseEntity.ok(dtoList);
 
     } catch (Exception e) {
-      log.error("❌ 연동 실패: {}", e.getMessage(), e);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
