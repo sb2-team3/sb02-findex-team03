@@ -1,6 +1,6 @@
 external:
   market-index:
-    service-key: ${MARKET_INDEX_SERVICE_KEY}
+    service-key: MkvGYtjqXwhLG79ljGRPqBYsjnMT9M6atTQI0YofGQJQaPIj4miDdSkxAPNQWlVLuN%2FbFkbX3CeAjNGP3JNlrA%3D%3D
     base-url: https://apis.data.go.kr/1160100/service/GetMarketIndexInfoService/getStockMarketIndex
     num-of-rows: 100
 
