@@ -48,15 +48,33 @@ public class DataService {
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
         List<DataPoint> ma20DataPoints = calculateMovingAverage(dataPoints, 20);
 
+        List<DataPoint> alignedMa5 = alignMovingAverageWithOriginal(dataPoints, ma5DataPoints);
+        List<DataPoint> alignedMa20 = alignMovingAverageWithOriginal(dataPoints, ma20DataPoints);
+
         return new IndexChartDto(
             indexInfoId,
             indexInfo.getIndexClassification(),
             indexInfo.getIndexName(),
             periodType,
             dataPoints,
-            ma5DataPoints,
-            ma20DataPoints
+            alignedMa5,
+            alignedMa20
         );
+    }
+
+    private List<DataPoint> alignMovingAverageWithOriginal(List<DataPoint> original,
+        List<DataPoint> movingAvg) {
+        // 이동평균 데이터를 날짜로 Map화
+        Map<LocalDate, Double> maMap = movingAvg.stream()
+            .collect(Collectors.toMap(DataPoint::getDate, DataPoint::getValue));
+
+        // 원본 데이터 날짜 순서대로, 이동평균 데이터가 있으면 값, 없으면 null
+        List<DataPoint> aligned = new ArrayList<>();
+        for (DataPoint dp : original) {
+            Double maValue = maMap.get(dp.getDate());
+            aligned.add(new DataPoint(dp.getDate(), maValue)); // 없으면 null
+        }
+        return aligned;
     }
 
     // 특정 지수 성과 순위 조회.
@@ -142,7 +160,7 @@ public class DataService {
         if (actualStartDate == null || actualEndDate == null) {
             return Collections.emptyList();
         }
-        
+
         List<IndexData> indexDataList = dataRepository.findByIndexInfoIdInAndBaseDateIn(
             favoriteIndexIds, List.of(actualStartDate, actualEndDate));
         if (indexDataList.isEmpty()) {

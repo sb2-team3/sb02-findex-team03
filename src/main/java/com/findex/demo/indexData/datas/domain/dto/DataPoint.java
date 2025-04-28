@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class DataPoint {
 
     private LocalDate date;
-    private double value;
+    private Double value;
 }
