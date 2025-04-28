@@ -38,7 +38,7 @@ public class MarketIndexDataSyncService {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper;
 
-  @Value("36ID8iOnp68nJoKAhT0Ynow39nMtNDM3idhAa9TSjW9MzNS79979CltA7umRWB%2FbyvbLhPjpqLBnbdJeSophrA%3D%3D")
+  @Value("${external.market-index.service-key}")
   private String serviceKey;
 
   @Value("${external.market-index.base-url}")
@@ -111,7 +111,6 @@ public class MarketIndexDataSyncService {
       log.warn("❗ 등록되지 않은 지수: {} - 저장 생략", indexName);
       return;
     }
-
 
 
     List<IndexData> indexDatas = new ArrayList<>();
