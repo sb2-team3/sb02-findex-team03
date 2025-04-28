@@ -7,7 +7,8 @@
 |:---:|:---:|:---:|
 | 이준엽 (팀장) | [leejunnyeop](https://github.com/leejunnyeop) | ![이준엽]() |
 | 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | ![이유나](🐰) |
-| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | ![김태우]() |
+| 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | ![김태우](![image](https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17)
+) |
 | 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | ![이준혁]() |
 | 김세은 | [Seeun126](https://github.com/Seeun126) | ![김세은]() |
 
