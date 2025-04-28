@@ -2,7 +2,7 @@ spring:
   profiles:
     active: prod
   datasource:
-    url: jdbc:postgresql://postgres.railway.internal:55408/railway
+    url: jdbc:postgresql://shuttle.proxy.rlwy.net:55408/railway
     username: postgres
     password: paaLVKDCkjopiGOskumyTShEYYTxsDHS
     driver-class-name: org.postgresql.Driver
