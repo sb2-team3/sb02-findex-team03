@@ -4,9 +4,12 @@
 
 ## **팀원 구성**
 
-| <img src="https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
-| **이준엽 (팀장)** | 이유나 | 김태우 | 이준혁 | 김세은 |
-| [GitHub](https://github.com/leejunnyeop) | [GitHub](https://github.com/nayu-yuna) | [GitHub](https://github.com/kimtaewoo9) | [GitHub](https://github.com/LeejunHyeok7170) | [GitHub](https://github.com/Seeun126) |
+| <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336656185102409/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336696639160350/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336787651493969/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336909000839188/image.png?format=webp&width=80" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336869675171840/image.png?format=webp&width=80" style="border-radius:50%"/> |
+| :---: | :---: | :---: | :---: | :---: |
+| 이준엽 (팀장) | 김세은 | 이유나 | 이준혁 | 김태우 |
+| [GitHub](https://github.com/leejunnyeop) | [GitHub](https://github.com/Seeun126) | [GitHub](https://github.com/nayu-yuna) | [GitHub](https://github.com/LeejunHyeok7170) | [GitHub](https://github.com/kimtaewoo9) |
+
+
 
 
 ## **프로젝트 소개**
