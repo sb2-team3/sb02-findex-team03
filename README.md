@@ -9,7 +9,8 @@
 | 이유나 | [nayu-yuna](https://github.com/nayu-yuna) | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> |
 | 김태우 | [kimtaewoo9](https://github.com/kimtaewoo9) | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> |
 | 이준혁 | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> |
-| 김세은 | [Seeun126](https://github.com/Seeun126) | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100"
+| 김세은 | [Seeun126](https://github.com/Seeun126) | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
+
 
 
 
