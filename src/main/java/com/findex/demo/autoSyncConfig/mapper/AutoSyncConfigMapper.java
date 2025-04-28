@@ -9,7 +9,13 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 public class AutoSyncConfigMapper {
 
     public static AutoSyncConfigDto toAutoSyncConfigDto(AutoSyncConfig autoSyncConfig) {
-        return new AutoSyncConfigDto(autoSyncConfig.getId(), autoSyncConfig.getIndexInfo().getId(), autoSyncConfig.getIndexInfo().getIndexClassification(), autoSyncConfig.getIndexInfo().getIndexName(), autoSyncConfig.getEnabled());
+        return new AutoSyncConfigDto(
+                autoSyncConfig.getId(),
+                autoSyncConfig.getIndexInfo().getId(),
+                autoSyncConfig.getIndexInfo().getIndexClassification(),
+                autoSyncConfig.getIndexInfo().getIndexName(),
+                autoSyncConfig.getEnabled()
+        );
     }
 
     public static AutoSyncConfig toAutoSyncConfig(Boolean enabled, IndexInfo indexInfo) {
@@ -18,7 +24,4 @@ public class AutoSyncConfigMapper {
                 .indexInfo(indexInfo)
                 .build();
     }
-
-
-
 }

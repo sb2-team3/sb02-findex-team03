@@ -34,7 +34,7 @@ public class AutoSyncConfigController {
     }
 
     @GetMapping
-    public ResponseEntity<PagedResponse<AutoSyncConfig>> pageAutoSyncConfigs(
+    public ResponseEntity<PagedResponse<AutoSyncConfigDto>> pageAutoSyncConfigs(
             @RequestParam(required = false) Integer indexInfoId,
             @RequestParam(required = false) Boolean enabled,
             @RequestParam(defaultValue = "0") int idAfter,
@@ -45,7 +45,7 @@ public class AutoSyncConfigController {
 
         SortField resolved = SortField.from(sortField);
         SortDirection resolvedDirection = SortDirection.from(sortDirection);
-        PagedResponse<AutoSyncConfig> page = autoSyncConfigService.getPageAutoSynConfig(
+        PagedResponse<AutoSyncConfigDto> page = autoSyncConfigService.getPageAutoSynConfig(
                 indexInfoId, enabled, idAfter, cursor, resolved, resolvedDirection, size);
 
         return ResponseEntity.ok(page);
