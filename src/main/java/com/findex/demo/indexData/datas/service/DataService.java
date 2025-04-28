@@ -146,6 +146,17 @@ public class DataService {
             return Collections.emptyList();
         }
 
+        boolean flag = true;
+        for (Integer favoriteIndexId : favoriteIndexIds) {
+            if (dataRepository.existsByIndexInfoId(favoriteIndexId)) {
+                flag = false;
+                break;
+            }
+        }
+        if (!flag) {
+            return Collections.emptyList();
+        }
+
         // IndexInfo 에 대한 성과
         Map<Integer, IndexData> startDateMap = indexDataList.stream()
             .filter(data -> data.getBaseDate().equals(actualStartDate))
