@@ -57,7 +57,7 @@ public class AutoSyncConfigRepositoryImpl implements
                 null,
                 nextIdAfter,
                 size,
-                result.size(),
+                (long) result.size(),
                 hasNext
         );
     }

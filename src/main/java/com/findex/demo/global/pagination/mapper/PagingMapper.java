@@ -13,7 +13,7 @@ public class PagingMapper {
                 nextCursor,
                 nextIdAfter,
                 size,
-                totalElements,
+                (long) totalElements,
                 hasNext
         );
     }
