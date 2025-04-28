@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class IndexData extends BaseTimeEntity {
+public class IndexData  {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
