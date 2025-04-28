@@ -6,7 +6,7 @@ WORKDIR /app
 COPY build.gradle settings.gradle gradlew gradlew.bat /app/
 COPY gradle /app/gradle
 RUN chmod +x gradlew
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean build -x test || (cat /app/build/reports/*/* || true) && false
 
 # 실행 스테이지
 FROM eclipse-temurin:17-jre
