@@ -151,7 +151,6 @@ public class MarketIndexDataSyncService {
     try {
       for(IndexData indexData : indexDatas) {
         indexDataRepository.save(indexData);
-
         log.debug("저장 되니");
         log.info("✅ 저장 완료: {}", indexName);
 
