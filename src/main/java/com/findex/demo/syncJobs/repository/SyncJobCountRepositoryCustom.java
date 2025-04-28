@@ -6,10 +6,14 @@ import java.time.LocalDate;
 
 public interface SyncJobCountRepositoryCustom {
 
-
-    Long countByConditions(JobType jobType, Integer indexInfoId, LocalDate baseDateFrom,
-                  LocalDate baseDateTo, String worker, LocalDate jobTimeFrom, LocalDate jobTimeTo,
-                  StatusType status, Integer idAfter, String cursor, String sortField,
-                  String sortDirection, int size);
-
-    }
+    Long countByConditions(
+            JobType jobType,
+            Integer indexInfoId,
+            LocalDate baseDateFrom,
+            LocalDate baseDateTo,
+            String worker,
+            LocalDate jobTimeFrom,
+            LocalDate jobTimeTo,
+            StatusType status
+    );
+}
