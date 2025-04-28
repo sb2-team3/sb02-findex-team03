@@ -9,6 +9,7 @@ services:
       POSTGRES_USER: junhyeok
       POSTGRES_PASSWORD: 1234  # <- 여기에 비밀번호 입력
       POSTGRES_DB: findex
+      TZ: Asia/Seoul  # 대한민국 서울 시간대로 설정
     ports:
       - "5432:5432"
     volumes:
