@@ -4,9 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class IndexDataUpdateRequest {
 
   private Double marketPrice;
@@ -16,7 +20,9 @@ public class IndexDataUpdateRequest {
   private Double versus;
   private Double fluctuationRate;
 
+
   private Long tradingQuantity;
   private Long tradingPrice;
   private Long marketTotalAmount;
 }
+
