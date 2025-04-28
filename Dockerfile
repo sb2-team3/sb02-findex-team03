@@ -30,10 +30,3 @@ EXPOSE 8080
 
 #실행 명령어
 CMD ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]
-
-ENV TZ=Asia/Seoul
-
-RUN apk add --no-cache tzdata \
-    && cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
-    && echo "Asia/Seoul" > /etc/timezone \
-    && apk del tzdata
