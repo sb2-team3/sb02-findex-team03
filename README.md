@@ -3,13 +3,11 @@
 [Notion](https://ballistic-teller-d42.notion.site/1d9987eef3c680bea1cbeb1e529f6c91?pvs=4)
 
 ## **팀원 구성**
+
+| <img src="https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
 | 이준엽 (팀장) | 이유나 | 김태우 | 이준혁 | 김세은 |
 |:---:|:---:|:---:|:---:|:---:|
 | [leejunnyeop](https://github.com/leejunnyeop) | [nayu-yuna](https://github.com/nayu-yuna) | [kimtaewoo9](https://github.com/kimtaewoo9) | [LeejunHyeok7170](https://github.com/LeejunHyeok7170) | [Seeun126](https://github.com/Seeun126) |
-| <img src="https://github.com/user-attachments/assets/1f604bdd-aecf-4da1-a3fe-ed18375dc616" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/2662eb9e-c5a5-46d9-913d-8551b2a3511d" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/5e3fae80-c6bc-445c-835e-1ed821ed2b17" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/df0436df-2949-4a45-8f7a-c4dc902e18cd" width="100" style="border-radius:50%"/> | <img src="https://github.com/user-attachments/assets/267453d8-560d-4b4a-a07a-ab5093287adc" width="100" style="border-radius:50%"/> |
-
-
-
 
 
 ## **프로젝트 소개**
@@ -30,7 +28,7 @@
     - PATHS `/api/auto-sync-configs/{indexInfoId}` **활성화** 속성 수정
 - **자동 연동 설정 목록 조회**
     - `GET /api/auto-sync-configs`
-    - **{지수}, {활성화}**로 자동 연동 설정 목록을 조회, 정렬 및 페이지네이션(QueryDSL) 구현
+    - {지수}, {활성화}로 자동 연동 설정 목록을 조회, 정렬 및 페이지네이션(QueryDSL) 구현
     - **afterId (이전 페이지의 마지막 요소 ID)** 활용
 - **배치에 의한 지수 데이터 연동 자동화**
     - **지수 데이터 연동 프로세스**를 일정 주기(1일)마다 자동화
@@ -52,7 +50,7 @@
 ### **김태우**
 - **지수 차트 조회 API**
     - `POST /api/index-data/{id}/chart`에서 지수 차트 조회 기능 구현
-    - **{즐겨찾기}**된 지수의 성과 정보를 포함
+    - {즐겨찾기}된 지수의 성과 정보를 포함
 - **지수 성과 랭킹 조회 API**
     - `POST /api/index-data/performance/rank`에서 지수 성과 랭킹 조회 기능 구현
     - 월/분기/년 단위 시계열 데이터
