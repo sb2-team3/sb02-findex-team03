@@ -4,27 +4,10 @@
 
 ## **팀원 구성**
 
-<div align="center">
-  <a href="https://github.com/leejunnyeop">
-    <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336656185102409/image.png?ex=681093ac&is=680f422c&hm=66f597194006a8d80de951fee4bffc2e7db4abe0c6913069007ec38f4cf3d2a3&=&format=webp&quality=lossless&width=564&height=469" width="100" style="border-radius:50%"><br/>
-    <sub><b>이준엽 (팀장)</b></sub>
-  </a>
-  &nbsp; &nbsp; &nbsp;
-  <a href="https://github.com/Seeun126">
-    <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336696639160350/image.png?ex=681093b5&is=680f4235&hm=c1a7bcc4b327869d95a24ee9656b3b7c2723c3d540dcc6a1bdab4f0087fcc625&=&format=webp&quality=lossless&width=429&height=511" width="100" style="border-radius:50%"><br/>
-    <sub><b>김세은</b></sub>
-  </a>
-  &nbsp; &nbsp; &nbsp;
-  <a href="https://github.com/nayu-yuna">
-    <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336787651493969/image.png?ex=681093cb&is=680f424b&hm=9f10a9b35a97fd50427489e4b2b5c64fce4f4e4e9d0cbb24e444d2b8350b443d&=&format=webp&quality=lossless&width=314&height=469" width="100" style="border-radius:50%"><br/>
-    <sub><b>이유나</b></sub>
-  </a>
-  &nbsp; &nbsp; &nbsp;
-  <a href="https://github.com/LeejunHyeok7170">
-    <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336909000839188/image.png?ex=681093e8&is=680f4268&hm=53fe6673123cce6c9dfee0fc3c4ded148ec255d05be28a4dd3e96c85b282b537&=&format=webp&quality=lossless&width=461&height=496" width="100" style="border-radius:50%"><br/>
-    <sub><b>이준혁</b></sub>
-  </a>
-</div>
+| <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336656185102409/image.png?ex=681093ac&is=680f422c&hm=66f597194006a8d80de951fee4bffc2e7db4abe0c6913069007ec38f4cf3d2a3&=&format=webp&quality=lossless&width=100" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336696639160350/image.png?ex=681093b5&is=680f4235&hm=c1a7bcc4b327869d95a24ee9656b3b7c2723c3d540dcc6a1bdab4f0087fcc625&=&format=webp&quality=lossless&width=100" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336787651493969/image.png?ex=681093cb&is=680f424b&hm=9f10a9b35a97fd50427489e4b2b5c64fce4f4e4e9d0cbb24e444d2b8350b443d&=&format=webp&quality=lossless&width=100" style="border-radius:50%"/> | <img src="https://media.discordapp.net/attachments/1331497434894958662/1366336909000839188/image.png?ex=681093e8&is=680f4268&hm=53fe6673123cce6c9dfee0fc3c4ded148ec255d05be28a4dd3e96c85b282b537&=&format=webp&quality=lossless&width=100" style="border-radius:50%"/> |
+| :---: | :---: | :---: | :---: |
+| 이준엽 (팀장) | 김세은 | 이유나 | 이준혁 |
+| [GitHub](https://github.com/leejunnyeop) | [GitHub](https://github.com/Seeun126) | [GitHub](https://github.com/nayu-yuna) | [GitHub](https://github.com/LeejunHyeok7170) |
 
 
 
