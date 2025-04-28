@@ -11,6 +11,7 @@ import com.findex.demo.indexData.index.service.CSVExportIndexDataService;
 import com.findex.demo.indexData.index.service.IndexDataService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,13 +46,19 @@ public class IndexDataController {
   public ResponseEntity<CursorPageResponseIndexDataDto<IndexDataDto>> findAll(
       @RequestParam(defaultValue = "1") Integer indexInfoId,
       @RequestParam(defaultValue = "2010-01-01") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-      @RequestParam(defaultValue = "2025-04-24") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
       @RequestParam(defaultValue = "eyJpZCI6MjB9") String cursor,
       @RequestParam(defaultValue = "2") Integer idAfter,
       @RequestParam(defaultValue = "baseDate") String sortField,
       @RequestParam(defaultValue = "desc") String sortDirection,
       @RequestParam(defaultValue = "10") Integer size
   ) {
+    if (endDate == null) {
+      // 현재 날짜를 yyyy-MM-dd 포맷으로 변환
+      LocalDate today = LocalDate.now();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      endDate = LocalDate.parse(today.format(formatter)) ;
+    }
     IndexDataSearchCondition request = new IndexDataSearchCondition(
         indexInfoId, startDate, endDate, idAfter, cursor,
         sortField, sortDirection, size
