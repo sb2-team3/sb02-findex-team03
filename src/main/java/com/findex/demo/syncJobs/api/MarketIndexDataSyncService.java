@@ -9,7 +9,6 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +45,8 @@ public class MarketIndexDataSyncService {
   private int numOfRows;
 
   public void fetchIndexData(String baseDate, List<String> indexNames) {
+    log.info("[시작] 마켓 인덱스 데이터 수집 - 기준일: {}, 대상 인덱스: {}", baseDate, indexNames);
+
     Set<String> seenKeys = new HashSet<>();
     int totalPages = (int) Math.ceil((double) 100 / numOfRows); // TODO: 총 개수 동적으로 바꾸기
 
@@ -54,12 +55,16 @@ public class MarketIndexDataSyncService {
         String apiUrl = String.format("%s?serviceKey=%s&resultType=json&pageNo=%d&numOfRows=%d&basDt=%s",
             baseUrl, serviceKey, page, numOfRows, baseDate);
         URI uri = new URI(apiUrl);
+
+        log.debug("[API 호출] 페이지 {}: {}", page, apiUrl);
+
         String response = restTemplate.getForObject(uri, String.class);
 
         JsonNode items = objectMapper.readTree(response)
             .path("response").path("body").path("items").path("item");
 
         if (items.isMissingNode() || items.isNull()) {
+          log.warn("[경고] 페이지 {}에 데이터 없음", page);
           continue;
         }
 
@@ -71,41 +76,49 @@ public class MarketIndexDataSyncService {
           processItem(items, seenKeys, indexNames, baseDate);
         }
 
+        log.info("[성공] 페이지 {} 처리 완료", page);
+
       } catch (Exception e) {
+        log.error("[실패] 페이지 {} 처리 중 예외 발생: {}", page, e.getMessage(), e);
         throw new CustomException(ErrorCode.PATH_NOT_FOUND, "API 호출 중 오류 발생");
       }
     }
+
+    log.info("[완료] 마켓 인덱스 데이터 수집 종료 - 기준일: {}", baseDate);
   }
 
   private void processItem(JsonNode item, Set<String> seenKeys, List<String> indexNames, String baseDate) {
     String indexClassification = item.path("idxCsf").asText();
     String indexName = item.path("idxNm").asText();
     String itemDate = item.path("basDt").asText();
+    String key = indexClassification + "|" + indexName;
 
     if (!itemDate.equals(baseDate)) {
+      log.debug("[스킵] 기준일 불일치: {}", key);
       return;
     }
 
-
-    //
-    if ( !indexNames.isEmpty() &&!indexNames.contains(indexName)) {
+    if (!indexNames.isEmpty() && !indexNames.contains(indexName)) {
+      log.debug("[스킵] 대상 인덱스 아님: {}", indexName);
       return;
     }
 
-    String key = indexClassification + "|" + indexName;
     if (!seenKeys.add(key)) {
+      log.debug("[중복 스킵] {}", key);
       return;
     }
 
     if (!indexInfoRepository.existsByIndexClassificationAndIndexName(indexClassification, indexName)) {
+      log.warn("[경고] 존재하지 않는 IndexInfo: {}", key);
       return;
     }
 
-
-    List<IndexData> indexDatas = new ArrayList<>();
     Optional<IndexInfo> optionalInfo =
         indexInfoRepository.findByIndexClassificationAndIndexName(indexClassification, indexName);
-
+    if (optionalInfo.isEmpty()) {
+      log.warn("[경고] IndexInfo 조회 실패: {}", key);
+      return;
+    }
 
     IndexInfo indexInfo = optionalInfo.get();
 
@@ -113,10 +126,11 @@ public class MarketIndexDataSyncService {
     LocalDate parsedBaseDate = LocalDate.parse(itemDate, yyyyMMdd);
 
     if (indexDataRepository.existsByIndexInfoAndBaseDate(indexInfo, parsedBaseDate)) {
+      log.debug("[스킵] 이미 존재하는 IndexData: {} ({})", key, baseDate);
       return;
     }
 
-    try{
+    try {
       ExternalIndexDataDto dto = ExternalIndexDataDto.builder()
           .indexInfo(indexInfo)
           .closePrice(item.path("clpr").asDouble())
@@ -127,23 +141,20 @@ public class MarketIndexDataSyncService {
           .versus(item.path("vs").asDouble())
           .sourceType(SourceType.OPEN_API)
           .tradingPrice(item.path("trPrc").asLong())
-          .baseDate(Optional.of(
-                  LocalDate.parse(itemDate, yyyyMMdd))
-              .orElseThrow(() -> new IllegalArgumentException("baseDate 파싱 실패")))
+          .baseDate(parsedBaseDate)
           .marketTotalAmount(item.path("lstgMrktTotAmt").asLong())
           .tradingQuantity(item.path("trqu").asLong())
           .build();
-      indexDatas.add(OpenApiIndexDataMapper.toIndexData(dto));
-    }
-    catch (Exception e) {
-      return;
-    }
-    try {
-      for(IndexData indexData : indexDatas) {
-        indexDataRepository.save(indexData);
-      }
+
+      IndexData indexData = OpenApiIndexDataMapper.toIndexData(dto);
+
+      indexDataRepository.save(indexData);
+      log.info("[저장 성공] IndexData 저장 완료: {} ({})", key, baseDate);
+
     } catch (DataIntegrityViolationException e) {
+      log.warn("[무시] 무결성 제약 위반: {} ({}) - {}", key, baseDate, e.getMessage());
+    } catch (Exception e) {
+      log.error("[실패] IndexData 저장 실패: {} ({}) - {}", key, baseDate, e.getMessage(), e);
     }
   }
 }
-
