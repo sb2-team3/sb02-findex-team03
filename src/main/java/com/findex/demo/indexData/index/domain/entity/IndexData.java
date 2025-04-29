@@ -1,7 +1,5 @@
 package com.findex.demo.indexData.index.domain.entity;
 
-import com.findex.demo.global.times.BaseTimeEntity;
-import com.findex.demo.indexData.index.domain.dto.IndexDataCreateRequest;
 import com.findex.demo.indexData.index.domain.dto.IndexDataUpdateRequest;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;

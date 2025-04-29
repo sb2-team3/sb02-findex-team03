@@ -6,7 +6,7 @@ import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.data.domain.Page;
+
 
 public interface IndexDataRepositoryCustom {
   List<IndexData> findByCondition(IndexDataSearchCondition condition, Pageable pageable);
