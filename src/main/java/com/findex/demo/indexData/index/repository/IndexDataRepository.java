@@ -53,11 +53,13 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
     // 필터 조건에 맞는 카운트를 계산하는 메서드
     @Query("SELECT COUNT(i) FROM IndexData i WHERE " +
         "i.indexInfo = :indexInfo AND " +
+        "(:cursorId IS NULL OR i.id > :cursorId) AND " +
         "(i.baseDate BETWEEN :startDate AND :endDate)")
     long countWithFilter(
         IndexInfo indexInfo,
         LocalDate startDate,
-        LocalDate endDate
+        LocalDate endDate,
+        Integer cursorId
     );
 
     boolean existsByBaseDate(LocalDate date);
