@@ -9,6 +9,7 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
+import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
