@@ -91,8 +91,7 @@
 
 
 ## **구현 홈페이지**
-[[www.codezooFindex.com](https://sb02-findex-team03-production-fefc.up.railway.app/)](sb02-findex-team03-production-531a.up.railway.app)
-
+[CodeZoo](https://sb02-findex-team03-production-fefc.up.railway.app/)
 
 ## **프로젝트 회고록**
 [회고록 보기](https://www.notion.so/4L-1e0987eef3c68016a9f4ee169b9c816a)
