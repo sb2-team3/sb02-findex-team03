@@ -68,14 +68,11 @@ public interface IndexDataRepository extends JpaRepository<IndexData, Integer>,
     @Query("SELECT MIN(i.baseDate) FROM IndexData i WHERE i.baseDate > :date")
     Optional<LocalDate> findMinBaseDateAfterDate(@Param("date") LocalDate date);
 
-    Optional<IndexData> findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(
-        IndexInfo info, LocalDate date);
+    Optional<IndexData> findTopByIndexInfoAndBaseDateLessThanEqualOrderByBaseDateDesc(IndexInfo info, LocalDate date);
 
-    Optional<IndexData> findFirstByIndexInfoAndBaseDateGreaterThanOrderByBaseDateAsc(
-        IndexInfo indexInfo, LocalDate endDate);
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateGreaterThanOrderByBaseDateAsc(IndexInfo indexInfo, LocalDate endDate);
 
-    Optional<IndexData> findFirstByIndexInfoAndBaseDateLessThanOrderByBaseDateDesc(
-        IndexInfo indexInfo, LocalDate startDate);
+    Optional<IndexData> findFirstByIndexInfoAndBaseDateLessThanOrderByBaseDateDesc(IndexInfo indexInfo, LocalDate startDate);
 
-    boolean existsByIndexInfoId(Integer favoriteIndexId);
+    void deleteByIndexInfo(IndexInfo indexInfo);
 }

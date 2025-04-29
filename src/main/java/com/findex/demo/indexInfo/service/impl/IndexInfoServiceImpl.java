@@ -1,7 +1,10 @@
 package com.findex.demo.indexInfo.service.impl;
 
+import com.findex.demo.autoSyncConfig.domain.entity.AutoSyncConfig;
+import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
+import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.dto.CursorPageResponseIndexInfoDto;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoCreateRequest;
 import com.findex.demo.indexInfo.domain.dto.IndexInfoDto;
@@ -30,6 +33,9 @@ import org.springframework.stereotype.Service;
 public class IndexInfoServiceImpl implements IndexInfoService {
 
   private final IndexInfoRepository indexInfoRepository;
+  private final IndexDataRepository indexDataRepository;
+  private final SyncJobRepository syncJobRepository;
+  private final AutoSyncConfigRepository autoSyncConfigRepository;
 
 
   @Override
@@ -53,7 +59,6 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     indexInfo = indexInfoRepository.save(indexInfo);
 
-
     return IndexInfoMapper.toIndexInfoDto(indexInfo);
   }
 
@@ -75,9 +80,15 @@ public class IndexInfoServiceImpl implements IndexInfoService {
   public void delete(Integer id) {
     IndexInfo indexInfo = indexInfoRepository.findById(id)
         .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE, "부서 코드는 필수입니다"));
+    autoSyncConfigRepository.deleteByIndexInfo(indexInfo);
+
+    syncJobRepository.deleteByIndexInfo(indexInfo);
+
+    indexDataRepository.deleteByIndexInfo(indexInfo);
 
     indexInfoRepository.delete(indexInfo);
   }
+
 
   @Override
   @Transactional(readOnly = true)
