@@ -92,8 +92,7 @@ public class IndexDataService {
     long totalElements = indexDataRepository.countWithFilter(
         indexInfo,
         condition.getStartDate(),
-        condition.getEndDate(),
-        cursorId
+        condition.getEndDate()
     );
 
     return CursorPageResponseIndexDataDto.<IndexDataDto>builder()
