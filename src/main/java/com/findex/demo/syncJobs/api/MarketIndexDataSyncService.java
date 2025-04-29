@@ -2,7 +2,6 @@ package com.findex.demo.syncJobs.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.findex.demo.autoSyncConfig.repository.AutoSyncConfigRepository;
 import com.findex.demo.global.error.CustomException;
 import com.findex.demo.global.error.ErrorCode;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
@@ -10,11 +9,9 @@ import com.findex.demo.indexData.index.repository.IndexDataRepository;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
 import com.findex.demo.indexInfo.repository.IndexInfoRepository;
-import com.findex.demo.syncJobs.repository.SyncJobRepository;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

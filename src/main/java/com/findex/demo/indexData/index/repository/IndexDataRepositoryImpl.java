@@ -2,13 +2,11 @@ package com.findex.demo.indexData.index.repository;
 
 
 
-import com.findex.demo.indexData.index.domain.dto.CursorPageResponseIndexDataDto;
-import com.findex.demo.indexData.index.domain.dto.IndexDataDto;
 import com.findex.demo.indexData.index.domain.dto.IndexDataSearchCondition;
 import com.findex.demo.indexData.index.domain.entity.IndexData;
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
 import com.findex.demo.indexInfo.domain.entity.SourceType;
-import com.findex.demo.indexInfo.repository.IndexInfoRepository;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
