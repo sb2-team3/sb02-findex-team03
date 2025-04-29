@@ -23,7 +23,7 @@ public class SyncJobController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<SyncJobDto>> searchSyncJobs(
-            @RequestParam(defaultValue = "INDEX_INFO", required = false)
+            @RequestParam(defaultValue = "ALL", required = false)
             JobType jobType,
             @RequestParam(required = false)
             Integer indexInfoId,

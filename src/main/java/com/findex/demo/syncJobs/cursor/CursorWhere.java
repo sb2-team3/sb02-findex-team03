@@ -20,8 +20,17 @@ public class CursorWhere {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if (jobType != null) {
-            booleanBuilder.and(qSyncJob.jobType.eq(jobType));
+            if (JobType.ALL.equals(jobType)) {
+                booleanBuilder.and(
+                        qSyncJob.jobType.in(JobType.INDEX_INFO, JobType.INDEX_DATA)
+                );
+            } else {
+                booleanBuilder.and(
+                        qSyncJob.jobType.eq(jobType)
+                );
+            }
         }
+
 
         if (indexInfoId != null) {
             booleanBuilder.and(qSyncJob.indexInfo.id.eq(indexInfoId));
