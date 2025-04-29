@@ -48,7 +48,6 @@ public class DataService {
         List<DataPoint> ma5DataPoints = calculateMovingAverage(dataPoints, 5);
         List<DataPoint> ma20DataPoints = calculateMovingAverage(dataPoints, 20);
 
-        // 가장 과거 데이터에 null 값을 넣어야함 .
         List<DataPoint> alignedMa5 = alignMovingAverageWithOriginal(dataPoints, ma5DataPoints);
         List<DataPoint> alignedMa20 = alignMovingAverageWithOriginal(dataPoints, ma20DataPoints);
 
@@ -65,11 +64,10 @@ public class DataService {
 
     private List<DataPoint> alignMovingAverageWithOriginal(List<DataPoint> original,
         List<DataPoint> movingAvg) {
-        // 이동평균 데이터를 날짜로 Map화
+
         Map<LocalDate, Double> maMap = movingAvg.stream()
             .collect(Collectors.toMap(DataPoint::getDate, DataPoint::getValue));
 
-        // 원본 데이터 날짜 순서대로, 이동평균 데이터가 있으면 값, 없으면 null
         List<DataPoint> aligned = new ArrayList<>();
         for (DataPoint dp : original) {
             Double maValue = maMap.get(dp.getDate());
@@ -77,8 +75,7 @@ public class DataService {
         }
         return aligned;
     }
-
-    // 특정 지수 성과 순위 조회.
+    
     @Transactional(readOnly = true)
     public List<RankedIndexPerformanceDto> getIndexPerformanceRank(PeriodType periodType,
         Integer indexInfoId, int limit) {

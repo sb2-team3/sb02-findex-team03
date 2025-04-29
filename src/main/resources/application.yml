@@ -2,9 +2,9 @@ spring:
   profiles:
     active: prod
   datasource:
-    url: jdbc:postgresql://interchange.proxy.rlwy.net:44271/railway
-    username: postgres
-    password: yUdJNOqYLgjaSelQKgDhLybVrYCCdvHD
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${POSTGRES_DB}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-timezone: Asia/Seoul
