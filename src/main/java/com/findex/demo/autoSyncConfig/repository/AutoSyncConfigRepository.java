@@ -14,4 +14,6 @@ public interface AutoSyncConfigRepository extends JpaRepository<AutoSyncConfig, 
     boolean existsByIndexInfoId(Integer indexInfoId);
 
     void deleteByIndexInfo(IndexInfo indexInfo);
+
+    List<AutoSyncConfig> findAllByEnabledTrue();
 }
