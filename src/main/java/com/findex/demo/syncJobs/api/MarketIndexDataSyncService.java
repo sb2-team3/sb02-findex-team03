@@ -89,6 +89,7 @@ public class MarketIndexDataSyncService {
       return;
     }
 
+
     //
     if ( !indexNames.isEmpty() &&!indexNames.contains(indexName)) {
       return;
@@ -112,7 +113,11 @@ public class MarketIndexDataSyncService {
     IndexInfo indexInfo = optionalInfo.get();
 
     DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
+    LocalDate parsedBaseDate = LocalDate.parse(itemDate, yyyyMMdd);
 
+    if (indexDataRepository.existsByIndexInfoAndBaseDate(indexInfo, parsedBaseDate)) {
+      return;
+    }
 
     try{
       ExternalIndexDataDto dto = ExternalIndexDataDto.builder()

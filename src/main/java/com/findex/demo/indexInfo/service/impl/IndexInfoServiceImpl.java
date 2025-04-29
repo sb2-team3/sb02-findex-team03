@@ -86,7 +86,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     indexDataRepository.deleteByIndexInfo(indexInfo);
 
-    indexInfoRepository.delete(indexInfo);
+    indexInfoRepository.deleteById(id);
   }
 
 

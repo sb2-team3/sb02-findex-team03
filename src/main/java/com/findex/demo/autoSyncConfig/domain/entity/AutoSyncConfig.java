@@ -1,6 +1,7 @@
 package com.findex.demo.autoSyncConfig.domain.entity;
 
 import com.findex.demo.indexInfo.domain.entity.IndexInfo;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class AutoSyncConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "index_info_id")
     private IndexInfo indexInfo;
 
@@ -36,6 +37,4 @@ public class AutoSyncConfig {
             this.enabled = enabled;
         }
     }
-
-
 }

@@ -21,7 +21,7 @@
 ## **기술 스택**
 - **Backend**: Spring Boot, Spring Data JPA, QueryDSL
 - **Database**: PostgreSQL
-- **공통 Tool**: Git & Github, Swagger, Discord, IntelliJ, Notion, Postman, Railway, **Redis**
+- **공통 Tool**: Git & Github, Swagger, Discord, IntelliJ, Notion, Postman, Railway
 
 
 ## **팀원별 맡은 작업**
