@@ -86,12 +86,7 @@ public class IndexInfoServiceImpl implements IndexInfoService {
 
     indexDataRepository.deleteByIndexInfo(indexInfo);
 
-    try{
-      indexInfoRepository.delete(indexInfo);
-    }catch(Exception e){
-      throw new CustomException(ErrorCode.INVALID_INPUT_VALUE, e.getMessage());
-    }
-
+    indexInfoRepository.deleteById(id);
   }
 
 
