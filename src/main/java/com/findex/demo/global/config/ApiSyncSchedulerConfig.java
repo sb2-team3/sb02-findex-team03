@@ -18,7 +18,7 @@ public class ApiSyncSchedulerConfig {
     private final MarketIndexDataSyncService marketIndexDataSyncService;
     private final MarketIndexSyncService marketIndexSyncService;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 49 3 * * *")
     public void scheduleFetchIndexData() {
         log.info("⏰ [스케줄러] 지수 데이터 수집 시작");
 

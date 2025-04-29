@@ -30,7 +30,8 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
     @Transactional
     public AutoSyncConfigDto updateAutoSyncConfig(Integer indexInfoId, AutoSyncConfigUpdateRequest request) {
         IndexInfo indexInfo = indexInfoRepository.findById(indexInfoId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "자동 연동된 지수를 찾을 수 없습니다"));
+            .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "해당 지수를 찾을 수 없습니다"));
+
         AutoSyncConfig autoSyncConfig;
         Optional<AutoSyncConfig> existingConfig = autoSyncConfigRepository.findByIndexInfo_Id(indexInfoId);
 
@@ -45,27 +46,23 @@ public class AutoSyncConfigServiceImpl implements AutoSyncConfigService{
         return AutoSyncConfigMapper.toAutoSyncConfigDto(autoSyncConfig);
     }
 
-
-
     @Override
     @Transactional(readOnly = true)
     public PagedResponse<AutoSyncConfigDto> getPageAutoSynConfig(Integer indexInfoId, Boolean enabled, int idAfter, String cursor,
-                                                                 SortField sortField, SortDirection sortDirection, int size) {
+        SortField sortField, SortDirection sortDirection, int size) {
 
         PagedResponse<AutoSyncConfig> entityPage = autoSyncConfigRepository.getPage(indexInfoId, enabled, idAfter, cursor, sortField, sortDirection, size);
         List<AutoSyncConfigDto> dtoList = entityPage.content().stream()
-                .map(AutoSyncConfigMapper::toAutoSyncConfigDto)
-                .collect(Collectors.toList());
+            .map(AutoSyncConfigMapper::toAutoSyncConfigDto)
+            .collect(Collectors.toList());
 
         return new PagedResponse<>(
-                dtoList,
-                entityPage.nextCursor(),
-                entityPage.nextIdAfter(),
-                entityPage.size(),
-                (long) dtoList.size(),
-                entityPage.hasNext()
+            dtoList,
+            entityPage.nextCursor(),
+            entityPage.nextIdAfter(),
+            entityPage.size(),
+            (long) dtoList.size(),
+            entityPage.hasNext()
         );
-
     }
-
 }
